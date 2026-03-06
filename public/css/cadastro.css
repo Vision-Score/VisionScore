@@ -21,6 +21,16 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #101010;
+    position: relative;
+}
+
+#link-voltar {
+    position: absolute;
+    left: 15px;
+    top: 25px;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
 }
 
 .subtitulo {

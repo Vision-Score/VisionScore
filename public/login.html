@@ -6,9 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Vision Score</title>
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
+    <a href="./index.html" id="link-voltar">
+        <i class="fa-solid fa-arrow-left"></i>
+        Voltar
+    </a>
+
     <main>
         <div id="cabecalho-container">
             <img src="../public/assets/logoVisionScore.png" alt="Logo Vision Score" id="logo">
@@ -19,7 +29,14 @@
         <div id="inputs-container">
             <input type="text" placeholder="Email ou telefone" id="input-email">
 
-            <input type="password" placeholder="Senha" id="input-senha">
+            <div id="senha-container">
+                <input type="password" placeholder="Senha" id="input-senha">
+
+                <span>
+                    Esqueceu a senha?
+                    <a href="./recuperacao-senha.html" id="link-recuperar-senha">Clique aqui</a>
+                </span>
+            </div>
         </div>
 
         <div id="direcionadores-container">
