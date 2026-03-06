@@ -50,7 +50,7 @@ main div {
 }
 
 #subtitulo {
-    color: var(--cor-clara);
+    color: #ffffff;
     font-size: 22px;
 }
 
@@ -80,7 +80,7 @@ main div {
 #direcionadores-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
     align-items: center;
 }
 
@@ -154,11 +154,7 @@ a:active {
         transition: none;
     }
 
-    button:hover {
-        opacity: 1;
-    }
-
-    button:active {
+    button:hover, button:active {
         opacity: 1;
     }
 
