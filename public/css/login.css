@@ -1,0 +1,172 @@
+:root {
+    --cor-principal: #044343;
+    --cor-segundaria: #045757;
+    --cor-clara: #e4e4e4;
+    --cor-escuro: #222222;
+    --fundo-input: #575757;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #101010;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90vh;
+    width: 50vw;
+    justify-content: space-evenly;
+    background-color: var(--cor-escuro);
+    border-radius: 15px;
+}
+
+main div {
+    max-width: 1200px;
+    width: 100%;
+}
+
+#cabecalho-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+#logo {
+    width: 100px;
+}
+
+#subtitulo {
+    color: var(--cor-clara);
+    font-size: 22px;
+}
+
+#inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+#inputs-container input {
+    padding: 1.5rem 0.8rem;
+    border: solid var(--cor-clara) 1px;
+    background-color: var(--fundo-input);
+    width: 50%;
+    border-radius: 4px;
+    color: var(--cor-clara);
+    outline: none;
+    height: 45px;
+    font-size: 16px;
+}
+
+#inputs-container input::placeholder {
+    color: var(--cor-clara);
+}
+
+#direcionadores-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+button {
+    width: 50%;
+    font-size: 23px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 50px;
+    border: none;
+    background-color: var(--cor-segundaria);
+    color: var(--cor-clara);
+    transition: all ease .3s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+button:active {
+    opacity: 0.6;
+}
+
+a {
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cor-clara);
+    position: relative;
+    padding-bottom: 3px;
+    transition: opacity ease .3s;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: var(--cor-clara);
+    height: 2px;
+    width: 0;
+    transition: ease-in-out .5s;
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+a:active {
+    opacity: 0.6;
+}
+
+@media (max-width: 1024px) {
+    #logo {
+        width: 120px;
+    }
+
+    main {
+        height: 80vh;
+        width: 85vw;
+    }
+
+    #inputs-container input {
+        height: 60px;
+    }
+
+    #inputs-container input,
+    button {
+        width: 70%;
+        transition: none;
+    }
+
+    button:hover {
+        opacity: 1;
+    }
+
+    button:active {
+        opacity: 1;
+    }
+
+    a::after {
+        content: none;
+    }
+
+    a:active {
+        opacity: 1;
+    }
+}
