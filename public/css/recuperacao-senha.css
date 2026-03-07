@@ -48,6 +48,7 @@ main {
 #subtitulo {
     color: #ffffff;
     font-size: 22px;
+    text-align: center;
 }
 
 #descricao {
@@ -129,4 +130,65 @@ a:hover::after {
 
 a:active {
     opacity: 0.6;
+}
+
+@media (max-width: 1024px) {
+    #logo {
+        width: 120px;
+    }
+
+    main {
+        height: 80vh;
+        width: 85vw;
+    }
+
+    input {
+        height: 60px;
+    }
+
+    input,
+    button {
+        width: 70%;
+        transition: none;
+    }
+
+    button:hover,
+    button:active {
+        opacity: 1;
+    }
+
+    a::after {
+        content: none;
+    }
+
+    a:active {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 500px) {
+    #descricao {
+        font-size: 16px;
+    }
+
+    input {
+        height: 10px;
+    }
+
+    button {
+        font-size: 18px;
+        height: 40px;
+    }
+
+    #link-voltar {
+        font-size: 16px;
+    }
+
+    a:not(#link-recuperar-senha, #link-voltar) {
+        font-size: 18px;
+    }
+
+    #direcionadores-container {
+        gap: 1.3rem;
+    }
 }
