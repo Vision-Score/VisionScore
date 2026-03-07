@@ -94,9 +94,9 @@ main div {
     font-weight: bold;
     padding-bottom: 2.5px;
     position: relative;
-} 
+}
 
-#link-recuperar-senha::after{
+#link-recuperar-senha::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -208,7 +208,8 @@ a:active {
         transition: none;
     }
 
-    button:hover, button:active {
+    button:hover,
+    button:active {
         opacity: 1;
     }
 
@@ -218,5 +219,28 @@ a:active {
 
     a:active {
         opacity: 1;
+    }
+}
+
+@media (max-width: 500px) {
+    #inputs-container input {
+        height: 10px;
+    }
+
+    button {
+        font-size: 18px;
+        height: 40px;
+    }
+
+    #link-voltar {
+        font-size: 16px;
+    }
+
+    a:not(#link-recuperar-senha, #link-voltar) {
+        font-size: 18px;
+    }
+
+    #direcionadores-container {
+        gap: 1.3rem;
     }
 }
