@@ -33,17 +33,21 @@ html {
     width: 40%;
     margin-right: 50px;
     font-size: 20px;
+    overflow-y: hidden;
 }
 
 a {
+    width: auto;
     transition: all 0.3s ease;
     text-decoration: none;
     color: white;
+    overflow-y: hidden;
 }
 
 a:hover {
+    width: auto;
     display: flex;
-    transform: scale(1.1);
+    transform: scale(1.05);
     color: #0F8B8B;
 }
 
