@@ -4,142 +4,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Institucional</title>
-  <link rel="stylesheet" href="css/index.css">
-  <link rel="icon" href="assets/logo_branca.png">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/index.css">
 </head>
 
 <body>
-
-  <!-- Header -->
-  <div class="header">
-
-    <img src="assets/logo_branca.png" class="logo" />
+  <div class="main">
 
     <div class="navbar">
-      <a href="#sobre">Sobre</a>
-      <a href="#contato">Contato</a>
-      <a href="login.html">Login</a>
+      <div class="logo">
+        <img src="./assets/logo_branca.png" alt="Logo">
+      </div>
+
+      <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="login">
+        <a href="#">Login</a>
+      </div>
     </div>
+
+    <div class="banner cta">
+      <div class="textoCta">
+        <h1>VISION SCORE</h1>
+        <p>ACELERE E OTIMIZE SUAS ANÁLISES</p>
+      </div>
+      <div class="btn">
+        <a href="#" class="btn_dentro">SAIBA MAIS</a>
+      </div>
+    </div>
+
+    <div class="banner promo">
+      <span>ACESSE INFORMAÇÕES DETALHADAS SOBRE</span>
+      <div class="promo-container fundo1">
+
+        <div class="menu-promo">
+          <div class="navbar-menu-promo">
+            <div class="btn-promo"><button class="btn-dentro active" onclick="clickMenuPromo(this)"> SUA EQUIPE</button>
+            </div>
+            <div class="btn-promo"><button class="btn-dentro" onclick="clickMenuPromo(this)"> SEU ADVERSÁRIO</button>
+            </div>
+            <div class="btn-promo"><button class="btn-dentro" onclick="clickMenuPromo(this)"> A COMPETIÇÃO</button></div>
+          </div>
+
+          <div class="texto-promo">
+            <span>Vision Score reúne em um só lugar as métricas que importam para equipes competitivas de League of Legends. Acompanhe a performance do seu time em campeonatos, identifique padrões e tome decisões estratégicas com base em dados.</span>
+            <img src="./assets/Support_icon.png">
+          </div>
+
+        </div>
+
+
+        <div class="promo-box fundo1">
+        </div>
+      </div>
+    </div>
+
 
 
   </div>
-
-  <!-- Tela inicial -->
-
-  <div class="inicio">
-    <p class="titulo">VISION SCORE</p>
-    <p class="frase">Otimize suas análises e acelere a preparação entre as partidas!</p>
-    <a href="#infos">
-      <button>Saiba mais</button>
-    </a>
-
-  </div>
-
-  <div class="infos" id="infos">
-    <p class="titulo">Informações detalhadas sobre:</p>
-
-    <div class="imagens">
-      <div class="img1">
-        Sua equipe
-      </div>
-
-      <div class="img2">
-        Equipes adversárias
-      </div>
-    </div>
-
-
-  </div>
-
-  <div class="sobre" id="sobre">
-
-    <div class="container">
-
-      <div class="titulo">
-        Sobre a <span class="vs"> Vision Score</span>
-      </div>
-
-      <div class="texto">
-
-        Nossa plataforma centraliza e organiza as principais informações de jogo dos jogadores profissionais de
-        League of Legends, reunindo históricos de partidas, padrões de desempenho, estatísticas individuais e
-        coletivas, além de dados estratégicos tanto da sua equipe quanto dos adversários.
-
-        <br><br>
-
-        Os dados estão dispersos em diferentes fontes, exigindo horas de pesquisa manual e análise fragmentada.
-        Isso
-        gera desgaste e reduz o tempo disponível para a preparação estratégica e tomada de decisão.
-
-      </div>
-    </div>
-
-  </div>
-
-  <div class="contato" id="contato">
-
-    <div class="container">
-
-      <div class="titulo">
-        Entre em contato
-      </div>
-
-      <div class="campos">
-
-        <input type="text" placeholder="Nome" class="inputs">
-
-        <input type="text" placeholder="Equipe" class="inputs">
-
-      </div>
-
-      <div class="campos">
-
-        <input type="text" placeholder="Telefone" class="inputs">
-
-        <input type="text" placeholder="Email" class="inputs">
-
-      </div>
-
-      <div class="mensagem">
-        <!-- <input type="text" placeholder="Deixe a sua mensagem" class="campoMsg"> -->
-        <textarea placeholder="Deixe a sua mensagem" class="campoMsg"></textarea>
-      </div>
-
-      <button class="botao">Enviar</button>
-
-    </div>
-
-  </div>
-
-  <div class="footer">
-
-    <div class="logo">
-      <img src="assets/logo_branca.png" width="90" length="90" /> <br>
-      VISION SCORE
-    </div>
-
-    <div class="membros">
-      Equipe: <br><br> • Davi Pereira <br>
-      • Gabriel Muniz <br>
-      • Gustavo Mota <br>
-      • Mauro Moreno <br>
-      • Mayara Franca <br>
-      • Nicollas Almeida <br>
-    </div>
-
-    <div class="items">
-      <div>Sobre</div>
-      <div>Contato</div>
-      <div>Login</div>
-    </div>
-
-    <div class="git">
-      <img src="assets/github-logo.png" width="45" length="45" />
-    </div>
-
-  </div>
-
 </body>
 
 </html>
+
+<script>
+
+  const infos = [`<span>Vision Score reúne em um só lugar as métricas que importam para equipes competitivas de League of Legends. Acompanhe a performance do seu time em campeonatos, identifique padrões e tome decisões estratégicas com base em dados.</span>
+            <img src="./assets/Support_icon.png">`,
+            `<span>Quer saber como seu adversário se saiu em partidas recentes? Vision Score oferece uma análise detalhada do desempenho de outros times, permitindo que você estude seus pontos fortes e fracos para se preparar melhor para os confrontos.</span>
+            <img src="./assets/Specialist_icon.png">`,
+            `<span>Fique por dentro do cenário competitivo com as análises de Vision Score. Acompanhe o desempenho dos principais times, descubra tendências e mantenha-se atualizado sobre as estratégias que estão dominando a cena de League of Legends.</span>
+            <img src="./assets/Every.png">`
+  ];
+
+  const info3 = `<span>Fique por dentro do cenário competitivo com as análises de Vision Score. Acompanhe o desempenho dos principais times, descubra tendências e mantenha-se atualizado sobre as estratégias que estão dominando a cena de League of Legends.</span>
+            <img src="./assets/Every.png">`;
+
+  function clickMenuPromo(button) {
+    const buttons = document.querySelectorAll('.btn-dentro');
+    let novoFundo = 1;
+    buttons.forEach((btn, index) => {
+      if (btn === button) {
+        btn.classList.add('active');
+        novoFundo = index + 1;
+        console.log(novoFundo);
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    const promoBox = document.querySelector('.promo-box');
+    promoBox.className = `promo-box fundo${novoFundo}`;
+    const textoPromo = document.querySelector('.texto-promo');
+    textoPromo.innerHTML = `${infos[novoFundo - 1]}`;
+  }
+
+</script>
