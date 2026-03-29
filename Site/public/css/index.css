@@ -79,12 +79,12 @@ body {
             height: 50vh;
             padding: 15vh 0;
 
-            background-image: url("../assets/Ryze_1.jpg");
+            background-image: url("../assets/Heimerdinger_1.png");
             background-size: cover;
-            background-position-y: 10vh;
+            background-position-y: -15vh;
             background-blend-mode: screen;
             background-color: #222;
-            box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .6);
+            box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .5);
 
             display: flex;
             flex-direction: column;
@@ -144,7 +144,7 @@ body {
                     justify-content: center;
                     text-align: center;
 
-                    background-color: #432488;
+                    background-color: #044545;
 
                     text-decoration: none;
                     color: #E4E4e4;
@@ -176,9 +176,7 @@ body {
                 height: 12vh;
 
                 background: #111;
-background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 25%, rgba(34, 34, 34, 1) 50%, rgba(17, 17, 17, 1) 75%);
-                
-                border: solid 2px #E4E4E4;
+                background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 25%, rgba(34, 34, 34, 1) 50%, rgba(17, 17, 17, 1) 75%);
 
                 display: flex;
                 align-items: center;
@@ -191,8 +189,10 @@ background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 2
             }
 
             .promo-container {
-                width: 100%;
+                width: 80%;
                 height: 80vh;
+
+                margin-bottom: 2%;
 
                 display: flex;
                 flex-direction: row;
@@ -204,7 +204,7 @@ background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 2
                     width: 30%;
                     height: 100%;
 
-                    background-color: #E4E4E4;
+                    background-color: #111;
 
                     display: flex;
                     flex-direction: column;
@@ -238,17 +238,20 @@ background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 2
                                 height: 100%;
 
                                 border: none;
+
                                 cursor: pointer;
 
                                 font-family: "Montserrat", sans-serif;
-                                font-size: 2vh;
+                                font-size: 1.5vh;
                                 color: #E4E4E4;
 
-                                background-color: #432488;
+                                background-color: #044545;
 
                                 &.active {
-                                    background-color: #E4E4e4;
-                                    color: #432488;
+                                    background-color: #111;
+                                    border: solid 2px #044545;
+                                    border-bottom: none;
+                                    font-weight: 700;
                                 }
 
                                 &:hover {
@@ -263,15 +266,15 @@ background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 2
                     }
 
                     .texto-promo {
-                        width: 90%;
+                        width: 100%;
                         height: calc(100% - 10vh);
 
 
-                        margin: 5% 0;
                         padding: 5% 5%;
                         box-sizing: border-box;
 
-                        border: solid 2px #432488;
+                        border: solid 2px #044545;
+                        border-top: none;
 
                         display: flex;
                         flex-direction: column;
@@ -292,19 +295,15 @@ background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 2
                             margin: 0;
                             padding: 0;
 
-                            font-size: 2vh;
+                            font-size: 2.5vh;
+                            font-weight: 200;
 
                             display: flex;
                             align-items: center;
                             justify-content: flex-start;
                             text-align: justify;
-                            color: #111;
+                            color: #e4e4e4;
 
-                            & > .b{
-                                display: block;
-                                margin: none;
-                                font-weight: 700;
-                            }
                         }
 
                         img {
@@ -317,28 +316,39 @@ background: linear-gradient(90deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 1) 2
 
                 .promo-box {
                     flex: 1;
-                    height: 100%;
+                    height: 99.5%;
 
-                     &.fundo1 {
-                    background-image: url("../assets/Ashe_2.jpg");
-                    background-size: cover;
-                    background-position: 100% 20%;
-                    box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 1000px rgba(0, 0, 0, .2);
-                }
+                    border: solid 2px #044545;
+                    border-left: none;
 
-                &.fundo2 {
-                    background-image: url("../assets/Volibear_1.jpg");
-                    background-size: cover;
-                    background-position: center 5%;
-                    box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 1000px rgba(0, 0, 0, .2);
-                }
+                    &.fundo1 {
+                        background-image: url("../assets/Jayce_1.jpg");
+                        background-size: cover;
+                        background-position-x: 45%;
+                        background-blend-mode: screen;
+                        background-color: #222;
+                        box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .3);
 
-                &.fundo3 {
-                    background-image: url("../assets/LOR_1.jpg");
-                    background-size: cover;
-                    background-position: 80% center;
-                    box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 1000px rgba(0, 0, 0, .2);
-                }
+
+                    }
+
+                    &.fundo2 {
+                        background-image: url("../assets/Thresh_1.jpg");
+                        background-size: cover;
+                        background-position: center 5%;
+                        background-blend-mode: screen;
+                        background-color: #222;
+                        box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .3);
+                    }
+
+                    &.fundo3 {
+                        background-image: url("../assets/LOR_2.jpg");
+                        background-size: cover;
+                        background-position-x: 35%;
+                        background-blend-mode: screen;
+                        background-color: #222;
+                        box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .3);
+                    }
                 }
             }
         }
