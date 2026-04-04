@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 
 body {
@@ -50,10 +50,35 @@ body {
 
         .nav-links {
             width: 40%;
+            
 
             display: flex;
             align-items: center;
             justify-content: space-between;
+
+            gap: 2%;
+
+            a{
+                width: 100%;
+                height: 11.6vh;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                color: #E4E4e4;
+
+                font-family: "Montserrat", sans-serif;
+                font-size: 3vh;
+
+                text-decoration: none;
+            }
+
+            a:hover {
+                color: #044545;
+                background-color: #111;
+                border-bottom: solid 4px #044545;
+            }
         }
 
         .login {
@@ -68,6 +93,7 @@ body {
 
     .banner {
         width: 100%;
+        height: 80vh;
 
         display: flex;
         align-items: center;
@@ -79,9 +105,9 @@ body {
             height: 50vh;
             padding: 15vh 0;
 
-            background-image: url("../assets/Heimerdinger_1.png");
+            background-image: url("../assets/Ryze_2.jpg");
             background-size: cover;
-            background-position-y: -15vh;
+            background-position-y: top;
             background-blend-mode: screen;
             background-color: #222;
             box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .5);
@@ -123,43 +149,7 @@ body {
                 }
             }
 
-            .btn {
-                width: 25vh;
-                height: 10vh;
 
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                outline: solid 2px #E4E4e4;
-
-                transition: all .3s ease;
-
-                .btn_dentro {
-                    width: 96%;
-                    height: 92%;
-
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-
-                    background-color: #044545;
-
-                    text-decoration: none;
-                    color: #E4E4e4;
-
-                    font-family: "Montserrat", sans-serif;
-                    font-size: 2vh;
-                    font-weight: 400;
-
-                    transition: all .3s ease;
-                }
-
-                .btn_dentro:hover {
-                    filter: brightness(1.4);
-                }
-            }
         }
 
         &.promo {
@@ -248,6 +238,7 @@ body {
                                 background-color: #044545;
 
                                 &.active {
+                                    cursor: default;
                                     background-color: #111;
                                     border: solid 2px #044545;
                                     border-bottom: none;
@@ -348,6 +339,226 @@ body {
                         background-blend-mode: screen;
                         background-color: #222;
                         box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .3);
+                    }
+                }
+            }
+        }
+    }
+
+    .saibaMais {
+        width: 100%;
+        height: 80vh;
+
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        background-color: rgba(4, 69, 69, 0.3);
+        box-shadow: inset 0px 0px 200px 200px rgba(17, 17, 17, 1);
+
+        .imgSaibaMais {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .textoSaibaMais {
+
+            flex: 1;
+            height: 100%;
+
+            padding: 0 5%;
+
+            color: #E4E4e4;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            font-family: "Montserrat", sans-serif;
+            font-size: 2vh;
+            text-align: justify;
+            
+
+            h1 {
+                font-size: 5vh;
+                border-bottom: solid 2px #E4E4e4;
+                font-weight: 900;
+            }
+
+            .btn {
+                margin-top: 5%;
+                width: 20vh;
+                height: 8vh;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                outline: solid 2px #E4E4e4;
+
+                transition: all .3s ease;
+
+                .btn_dentro {
+                    width: 96%;
+                    height: 92%;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+
+                    background-color: #044545;
+
+                    text-decoration: none;
+                    color: #E4E4e4;
+
+                    font-family: "Montserrat", sans-serif;
+                    font-size: 2vh;
+                    font-weight: 400;
+
+                    transition: all .3s ease;
+                }
+
+                .btn_dentro:hover {
+                    filter: brightness(1.4);
+                }
+            }
+        }
+    }
+
+    .contato {
+        width: 100%;
+        height: auto;
+        padding: 5% 0;
+
+        background-color: #111;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .faleConosco {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            padding: 5% 0;
+
+            background-color: rgba(22, 22, 22, 0.9);
+            box-shadow: inset -200px 0px 100px 50px rgba(4, 69, 69, 0.1);
+
+            border-top: solid 2px #044545;
+            border-bottom: solid 2px #044545;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10%;
+
+            color: #E4E4e4;
+            font-family: "Montserrat", sans-serif;
+            font-size: 3vh;
+
+            .faleConoscoUpper {
+                width: 100%;
+                max-width: 900px;
+                height: auto;
+                padding: 2% 0;
+
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+
+                input {
+                    width: 95%;
+                    height: 5vh;
+                    padding: 0 2%;
+
+                    background-color: #111;
+                    color: #E4E4e4;
+
+                    font-family: "Poppins", sans-serif;
+                    font-size: 1.5vh;
+
+                    border: solid 2px #044545;
+                    border-radius: 5px;
+                }
+
+            }
+
+            .faleConoscoBottom {
+                width: 100%;
+                max-width: 900px;
+                height: auto;
+
+                gap: 1rem;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                textarea {
+                    width: 100%;
+                    height: 20vh;
+                    padding: 2%;
+
+                    background-color: #111;
+                    color: #E4E4e4;
+
+                    font-family: "Poppins", sans-serif;
+                    font-size: 1.5vh;
+
+                    border: solid 2px #044545;
+                    border-radius: 5px;
+
+                    resize: none;
+                }
+
+                textarea::active {
+                    outline: solid 2px #044545;
+                }
+
+                .btn {
+                    width: 12vh;
+                    height: 6vh;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    outline: solid 2px #E4E4e4;
+
+                    transition: all .3s ease;
+
+                    .btn_dentro {
+                        width: 95%;
+                        height: 90%;
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        text-align: center;
+
+                        background-color: #044545;
+
+                        text-decoration: none;
+                        color: #E4E4e4;
+
+                        font-family: "Montserrat", sans-serif;
+                        font-size: 1.5vh;
+                        font-weight: 400;
+
+                        transition: all .3s ease;
+                    }
+
+                    .btn_dentro:hover {
+                        filter: brightness(1.4);
                     }
                 }
             }
