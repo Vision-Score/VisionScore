@@ -97,7 +97,8 @@ body {
             align-items: center;
             justify-content: space-evenly;
 
-            background-color: #044545;
+            transition: all 0.2s ease-in-out;
+
 
             a {
                 text-decoration: none;
@@ -107,6 +108,8 @@ body {
             }
 
             &:hover {
+
+                background-color: #044545;
                 filter: brightness(1.2);
             }
         }
@@ -491,7 +494,7 @@ body {
                 justify-content: center;
 
                 textarea {
-                    width: 100%;
+                    width: 95.5%;
                     height: 20vh;
                     padding: 2%;
 
