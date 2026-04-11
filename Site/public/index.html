@@ -54,19 +54,10 @@
             <div class="descricaoCard">Tenha acesso à análise detalhada do desempenho individual dos jogadores: <b>Dano</b>, <b>Healing</b>, <b>CS/min</b> e outras métricas importantes.</div>
             <div class="metricaCard">+ DE <b>50</b> PARAMETROS ANALISADOS</div>
           </div>
-          <div class="cardCarrossel">
-            <div class="tagCard">SUA EQUIPE</div>
-            <img src="./assets/Ranged_icon.png" alt="" class="icon">
-            <div class="tituloCard">DESEMPENHO</div>
-            <div class="descricaoCard">Compare o <b>desempenho</b> de seus jogadores em relação às outras equipes, em <b>diversas métricas</b>, com um clique.</div>
-            <div class="metricaCard"><b>DADOS</b> DE DIVERSOS CAMPEONATOS</div>
-          </div>
-          <div class="cardCarrossel">
-            <div class="tagCard">SUA EQUIPE</div>
-            <img src="./assets/Summoner_spell_icon.png" alt="" class="icon">
-            <div class="tituloCard">ESTRATÉGIA</div>
-            <div class="descricaoCard">Analise suas tendências e estratégias e como se comparam com o que está dominando a cena de League of Legends.</div>
-            <div class="metricaCard">INFORMAÇÕES DE <b>TODOS OS TIMES</b> ATIVOS</div>
+
+          <div class="texto-promo">
+            <span>Vision Score reúne em um só lugar as métricas que importam para equipes competitivas de League of Legends. Acompanhe a performance do seu time em campeonatos, identifique padrões e tome decisões estratégicas com base em dados.</span>
+            <img src="./assets/Akali_LoL_Promo_01.webp">
           </div>
         </div>
         <div class="botao" onclick="changeInfo(1)">
@@ -128,51 +119,12 @@
 
 <script>
 
-  const infos = [`<div class="cardCarrossel">
-            <div class="tagCard">SUA EQUIPE</div>
-            <img src="./assets/Acquisition_range.png" alt="" class="icon">
-            <div class="tituloCard">PERFORMANCE</div>
-            <div class="descricaoCard">Tenha acesso à análise detalhada do desempenho individual dos jogadores: <b>Dano</b>, <b>Healing</b>, <b>CS/min</b> e outras métricas importantes.</div>
-            <div class="metricaCard">+ DE <b>50</b> PARAMETROS ANALISADOS</div>
-          </div>
-          <div class="cardCarrossel">
-            <div class="tagCard">SUA EQUIPE</div>
-            <img src="./assets/Ranged_icon.png" alt="" class="icon">
-            <div class="tituloCard">DESEMPENHO</div>
-            <div class="descricaoCard">Compare o <b>desempenho</b> de seus jogadores em relação às outras equipes, em <b>diversas métricas</b>, com um clique.</div>
-            <div class="metricaCard"><b>DADOS</b> DE DIVERSOS CAMPEONATOS</div>
-          </div>
-          <div class="cardCarrossel">
-            <div class="tagCard">SUA EQUIPE</div>
-            <img src="./assets/Summoner_spell_icon.png" alt="" class="icon">
-            <div class="tituloCard">ESTRATÉGIA</div>
-            <div class="descricaoCard">Analise suas tendências e estratégias e como se comparam com o que está dominando a cena de League of Legends.</div>
-            <div class="metricaCard">INFORMAÇÕES DE <b>TODOS OS TIMES</b> ATIVOS</div>
-          </div>`,
-    `<div class="cardCarrossel">
-            <div class="tagCard">SEU ADVERSÁRIO</div>
-            <img src="./assets/TFT_Hybrid_Fighter.png" alt="" class="icon">
-            <div class="tituloCard">TENDÊNCIAS INDIVIDUAIS</div>
-            <div class="descricaoCard">Acesse com apenas um clique um <B>relatório detalhado</B> sobre as tendências
-              individuais dos jogadores. <b>Descubra como eles jogam</b>.</div>
-            <div class="metricaCard">+ DE <b>50</b> JOGADORES ANALISADOS</div>
-          </div>
-          <div class="cardCarrossel">
-            <div class="tagCard">SEU ADVERSÁRIO</div>
-            <img src="./assets/Selection_radius.png" alt="" class="icon">
-            <div class="tituloCard">ANÁLISE DE PLAYSTYLE</div>
-            <div class="descricaoCard">Obtenha <b>insights valiosos</b> sobre as estratégias e estilos de jogo das
-              equipes adversárias e como se posicionam em diferentes cenários de jogo, reduzindo o esforço de scouting.
-            </div>
-            <div class="metricaCard"><b>DADOS</b> ATUALIZADOS MENSALMENTE</div>
-          </div>
-          <div class="cardCarrossel">
-            <div class="tagCard">SEU ADVERSÁRIO</div>
-            <img src="./assets/Damage_rating.png" alt="" class="icon">
-            <div class="tituloCard">HISTÓRICO RECENTE</div>
-            <div class="descricaoCard">Tenha acesso ao <b>histórico de partidas recentes</b> dos seus oponentes e descubra como eles estão jogando, como responder e o que priorizar na sua preparação.</div>
-            <div class="metricaCard">ANÁLISE DE <B>TODOS</B> OS CAMPEONATOS OFICIAIS</div>
-          </div>`
+  const infos = [`<span>Vision Score reúne em um só lugar as métricas que importam para equipes competitivas de League of Legends. Acompanhe a performance do seu time em campeonatos, identifique padrões e tome decisões estratégicas com base em dados.</span>
+            <img src="./assets/Akali_LoL_Promo_01.webp">`,
+            `<span>Quer saber como seu adversário se saiu em partidas recentes? Vision Score oferece uma análise detalhada do desempenho de outros times, permitindo que você estude seus pontos fortes e fracos para se preparar melhor para os confrontos.</span>
+            <img src="./assets/Specialist_icon.png">`,
+            `<span>Fique por dentro do cenário competitivo com as análises de Vision Score. Acompanhe o desempenho dos principais times, descubra tendências e mantenha-se atualizado sobre as estratégias que estão dominando a cena de League of Legends.</span>
+            <img src="./assets/Every.png">`
   ];
 
   let currentIndex = 0;

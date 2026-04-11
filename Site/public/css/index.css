@@ -126,15 +126,18 @@ body {
         user-select: none;
 
         &.cta {
+
+            margin-top: 12vh;
+
             height: 50vh;
             padding: 15vh 0;
 
             background-image: url("../assets/Ryze_2.jpg");
             background-size: cover;
-            background-position-y: top;
+            background-position-y: 10%;
             background-blend-mode: screen;
             background-color: #222;
-            box-shadow: inset -25px 0px 100px 100px rgba(17, 17, 17, 1), inset 0 0 0 10000px rgba(0, 0, 0, .5);
+            box-shadow: inset 50px 0px 100px 100px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .2);
 
             display: flex;
             flex-direction: column;
@@ -541,8 +544,8 @@ body {
 
                         background-color: #044545;
 
-                        text-decoration: none;
-                        color: #E4E4e4;
+                            margin-bottom: 60%;
+                            padding: 0;
 
                         font-family: "Montserrat", sans-serif;
                         font-size: 1.5vh;
@@ -551,8 +554,13 @@ body {
                         transition: all .3s ease;
                     }
 
-                    .btn_dentro:hover {
-                        filter: brightness(1.4);
+                        img {
+                            position: absolute;
+                            margin-top: 25%;
+                            left: -.5%;
+                            width: 30%;
+                            z-index: 998;
+                        }
                     }
                 }
             }
@@ -563,24 +571,45 @@ body {
         width: 96%;
         height: 12vh;
 
-        padding: 0 2%;
+                .promo-box {
+                    flex: 1;
+                    margin-top: 1px;
+                    height: calc(100% - 3px);
 
         display: flex;
         align-items: center;
         justify-content: flex-end;
 
-        background-color: #000;
+                    &.fundo1 {
+                        background-image: url("../assets/Jayce_1.jpg");
+                        background-size: cover;
+                        background-position-x: 45%;
+                        background-blend-mode: screen;
+                        background-color: #222;
+                        box-shadow: inset 0px 0px 100px 50px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .1);
 
         user-select: none;
 
 
-        .copy {
-            justify-self: flex-end;
+                    &.fundo2 {
+                        background-image: url("../assets/Thresh_1.jpg");
+                        background-size: cover;
+                        background-position: center 5%;
+                        background-blend-mode: screen;
+                        background-color: #222;
+                        box-shadow: inset 0px 0px 100px 50px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .1);
+                    }
 
-            color: #E4E4e4;
-            font-family: "Montserrat", sans-serif;
-            font-size: 1.5vh;
-            font-weight: 300;
+                    &.fundo3 {
+                        background-image: url("../assets/LOR_2.jpg");
+                        background-size: cover;
+                        background-position-x: 35%;
+                        background-blend-mode: screen;
+                        background-color: #222;
+                        box-shadow: inset 0px 0px 100px 50px rgba(0, 0, 0, .8), inset 0 0 0 10000px rgba(0, 0, 0, .1);
+                    }
+                }
+            }
         }
 
     }
