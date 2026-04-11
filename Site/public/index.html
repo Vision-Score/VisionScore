@@ -4,8 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Vision Score</title>
   <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios,arrow_forward_ios" />
+  <link rel="icon" href="./assets/imgs/logo_branca.png" type="image/x-icon">
 </head>
 
 <body>
@@ -17,54 +19,98 @@
       </div>
 
       <div class="nav-links">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
+        <a href="#home">HOME</a>
+        <a href="#servicos">SERVIÇOS</a>
+        <a href="#sobre">SOBRE</a>
+        <a href="#contato">CONTATO</a>
       </div>
 
-      <div class="login">
-        <a href="#">Login</a>
+      <div class="login" href="./login.html">
+        <a href="./login.html">LOGIN</a>
       </div>
     </div>
 
-    <div class="banner cta">
+    <div class="banner cta" id="home">
       <div class="textoCta">
         <h1>VISION SCORE</h1>
         <p>ACELERE E OTIMIZE SUAS ANÁLISES</p>
       </div>
-      <div class="btn">
-        <a href="#" class="btn_dentro">SAIBA MAIS</a>
-      </div>
     </div>
 
-    <div class="banner promo">
+    <div class="banner promo" id="servicos">
       <span>ACESSE INFORMAÇÕES DETALHADAS SOBRE</span>
-      <div class="promo-container fundo1">
 
-        <div class="menu-promo">
-          <div class="navbar-menu-promo">
-            <div class="btn-promo"><button class="btn-dentro active" onclick="clickMenuPromo(this)"> A EQUIPE</button>
-            </div>
-            <div class="btn-promo"><button class="btn-dentro" onclick="clickMenuPromo(this)"> O ADVERSÁRIO</button>
-            </div>
-            <div class="btn-promo"><button class="btn-dentro" onclick="clickMenuPromo(this)"> A COMPETIÇÃO</button></div>
+      <div class="promoContainer">
+        <div class="botao" onclick="changeInfo(0)">
+          <span class="material-symbols-outlined">
+            arrow_back_ios
+          </span>
+        </div>
+        <div class="carrosselPromo">
+          <div class="cardCarrossel">
+            <div class="tagCard">SUA EQUIPE</div>
+            <img src="./assets/Acquisition_range.png" alt="" class="icon">
+            <div class="tituloCard">PERFORMANCE</div>
+            <div class="descricaoCard">Tenha acesso à análise detalhada do desempenho individual dos jogadores: <b>Dano</b>, <b>Healing</b>, <b>CS/min</b> e outras métricas importantes.</div>
+            <div class="metricaCard">+ DE <b>50</b> PARAMETROS ANALISADOS</div>
           </div>
 
           <div class="texto-promo">
             <span>Vision Score reúne em um só lugar as métricas que importam para equipes competitivas de League of Legends. Acompanhe a performance do seu time em campeonatos, identifique padrões e tome decisões estratégicas com base em dados.</span>
             <img src="./assets/Akali_LoL_Promo_01.webp">
           </div>
-
         </div>
+        <div class="botao" onclick="changeInfo(1)">
+          <span class="material-symbols-outlined">
+            arrow_forward_ios
+          </span>
+        </div>
+      </div>
+    </div>
 
+    <div class="saibaMais" id="sobre">
+      <div class="imgSaibaMais">
+        <img src="./assets/akali-promo.png" alt="Imagem Saiba Mais">
+      </div>
+      <div class="textoSaibaMais">
+        <h1>SOBRE A VISION SCORE</h1>
+        <p>Nossa plataforma centraliza e organiza as principais informações de jogo dos jogadores profissionais de
+          League of Legends, reunindo históricos de partidas, padrões de desempenho, estatísticas individuais e
+          coletivas, além de dados estratégicos tanto da sua equipe quanto dos adversários.
 
-        <div class="promo-box fundo1">
+          Os dados estão dispersos em diferentes fontes, exigindo horas de pesquisa manual e análise fragmentada. Isso
+          gera desgaste e reduz o tempo disponível para a preparação estratégica e tomada de decisão. </p>
+        <div class="btn">
+          <a class="btn_dentro">SAIBA MAIS</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contato" id="contato">
+      <div class="faleConosco">
+        ENTRE EM CONTATO
+        <div class="faleConoscoUpper">
+          <input type="text" placeholder="Nome">
+          <input type="text" placeholder="Equipe">
+          <input type="text" placeholder="Email">
+          <input type="text" placeholder="Telefone">
+        </div>
+        <div class="faleConoscoBottom">
+          <textarea class="mensagem" placeholder="Mensagem"></textarea>
+          <div class="btn">
+            <a class="btn_dentro">ENVIAR</a>
+          </div>
         </div>
       </div>
     </div>
 
 
+    <div class="footer">s
+      <div class="copy">
+        &copy; 2026 Vision Score. Todos os direitos reservados.
+      </div>
+    </div>
 
   </div>
 </body>
@@ -81,25 +127,12 @@
             <img src="./assets/Every.png">`
   ];
 
-  const info3 = `<span>Fique por dentro do cenário competitivo com as análises de Vision Score. Acompanhe o desempenho dos principais times, descubra tendências e mantenha-se atualizado sobre as estratégias que estão dominando a cena de League of Legends.</span>
-            <img src="./assets/Every.png">`;
+  let currentIndex = 0;
 
-  function clickMenuPromo(button) {
-    const buttons = document.querySelectorAll('.btn-dentro');
-    let novoFundo = 1;
-    buttons.forEach((btn, index) => {
-      if (btn === button) {
-        btn.classList.add('active');
-        novoFundo = index + 1;
-        console.log(novoFundo);
-      } else {
-        btn.classList.remove('active');
-      }
-    });
-    const promoBox = document.querySelector('.promo-box');
-    promoBox.className = `promo-box fundo${novoFundo}`;
-    const textoPromo = document.querySelector('.texto-promo');
-    textoPromo.innerHTML = `${infos[novoFundo - 1]}`;
+  function changeInfo() {
+    const carrossel = document.querySelector('.carrosselPromo');
+    carrossel.innerHTML = infos[++currentIndex % infos.length];
+    currentIndex = currentIndex % infos.length;
   }
 
 </script>
