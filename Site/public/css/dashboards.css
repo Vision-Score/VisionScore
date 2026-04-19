@@ -7,6 +7,7 @@ body {
   width: 100%;
   height: auto;
   overflow-x: hidden;
+  overflow-y: hidden;
   /* O Anjo da Guarda contra scroll horizontal */
 
   font-family: "Montserrat";
@@ -26,7 +27,7 @@ body {
 
 .header {
   width: 100%;
-  height: 18vh;
+  height: 12vh;
   box-sizing: border-box;
   padding: 0 4%;
 
@@ -208,7 +209,7 @@ body {
 .contentTitle {
 
   width: 100%;
-  height: 100%;
+  height: 3vh;
 
   font-weight: 400;
 
@@ -250,6 +251,7 @@ body {
 .strategicProfile {
 
   flex: 1;
+  height: 45vh;
 
   display: flex;
   flex-direction: column;
@@ -343,6 +345,7 @@ body {
 
 .gameIdentity {
   flex: 1;
+  height: 45vh;
 
   display: flex;
   flex-direction: column;
@@ -366,7 +369,6 @@ body {
     font-family: "Montserrat";
     font-weight: 800;
     font-size: 32px;
-    line-height: 200%;
     letter-spacing: 0%;
 
 
@@ -442,27 +444,111 @@ body {
   width: 100%;
   height: auto;
 
+  margin-top: 1%;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 
-  background-color: red;
+  gap: 30px;
 
-  gap: 20px;
 
 }
 
 .pieChart {
 
   flex: 1;
-  background-color: green;
+  height: 30vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #1F1F1F;
+
+  border-radius: 2vh;
+
+  box-shadow: 0px 0px 10px 5px #00000060;
+
+  color: #fff;
 
 }
 
 .mainKPIs {
 
   flex: 1;
-  background-color: blue;
+  height: 30vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: start;
+
+  gap: 5%;
+
+
+  .kpi {
+    flex: 1;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1%;
+
+    background-color: #1F1F1F;
+
+    border-radius: 2vh;
+
+    box-shadow: 0px 0px 10px 5px #00000060;
+
+    color: #FFFFFF;
+
+    .tituloKpi {
+      width: 100%;
+      height: auto;
+
+      font-family: "Montserrat";
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+
+    }
+
+    .conteudoKpi {
+      width: 100%;
+      height: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-family: "Montserrat";
+      font-weight: 800;
+      font-size: 45px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+
+    }
+
+    .subtituloKpi {
+      width: 100%;
+      height: auto;
+
+      font-family: "Montserrat";
+      font-weight: 700;
+      font-size: 19px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+
+    }
+  }
 
 }
