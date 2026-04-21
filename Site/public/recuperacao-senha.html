@@ -4,35 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperação de senha Vision Score</title>
+    <title>Login Vision Score</title>
     <link rel="stylesheet" href="css/recuperacao-senha.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+    <link rel="icon" href="./assets/imgs/logo_branca.png" type="image/x-icon">
 </head>
 
+<div class="mascara"></div>
+
 <body>
-    <main>
-        <div id="cabecalho-container">
-            <img id="logo" src="./assets/imgs/logo_branca.png" alt="Logo Vision Score">
+    <img src="./assets/imgs/logo_branca.png" alt="Logo Vision Score">
 
-            <h2 id="subtitulo">Recuperação de senha</h2>
+    <h1>Vision Score</h1>
+
+    <form>
+        <div class="container-texto">
+            <h2>Recupere seu Acesso</h2>
+
+            <p>
+                Informe seu e-mail abaixo e enviaremos um link para restaurar sua entrada no sistema
+            </p>
         </div>
 
-        <p id="descricao">
-            Para fazer a recuperação da sua senha, informe-nos seu e-mail e te enviaremos o código para realizar a
-            alteração de sua senha!
-        </p>
+        <div class="input-flutuante">
+            <input type="email" placeholder="" id="input-email" autocomplete="off">
 
-        <input type="email" placeholder="E-mail">
-
-        <div id="direcionadores-container">
-            <button>Enviar</button>
-
-            <a href="./login.html">Cancelar</a>
+            <label for="input-email">E-mail de cadastro</label>
         </div>
-    </main>
+
+
+        <div class="container-botao">
+            <button type="button" id="btn-recuperar-senha">Enviar Link de Recuperação</button>
+
+            <a href="./login.html">Voltar ao Login</a>
+        </div>
+
+        <a href="./index.html" class="link-voltar">
+            <i class="fa-solid fa-arrow-left"></i>
+            Voltar para o site institucional
+        </a>
+    </form>
+
+    <div class="mensagem">
+        <div class="borda-mensagem"></div>
+
+        <p>"O maior estrategista é aquele que nunca perde acesso à sua visão"</p>
+    </div>
 </body>
 
 </html>
+<script src="./js/login.js"></script>
