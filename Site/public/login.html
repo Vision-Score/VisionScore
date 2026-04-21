@@ -11,38 +11,51 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+    <link rel="icon" href="./assets/imgs/logo_branca.png" type="image/x-icon">
 </head>
 
+<div class="mascara"></div>
+
 <body>
-    <a href="./index.html" id="link-voltar">
-        <i class="fa-solid fa-arrow-left"></i>
-        Voltar
-    </a>
+    <img src="./assets/imgs/logo_branca.png" alt="Logo Vision Score">
 
-    <main>
-        <div id="cabecalho-container">
-            <img src="assets/imgs/logo_branca.png" alt="Logo Vision Score" id="logo">
+    <h1>Vision Score</h1>
 
-            <h2 id="subtitulo">Entre em sua conta!</h2>
+    <form>
+        <div class="container-texto">
+            <h2>Bem-vindo, Treinador</h2>
+            <p>Acesse seu sistema e faça sua preparação pré-jogo!</p>
         </div>
 
-        <div id="inputs-container">
-            <input type="text" placeholder="Email ou telefone" id="input-email">
+        <div class="input-container">
+            <div class="input-flutuante">
+                <input type="email" placeholder="" id="input-email" autocomplete="off">
 
-            <div id="senha-container">
-                <input type="password" placeholder="Senha" id="input-senha">
+                <label for="input-email">E-mail</label>
+            </div>
 
-                <span>
-                    Esqueceu a senha?
-                    <a href="./recuperacao-senha.html" id="link-recuperar-senha">Clique aqui</a>
-                </span>
+            <div class="input-flutuante">
+                <input type="password" placeholder="" id="input-senha">
+
+                <i class="fa-solid fa-eye icone-senha" id="password-icone"></i>
+                <i class="fa-solid fa-eye-slash icone-senha" id="text-icone"></i>
+
+                <label for="input-senha">Senha</label>
             </div>
         </div>
 
-        <div id="direcionadores-container">
-            <button>Acessar conta</button>
+        <div class="container-botao">
+            <button type="button" id="btn-login">Acessar Conta</button>
+
+            <a href="./recuperacao-senha.html">Esqueceu a senha?</a>
         </div>
-    </main>
+
+        <a href="./index.html" class="link-voltar">
+            <i class="fa-solid fa-arrow-left"></i>
+            Voltar para o site institucional
+        </a>
+    </form>
 </body>
 
 </html>
+<script src="./js/login.js"></script>
