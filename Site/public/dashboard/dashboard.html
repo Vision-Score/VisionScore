@@ -15,12 +15,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
+    <script src="../js/renderComponents.js"></script>
 </head>
 
 <body>
     <div class="main">
+
+        <div id="sidebarContainer">
+        </div>
+
+        <div id="teamListContainer">
+        </div>
+
         <div class="header">
-            <div class="burgerMenu">
+            <div class="burgerMenu" onclick="switchSidebar()">
                 <i class="material-icons">menu</i>
             </div>
             <div class="navBar">
@@ -37,7 +45,7 @@
                     <div class="lastGameLoss">D</div>
                 </div>
             </div>
-            <div class="viewTeams">
+            <div class="viewTeams" onclick="switchTeamList()">
                 <i class="material-icons">filter_alt</i>
             </div>
         </div>
@@ -166,3 +174,67 @@
 </body>
 
 </html>
+
+<script>
+
+    renderSidebar(document.getElementById("sidebarContainer"), "dashboard", {
+        name: "Mitohara",
+        role: "Coach",
+        imageUrl: "../assets/playerIcons/faker.png",
+        nameTeam: "T1",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    renderTeamList(document.getElementById("teamListContainer"), [
+        {
+            name: "T1",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Gen.G",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "KT Rolster",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Hanwha Life Esports",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "DRX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Liiv SANDBOX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Dplus KIA",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Kwangdong Freecs",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Nongshim RedForce",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        }
+    ]);
+
+    function switchSidebar() {
+        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
+    }
+
+    function switchTeamList() {
+        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
+    }
+
+
+</script>

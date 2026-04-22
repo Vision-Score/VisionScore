@@ -1,0 +1,316 @@
+.main {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #242424;
+
+    padding: 0 2% 2% 2%;
+}
+
+.header {
+    width: 100%;
+    height: 12vh;
+    box-sizing: border-box;
+    padding: 1.5% 4% 0 4%;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .burgerMenu {
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: start;
+
+        i {
+            font-size: 45px;
+            color: #e4e4e4;
+            transition: all .1s ease-in-out;
+            cursor: pointer;
+        }
+
+        i:hover {
+            transform: scale(1.1);
+        }
+    }
+
+
+
+    .navBar {
+        height: 100%;
+
+        position: absolute;
+        left: 0;
+        right: 1%;
+        margin: 0 auto;
+        width: fit-content;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 20px;
+
+        button {
+            height: 6vh;
+
+            text-decoration: none;
+            font-size: 23px;
+            font-weight: 400;
+            font-family: "Montserrat";
+
+            border: none;
+            border-bottom: solid 2px transparent;
+
+            background-color: transparent;
+            color: #e4e4e4;
+            cursor: pointer;
+
+            &.active {
+                border-bottom: solid 2px #e4e4e4;
+                font-weight: 800;
+                cursor: default;
+            }
+
+            &:hover {
+                border-bottom: solid 2px #e4e4e4;
+            }
+        }
+    }
+
+    .viewTeams {
+        height: 100%;
+        margin-left: auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: end;
+
+        i {
+            font-size: 45px;
+            color: #e4e4e4;
+            transition: all .1s ease-in-out;
+            cursor: pointer;
+        }
+
+        i:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 0 2% 0;
+
+    background-color: #242424;
+
+    .mainContainer {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        .mainContainerUpper {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            .attackMap {
+                flex: 1;
+                height: 45vh;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                padding: 2% 1% 2% 1%;
+
+                background-color: #1F1F1F;
+                border: 2px solid #0F8B8B;
+
+                border-radius: 2vh;
+
+                box-shadow: 0px 0px 10px 5px #00000060;
+
+                .attackMapTitle {
+                    width: 100%;
+                    height: 20%;
+
+                    font-family: "Montserrat";
+                    font-weight: 800;
+                    font-size: 32px;
+                    letter-spacing: 0%;
+
+
+                    color: #e4e4e4;
+                    border-bottom: solid 2px #0F8B8B;
+
+                    margin-bottom: 2%;
+                }
+
+                .attackMapContent {
+                    width: 100%;
+                    height: 90%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+
+                    .attackInfo {
+                        flex: 1;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+
+                        padding: 1%;
+
+                        &:not(:last-child) {
+                            border-right: solid 2px #0F8B8B;
+                        }
+
+                        .attackInfoData {
+                            width: 100%;
+                            height: 30%;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+
+                            font-family: "Open Sans";
+                            font-weight: 800;
+                            font-size: 52px;
+                            letter-spacing: 0%;
+
+
+                            color: #e4e4e4;
+                        }
+
+                        .attackInfoText {
+                            width: 90%;
+                            height: 50%;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+
+                            font-family: "Open Sans";
+                            font-weight: 200;
+                            font-size: 20px;
+                            letter-spacing: 0%;
+                            text-align: center;
+
+
+                            color: #e4e4e4;
+                        }
+                    }
+                }
+            }
+        }
+
+        .mainContainerLower {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+
+            .gamePatterns {
+                flex: 1;
+                height: 45vh;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 2vh;
+
+                .gamePatternsTitle {
+                    width: 100%;
+                    height: 20%;
+
+                    font-family: "Montserrat";
+                    font-weight: 800;
+                    font-size: 32px;
+                    letter-spacing: 0%;
+
+                    margin-bottom: 1%;
+
+                    color: #e4e4e4;
+                }
+
+                .gamePatternsContent {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+
+                    gap: 1.5%;
+
+                    .gamePattern {
+                        flex: 1;
+                        height: 28vh;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+
+                        padding: 1%;
+
+                        background-color: #1F1F1F;
+                        border: 2px solid #0F8B8B;
+
+                        border-radius: 2vh;
+
+                        box-shadow: 0px 0px 10px 5px #00000060;
+
+
+                        .gamePatternData {
+                            width: 100%;
+                            height: 10vh;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+
+                            font-family: "Open Sans";
+                            font-weight: 800;
+                            font-size: 24px;
+                            letter-spacing: 0%;
+                            text-align: center;
+
+
+                            color: #e4e4e4;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

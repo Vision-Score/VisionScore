@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard-time.css">
+    <link rel="stylesheet" href="../css/dashboards.css">
+    <link rel="stylesheet" href="../css/dashboard-time-adversario.css">
+    <link rel="stylesheet" href="../css/popup-jogador.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/renderComponents.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div id="sidebarContainer">
+        </div>
+        <div id="teamListContainer">
+        </div>
+        <div class="header">
+            <div class="burgerMenu" onclick="switchSidebar()">
+                <i class="material-icons">menu</i>
+            </div>
+            <div id="teamProfile" style="width: 20%; height: 90%; margin-left: 5%;">
+            </div>
+            <div class="navBar">
+                <button onclick="window.location.href = 'dashboard.html'">Visão geral</button>
+                <button onclick="window.location.href = 'dashboard-time.html'">Meu Time</button>
+            </div>
+            <div class="viewTeams" onclick="switchTeamList()">
+                <i class="material-icons">filter_alt</i>
+            </div>
+        </div>
+        <div class="content">
+            <div class="mainContainer">
+                <div class="mainContainerUpper">
+                    <div class="strategicProfile">
+                        <div class="strategicProfileTitle">
+                            Perfil Estratégico
+                        </div>
+                        <div class="strategicProfileContent">
+                            <div class="ProfileItem">
+                                <img src="../assets/icons/stopwatch.svg" alt="" class="icon">
+                                <div class="itemTitle">Pressão Early:</div>
+                                <div class="itemValue">Alta</div>
+                            </div>
+                            <div class="ProfileItem">
+                                <img src="../assets/icons/target.svg" alt="" class="icon">
+                                <div class="itemTitle">Controle de Objetivo:</div>
+                                <div class="itemValue">Médio</div>
+                            </div>
+                            <div class="ProfileItem">
+                                <img src="../assets/icons/visibility.svg" alt="" class="icon">
+                                <div class="itemTitle">Setup de Visão:</div>
+                                <div class="itemValue">Forte</div>
+                            </div>
+                            <div class="ProfileItem">
+                                <img src="../assets/icons/swords.svg" alt="" class="icon">
+                                <div class="itemTitle">Execução de Teamfight:</div>
+                                <div class="itemValue">Forte</div>
+                            </div>
+                            <div class="ProfileItem">
+                                <img src="../assets/icons/hourglass.svg" alt="" class="icon">
+                                <div class="itemTitle">Late Game:</div>
+                                <div class="itemValue">Fraco</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attackMap">
+                        <div class="attackMapTitle">
+                            Mapa de Ataque
+                        </div>
+                        <div class="attackMapContent">
+                            <div class="attackInfo">
+                                <div class="attackInfoData">
+                                    72%
+                                </div>
+                                <div class="attackInfoText">
+                                    Das primeiras kills acontecem no bot.
+                                </div>
+                            </div>
+                            <div class="attackInfo">
+                                <div class="attackInfoData">
+                                    65%
+                                </div>
+                                <div class="attackInfoText">
+                                    Dos primeiros pathings são para o top side.
+                                </div>
+                            </div>
+                            <div class="attackInfo">
+                                <div class="attackInfoData">
+                                    MID
+                                </div>
+                                <div class="attackInfoText">
+                                    Costuma sair da lane antes dos 15 minutos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mainContainerLower">
+                    <div class="gamePatterns">
+                        <div class="gamePatternsTitle">
+                            Padrões de Jogo
+                        </div>
+                        <div class="gamePatternsContent">
+                            <div class="gamePattern">
+                                <div class="gamePatternData">
+                                    Sempre invade antes do primeiro clear.
+                                </div>
+                            </div>
+                            <div class="gamePattern">
+                                <div class="gamePatternData">
+                                    Não joga pelo segundo herald.
+                                </div>
+                            </div>
+                            <div class="gamePattern">
+                                <div class="gamePatternData">
+                                    Costuma stackar dragões.
+                                </div>
+                            </div>
+                            <div class="gamePattern">
+                                <div class="gamePatternData">
+                                    Prefere composições de scaling.
+                                </div>
+                            </div>
+                            <div class="gamePattern">
+                                <div class="gamePatternData">
+                                    Costuma dar prioridade para o bot side.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
+
+<script>
+    renderTeamProfile(document.getElementById('teamProfile'), {
+        name: "INTZ",
+        coach: "Coach: Mitohara",
+        logoUrl: "../assets/icons/intzlogo.png"
+    });
+
+    function switchSidebar() {
+        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
+    }
+
+    function switchTeamList() {
+        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
+    }
+
+    // renderiza a sidebar. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time-adversario", {
+        name: "Mitohara",
+        role: "Coach",
+        imageUrl: "../assets/playerIcons/faker.png",
+        nameTeam: "T1",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    // renderiza a lista de times. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    renderTeamList(document.getElementById("teamListContainer"), [
+        {
+            name: "T1",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Gen.G",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "KT Rolster",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Hanwha Life",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "DRX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Liiv SANDBOX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Kwangdong Freecs",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Nongshim RedForce",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "OK Savings Bank BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        }
+    ]);
+</script>

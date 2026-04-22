@@ -17,10 +17,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/renderComponents.js"></script>
 </head>
 
 <body>
     <div class="main">
+        <div id="sidebarContainer">
+        </div>
+        <div id="teamListContainer">
+        </div>
         <div id="popupJogador" class="hidden">
             <div class="popupJogadorContent">
                 <div class="sideBar">
@@ -213,21 +218,16 @@
             </div>
         </div>
         <div class="header">
-            <div class="burgerMenu">
+            <div class="burgerMenu" onclick="switchSidebar()">
                 <i class="material-icons">menu</i>
             </div>
-            <div class="teamProfile">
-                <img src="../assets/icons/t1logo.png" alt="">
-                <div class="teamProfileContent">
-                    <div class="teamName">T1</div>
-                    <div class="teamCoach">Coach: Mata</div>
-                </div>
+            <div id="teamProfile" style="width: 20%; height: 90%; margin-left: 5%;">
             </div>
             <div class="navBar">
                 <button onclick="window.location.href = 'dashboard.html'">Visão geral</button>
                 <button class="active">Meu Time</button>
             </div>
-            <div class="viewTeams">
+            <div class="viewTeams" onclick="switchTeamList()">
                 <i class="material-icons">filter_alt</i>
             </div>
         </div>
@@ -293,105 +293,15 @@
                 </div>
                 <div class="mainContainerLower">
                     <div class="players">
-                        <div class="playerCard" onclick="switchPopupJogador()">
-                            <img src="../assets/icons/Top_icon.png" alt="" class="roleIcon">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/Doran.png" alt="">
-                                <div class="playerName">Doran</div>
-                            </div>
-
-                            <div class="playerInfo">
-                                <img src="../assets/icons/bow.svg" alt="">
-                                <span>~ 553 DpM</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/coins.svg" alt="">
-                                <span>▼250g @ 15</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/aim.svg" alt="">
-                                <span>~ 3.54 KDA</span>
-                            </div>
+                        <div id="playerCard1" onclick="switchPopupJogador()">
                         </div>
-                        <div class="playerCard" onclick="switchPopupJogador()">
-                            <img src="../assets/icons/Jungle_icon.png" alt="" class="roleIcon">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/Oner.png" alt="">
-                                <div class="playerName">Oner</div>
-                            </div>
-
-                            <div class="playerInfo">
-                                <img src="../assets/icons/swords.svg" alt="">
-                                <span>34% First Bloods</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/coins.svg" alt="">
-                                <span>▲976g @ 15</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/aim.svg" alt="">
-                                <span>~ 9.24 KDA</span>
-                            </div>
+                        <div id="playerCard2" onclick="switchPopupJogador()">
                         </div>
-                        <div class="playerCard" onclick="switchPopupJogador()">
-                            <img src="../assets/icons/Middle_icon.png" alt="" class="roleIcon">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/faker.png" alt="">
-                                <div class="playerName">Faker</div>
-                            </div>
-
-                            <div class="playerInfo">
-                                <img src="../assets/icons/bow.svg" alt="">
-                                <span>~ 698 DpM</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/coins.svg" alt="">
-                                <span>▲960g @ 15</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/aim.svg" alt="">
-                                <span>~ 12.3 KDA</span>
-                            </div>
+                        <div id="playerCard3" onclick="switchPopupJogador()">
                         </div>
-                        <div class="playerCard" onclick="switchPopupJogador()">
-                            <img src="../assets/icons/Bottom_icon.png" alt="" class="roleIcon">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/Peyz.png" alt="">
-                                <div class="playerName">Peyz</div>
-                            </div>
-
-                            <div class="playerInfo">
-                                <img src="../assets/icons/bow.svg" alt="">
-                                <span>~ 893 DpM</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/coins.svg" alt="">
-                                <span>▲2250g @ 15</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/aim.svg" alt="">
-                                <span>~ 10.2 KDA</span>
-                            </div>
+                        <div id="playerCard4" onclick="switchPopupJogador()">
                         </div>
-                        <div class="playerCard" onclick="switchPopupJogador()">
-                            <img src="../assets/icons/Support_icon_WR.png" alt="" class="roleIcon">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/Keria.png" alt="">
-                                <div class="playerName">Keria</div>
-                            </div>
-
-                            <div class="playerInfo">
-                                <img src="../assets/icons/target.svg" alt="">
-                                <span>3.1 Visão/Min</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/visibility.svg" alt="">
-                                <span> 6.5 Deny @ 30</span>
-                            </div>
-                            <div class="playerInfo">
-                                <img src="../assets/icons/aim.svg" alt="">
-                                <span>~ 18.2 KDA</span>
-                            </div>
+                        <div id="playerCard5" onclick="switchPopupJogador()">
                         </div>
                     </div>
                 </div>
@@ -406,8 +316,134 @@
         document.getElementById("popupJogador").classList.toggle("hidden");
     }
 
-    const ctx = document.getElementById('myChart');
+    function switchSidebar() {
+        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
+    }
 
+    function switchTeamList() {
+        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
+    }
+
+    // renderiza a lista de times. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    renderTeamList(document.getElementById("teamListContainer"), [
+        {
+            name: "T1",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Gen.G",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "KT Rolster",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Hanwha Life",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "DRX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Liiv SANDBOX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Kwangdong Freecs",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Nongshim RedForce",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "OK Savings Bank BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        }
+    ]);
+
+    // renderiza a sidebar. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time", {
+        name: "Mitohara",
+        role: "Coach",
+        imageUrl: "../assets/playerIcons/faker.png",
+        nameTeam: "T1",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    // renderiza o compontente de identificação do time.
+    renderTeamProfile(document.getElementById('teamProfile'), {
+        name: "T1",
+        coach: "Coach: Mata",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    // renderiza os playerCards, substituir por retorno do backend com um forEach.
+    renderPlayerCard(document.getElementById('playerCard1'), {
+        name: "Doran",
+        position: "Top",
+        roleIconUrl: "../assets/icons/Top_icon.png",
+        imageUrl: "../assets/playerIcons/Doran.png",
+        stats: [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 553 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▼250g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 3.54 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard2'), {
+        name: "Oner",
+        position: "Jungle",
+        roleIconUrl: "../assets/icons/Jungle_icon.png",
+        imageUrl: "../assets/playerIcons/Oner.png",
+        stats: [
+            { iconUrl: "../assets/icons/swords.svg", value: "34% First Bloods" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▲976g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 9.24 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard3'), {
+        name: "Faker",
+        position: "Mid",
+        roleIconUrl: "../assets/icons/Middle_icon.png",
+        imageUrl: "../assets/playerIcons/faker.png",
+        stats: [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 698 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▲960g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 12.3 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard4'), {
+        name: "Peyz",
+        position: "Bot",
+        roleIconUrl: "../assets/icons/Bottom_icon.png",
+        imageUrl: "../assets/playerIcons/Peyz.png",
+        stats: [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 893 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▲2250g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 10.2 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard5'), {
+        name: "Keria",
+        position: "Support",
+        roleIconUrl: "../assets/icons/Support_icon_WR.png",
+        imageUrl: "../assets/playerIcons/Keria.png",
+        stats: [
+            { iconUrl: "../assets/icons/target.svg", value: "3.1 Visão/Min" },
+            { iconUrl: "../assets/icons/visibility.svg", value: " 6.5 Deny @ 30" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 18.2 KDA" }
+        ]
+    });
+
+
+    // renderiza o gráfico de desempenho do jogador.
+    const ctx = document.getElementById('myChart');
     new Chart(ctx, {
         type: 'radar',
         data: {
