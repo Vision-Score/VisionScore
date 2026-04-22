@@ -9,14 +9,15 @@
 }
 
 @keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes loading {
@@ -249,13 +250,28 @@ button:active {
 }
 
 @media (max-width: 1024px) {
-    #logo {
-        width: 120px;
+
+    h1 {
+        margin-left: 0rem;
     }
 
-    main {
-        height: 80vh;
-        width: 85vw;
+    body {
+        align-items: center;
+    }
+
+    form {
+        height: 50vh;
+        width: 60%;
+        margin-left: 0rem;
+    }
+
+    button {
+        margin-left: 25%;
+        width: 50%;
+    }
+
+    #logo {
+        width: 120px;
     }
 
     #inputs-container input {
@@ -264,7 +280,6 @@ button:active {
 
     #inputs-container input,
     button {
-        width: 70%;
         transition: none;
     }
 
