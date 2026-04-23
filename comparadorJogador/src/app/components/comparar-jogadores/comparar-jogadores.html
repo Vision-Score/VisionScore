@@ -1,0 +1,17 @@
+<div class="main-content">
+    <div class="header">
+        <div class="goBack" onclick="navegarParaDashboard()">
+            <i class="material-icons">arrow_back</i>
+        </div>
+    </div>
+    <div class="content">
+        <div class="title">
+            Comparar Jogadores
+        </div>
+        <div class="compare-content">
+            <app-playercard [player]="player"></app-playercard>
+            <div class="versus">VS</div>
+            <app-playercard [player]=""></app-playercard>
+        </div>
+    </div>
+</div>
