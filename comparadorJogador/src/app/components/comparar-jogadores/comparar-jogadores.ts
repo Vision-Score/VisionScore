@@ -32,6 +32,10 @@ export class CompararJogadores {
       { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
       { name: 'Abates por jogo', value: '7.4', icon: 'arrow_upward' },
       { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
+      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
+      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
+      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
+      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
     ],
   };
 }
