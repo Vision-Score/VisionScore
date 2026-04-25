@@ -4,6 +4,9 @@ const inputSenha = document.getElementById('input-senha');
 const inputEmail = document.getElementById('input-email');
 const botaoLogin = document.getElementById('btn-login');
 
+const loader = document.querySelector('.loader');
+
+
 const mostrarSenha = () => {
     inputSenha.type = "text";
     iconeMostrarSenha.style.display = "none";
@@ -17,11 +20,13 @@ const esconderSenha = () => {
 };
 
 function entrar() {
+    loader.style.display = 'flex';
     var emailVar = inputEmail.value;
     var senhaVar = inputSenha.value;
 
     if (emailVar == "" || senhaVar == "") {
         alert("Preencha o e-mail e a senha.");
+        loader.style.display = 'none';
         return false;
     }
 
@@ -37,18 +42,25 @@ function entrar() {
     }).then(function (resposta) {
         if (resposta.ok) {
             resposta.json().then(json => {
-                sessionStorage.EMAIL_USUARIO = json.email;
-                sessionStorage.NOME_USUARIO = json.nome;
-                sessionStorage.ID_USUARIO = json.id;
+                setInterval(() => {
+                    loader.style.display = 'none';
+                    alert("Login realizado com sucesso! Redirecionando para a plataforma...");
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.ID_USUARIO = json.id;
 
-                window.location = "./dashboard/cards.html";
+                    window.location = "./dashboard/cards.html";
+
+                }, 2000);
             });
         } else {
             resposta.text().then(texto => {
+                loader.style.display = 'none';
                 alert(texto);
             });
         }
     }).catch(function (erro) {
+        loader.style.display = 'none';
         console.log(erro);
         alert("Erro ao tentar realizar login.");
     });
