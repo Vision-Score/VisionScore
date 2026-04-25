@@ -12,8 +12,12 @@ function cadastrar() {
     var senhaVar = inputSenha.value;
     var empresaVar = inputEmpresa.value;
 
+    var loader = document.querySelector('.loader');
+    loader.style.display = 'flex';
+
     if (nomeVar == "" || emailVar == "" || senhaVar == "" || empresaVar == "") {
         alert("Preencha todos os campos obrigatórios.");
+        loader.style.display = 'none';
         return false;
     }
 
@@ -33,14 +37,22 @@ function cadastrar() {
         console.log("Entrei no then do cadastro!");
 
         if (resposta.ok) {
-            alert("Cadastro realizado com sucesso! Redirecionando para o login...");
-            window.location = "./login.html";
+            
+            setTimeout(() => {
+                    loader.style.display = 'none';
+                    alert("Cadastro realizado com sucesso! Redirecionando para o login...");
+                    window.location.href = "login.html";
+                }, 2000);
         } else {
             resposta.text().then(texto => {
-                alert("Erro ao direcionar ao login");
+                loader.style.display = 'none';
+                if (texto.includes("Duplicate entry")) {
+                    alert("Email já cadastrado!");
+                }
             });
         }
     }).catch(function (erro) {  
+        loader.style.display = 'none';
         console.error(erro);
         alert("Erro ao tentar realizar cadastro.");
     });
