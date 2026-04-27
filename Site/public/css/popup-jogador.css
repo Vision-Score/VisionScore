@@ -1,0 +1,438 @@
+#popupJogador {
+    width: 100%;
+    height: 100%;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.8);
+
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out;
+
+}
+
+#popupJogador.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#popupJogador .popupJogadorContent {
+    width: 90%;
+    height: 90%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #1F1F1F;
+    border: 2px solid #0F8B8B;
+
+    border-radius: 2vh;
+
+    .sideBar {
+        width: 30%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+
+        background-color: #111;
+
+        border-top-left-radius: 2vh;
+        border-bottom-left-radius: 2vh;
+
+        .sideUpper {
+            width: 100%;
+            height: 15%;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+
+            padding: 2% 2%;
+
+            i {
+                font-size: 32px;
+                color: #e4e4e4;
+                transition: all .1s ease-in-out;
+                cursor: pointer;
+            }
+
+            i:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        .playerIcon {
+            width: 100%;
+            height: auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+
+            margin-bottom: 5%;
+
+            img {
+                width: 50%;
+                aspect-ratio: 1;
+
+                outline: 4px solid #0F8B8B;
+
+                border-radius: 100%;
+            }
+
+            .playerPosition {
+                width: fit-content;
+                height: auto;
+                margin-top: -15px;
+                /* Margem negativa para sobrepor a imagem */
+
+                padding: 4px 12px;
+
+                border-radius: 2vh;
+
+                background-color: #045757;
+                color: #e4e4e4;
+                font-weight: 600;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                z-index: 3;
+            }
+        }
+
+        .playerName {
+            width: 100%;
+            height: auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+
+            margin-bottom: 5%;
+
+            color: #e4e4e4;
+
+            font-family: "Open Sans";
+            font-weight: 800;
+            font-size: 32px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+        }
+
+        .playerInfo {
+            width: 100%;
+            height: auto;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 5%;
+
+            img {
+                width: 10%;
+                aspect-ratio: 1;
+
+                filter: brightness(0) invert(1);
+            }
+
+            span {
+                width: 40%;
+                color: #e4e4e4;
+
+                font-family: "Open Sans";
+                font-weight: 600;
+                font-size: 24px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                text-align: center;
+            }
+        }
+
+        .teamlogo {
+            width: 60%;
+            height: auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 5%;
+
+            img {
+                width: 50%;
+                aspect-ratio: 1;
+            }
+        }
+    }
+
+    .mainContent {
+        flex: 1;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+
+        background-color: #1F1F1F;
+
+        border-top-right-radius: 2vh;
+        border-bottom-right-radius: 2vh;
+
+
+        .mainUpper {
+            width: 100%;
+            height: 15%;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+
+            padding: 2%;
+
+            .compareButton {
+                width: 20%;
+                height: 100%;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                background-color: #045757;
+
+                border-radius: 1vh;
+
+                cursor: pointer;
+
+                i {
+                    font-size: 32px;
+                    color: #e4e4e4;
+                    transition: all .1s ease-in-out;
+                    cursor: pointer;
+
+                    margin-left: 6%;
+                }
+
+                span {
+                    flex: 1;
+                    color: #e4e4e4;
+
+                    font-family: "Open Sans";
+                    font-weight: 600;
+                    font-size: 24px;
+                    line-height: 100%;
+                    letter-spacing: 0%;
+                    text-align: center;
+
+                    margin-bottom: 2px;
+                }
+
+                &:hover {
+                    background-color: #0F8B8B;
+                }
+            }
+        }
+
+        .mainLower {
+            width: 100%;
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .mainLowerUpper {
+                width: 100%;
+                flex: 1;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: start;
+
+                padding: 1%;
+
+                gap: 1%;
+
+                .playerInformation {
+                    width: 50%;
+                    height: 100%;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+
+                    padding: 5%;
+
+                    gap: 5%;
+
+                    .infoBox {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        width: 100%;
+                        height: auto;
+
+                        color: #e4e4e4;
+
+                        font-family: "Open Sans";
+                        font-size: 16px;
+                        font-weight: 600;
+                    }
+
+                    .infoLabel {
+                        width: fit-content;
+                        height: auto;
+
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: start;
+                    }
+
+                    .infoStats {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                    }
+
+                    .infoTrend {
+                        display: flex;
+                        align-items: center;
+                        gap: 2px;
+
+                        &.down {
+                            color: #DF0004;
+                        }
+
+                        &.up {
+                            color: #14AE5C;
+                        }
+                    }
+
+                    .infoPlayerValue {
+                        font-weight: bold;
+
+                        width: 30px;
+                        text-align: right;
+                    }
+
+                    .infoSeparator {
+                        margin: 0 4px;
+                        opacity: 0.5;
+                    }
+
+                    .infoMedianValue {
+                        opacity: 0.7;
+
+                        width: 20px;
+                        text-align: right;
+                    }
+
+                }
+
+                .radarGraph {
+                    width: 50%;
+                    height: 100%;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+
+                    background-color: #111;
+
+                    border-radius: 1vh;
+
+                    .canvasContainer {
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        width: 100%;
+                        height: 100%;
+
+                        canvas {
+                            width: 85% !important;
+                            height: 90% !important;
+                        }
+                    }
+                }
+            }
+
+            .mainLowerLower {
+                width: 100%;
+                height: 30%;
+
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+
+                .badge {
+
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+
+                    padding: 10px;
+                    border-radius: 8px;
+                    transition: transform 0.2s;
+
+                    img {
+                        width: 80px;
+                        height: auto;
+                        aspect-ratio: 1;
+
+                        filter: brightness(0) invert(1);
+                    }
+
+                    span {
+                        color: #e4e4e4;
+
+                        font-family: "Open Sans";
+                        font-weight: 600;
+                        font-size: 16px;
+                        line-height: 100%;
+                        letter-spacing: 0%;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}

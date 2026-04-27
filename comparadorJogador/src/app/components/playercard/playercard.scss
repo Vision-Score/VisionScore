@@ -1,0 +1,295 @@
+:host {
+    width: 35%;
+    height: 80%;
+}
+
+.mainContainer {
+    width: 100%;
+    height: 90%;
+    max-height: 90%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 2vh;
+
+    box-shadow: 0 0 10px #00000050;
+
+    background-color: #00000050;
+
+    &.empty {
+        height: 40%;
+
+        .search {
+            width: 80%;
+            height: 30%;
+
+            background-color: #003B3B60;
+            border: solid 2px #0F8B8B60;
+            border-radius: 2vh;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            font-size: 24px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+
+            color: #e4e4e4;
+
+            padding-left: 2vh;
+            padding-right: 2vh;
+
+            i {
+                width: 32px;
+                font-size: 32px;
+                color: #e4e4e4;
+                text-align: right;
+            }
+        }
+    }
+
+    .header {
+        width: 100%;
+        height: 30%;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: end;
+
+        .change-player-container {
+            width: 10%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            padding-top: 3vh;
+            padding-right: .5vw;
+
+            .player-selector {
+
+                background-color: #3D3D3D50;
+                border: solid 2px #FFFFFF80;
+                border-radius: 10px;
+                padding: 1vh;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+
+
+                i {
+                    font-size: 32px;
+                    color: #e4e4e4;
+                    transition: all .1s ease-in-out;
+
+                }
+
+                &:hover {
+                    background-color: #3D3D3D;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .profile {
+            flex: 1;
+            height: 100%;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            padding-top: 2vh;
+            padding-left: 1vh;
+
+            .playerIcon {
+                height: 90%;
+                aspect-ratio: 1;
+
+                padding: 2%;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+
+                    border: solid 3px #0F8B8B;
+                }
+            }
+
+            .playerInfoContainer {
+                flex: 1;
+                height: 100%;
+
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                justify-content: center;
+
+                padding-left: 3vh;
+
+
+                .playerInfo {
+                    width: auto;
+                    height: 50%;
+
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+
+                    .team {
+                        height: 80%;
+                        aspect-ratio: 1;
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+
+                    .name {
+                        width: 100%;
+                        height: 50%;
+
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+
+                        font-size: 24px;
+                        font-family: 'Montserrat', sans-serif;
+                        font-weight: 800;
+
+                        color: #e4e4e4;
+                    }
+
+                    .position {
+                        width: auto;
+                        height: auto;
+
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+
+                        padding: .5vh 1vh;
+
+                        border-radius: 1vh;
+
+                        font-family: 'Montserrat', sans-serif;
+                        font-weight: 400;
+                        font-size: 16px;
+                        text-align: center;
+                        line-height: 120%;
+
+                        color: #e4e4e4;
+
+                        background-color: #003B3B;
+                    }
+                }
+            }
+        }
+    }
+
+    .content {
+        width: 90%;
+        flex: 1;
+
+        margin-top: 2vh;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+
+        border-top: solid 2px #0F8B8B40;
+
+        .badges {
+            width: 95%;
+            height: 30%;
+
+            flex-wrap: nowrap;
+            overflow-x: auto;
+
+            scrollbar-width: thin;
+            scrollbar-color: #0F8B8B40 transparent;
+
+            &::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #0F8B8B60;
+                border-radius: 3px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: #0F8B8B;
+            }
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+
+            gap: 2vw;
+
+        }
+
+        .stats {
+            width: 95%;
+            flex: 1;
+
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: start;
+
+            margin-bottom: 2vh;
+            overflow-y: scroll;
+            scrollbar-color: transparent transparent;
+            scrollbar-width: thin;
+
+            &:hover {
+                overflow-y: auto;
+
+                scrollbar-width: thin;
+                scrollbar-color: #0F8B8B40 transparent;
+
+                &::-webkit-scrollbar {
+                    height: 6px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: #0F8B8B60;
+                    border-radius: 3px;
+                }
+
+                &::-webkit-scrollbar-thumb:hover {
+                    background: #0F8B8B;
+                }
+            }
+        }
+    }
+}

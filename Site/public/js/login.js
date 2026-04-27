@@ -49,9 +49,9 @@ function entrar() {
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id;
 
-                    window.location = "./dashboard/cards.html";
+                    window.location = "./dashboard/dashboard.html";
 
-                }, 2000);
+                }, 1000);
             });
         } else {
             resposta.text().then(texto => {

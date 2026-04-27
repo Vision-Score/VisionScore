@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard-time.css">
+    <link rel="stylesheet" href="../css/popup-jogador.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/renderComponents.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div id="sidebarContainer">
+        </div>
+        <div id="teamListContainer">
+        </div>
+        <div id="popupJogador" class="hidden">
+            <div class="popupJogadorContent">
+                <div class="sideBar">
+                    <div class="sideUpper" onclick="switchPopupJogador()">
+                        <i class="material-icons">arrow_back</i>
+                    </div>
+                    <div class="playerIcon">
+                        <img src="../assets/playerIcons/faker.png" alt="">
+                        <div class="playerPosition">Mid</div>
+                    </div>
+                    <div class="playerName">Faker</div>
+                    <div class="playerInfo">
+                        <img src="../assets/icons/bow.svg" alt="">
+                        <span>~ 553 DpM</span>
+                    </div>
+                    <div class="playerInfo">
+                        <img src="../assets/icons/coins.svg" alt="">
+                        <span>▼250g @ 15</span>
+                    </div>
+                    <div class="playerInfo">
+                        <img src="../assets/icons/aim.svg" alt="">
+                        <span>~ 12.3 KDA</span>
+                    </div>
+                    <div class="teamlogo">
+                        <img src="../assets/icons/t1logo.png" alt="">
+                    </div>
+                </div>
+                <div class="mainContent">
+                    <div class="mainUpper">
+                        <div class="compareButton">
+                            <i class="material-icons">compare_arrows</i>
+                            <span>Comparar</span>
+                        </div>
+
+                    </div>
+                    <div class="mainLower">
+                        <div class="mainLowerUpper">
+                            <div class="playerInformation">
+
+                                <div class="infoBox">
+                                    <span class="infoLabel">Dano por Minuto (DpM)</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">612</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">545</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="infoBox">
+                                    <span class="infoLabel">Abates Mortes Assistências (KDA)</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">4.7</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">3.1</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="infoBox">
+                                    <span class="infoLabel">Participação em Abates (KP%)</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">66%</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">61%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="infoBox">
+                                    <span class="infoLabel">Ouro por Minuto (GPM)</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">428</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">395</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infoBox">
+                                    <span class="infoLabel">Diferença de Ouro @ 15m (G@15)</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">+480</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">+110</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infoBox">
+                                    <span class="infoLabel">Creep Score por Minuto (CSPM)</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">8.9</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">8.3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="infoBox">
+                                    <span class="infoLabel">Wards por Minuto</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">0.5</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">0.4</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="infoBox">
+                                    <span class="infoLabel">Dano em Torres por Minuto</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend down">
+                                            <i class="material-icons">arrow_downward</i>
+                                            <span class="infoPlayerValue">480</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">520</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="infoBox">
+                                    <span class="infoLabel">Torres abatidas por Jogo</span>
+                                    <div class="infoStats">
+                                        <div class="infoTrend up">
+                                            <i class="material-icons">arrow_upward</i>
+                                            <span class="infoPlayerValue">1.4</span>
+                                        </div>
+                                        <span class="infoSeparator">|</span>
+                                        <div class="infoTrend">
+                                            <span class="infoMedianValue">0.8</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="radarGraph">
+                                <div class="canvasContainer">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainLowerLower">
+                            <div class="badge">
+                                <img src="../assets/Damage_rating.png" alt="Badge 1" class="badgeImage">
+                                <span class="badgeTitle">Top Damage</span>
+                            </div>
+                            <div class="badge">
+                                <img src="../assets/icons/Availability.png" alt="Badge 1" class="badgeImage">
+                                <span class="badgeTitle">Acumula Gold</span>
+                            </div>
+                            <div class="badge">
+                                <img src="../assets/icons/Toughness_rating.png" alt="Badge 1" class="badgeImage">
+                                <span class="badgeTitle">Morre pouco</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="header">
+            <div class="burgerMenu" onclick="switchSidebar()">
+                <i class="material-icons">menu</i>
+            </div>
+            <div id="teamProfile" style="width: 20%; height: 90%; margin-left: 5%;">
+            </div>
+            <div class="navBar">
+                <button onclick="window.location.href = 'dashboard.html'">Visão geral</button>
+                <button class="active">Meu Time</button>
+            </div>
+            <div class="viewTeams" onclick="switchTeamList()">
+                <i class="material-icons">filter_alt</i>
+            </div>
+        </div>
+        <div class="content">
+            <div class="mainContainer">
+                <div class="mainContainerUpper">
+                    <div class="highlights">
+                        <div class="moveArrow back">
+                            <i class="material-icons">arrow_back_ios</i>
+                        </div>
+                        <div class="highlightBox left">
+                            <div class="playerIcon">
+                                <img src="../assets/playerIcons/Doran.png" alt="">
+                                <div class="playerPosition">Top</div>
+                            </div>
+                            <div class="playerName">Doran</div>
+                            <div class="playerStat">Top 20% Topos</div>
+                        </div>
+                        <div class="highlightBox center">
+                            <div class="playerIcon">
+                                <img src="../assets/playerIcons/faker.png" alt="">
+                                <div class="playerPosition">Mid</div>
+                            </div>
+                            <div class="playerName">Faker</div>
+                            <div class="playerStat">Top 1% Meios</div>
+                        </div>
+                        <div class="highlightBox right">
+                            <div class="playerIcon">
+                                <img src="../assets/playerIcons/Oner.png" alt="">
+                                <div class="playerPosition">Jungle</div>
+                            </div>
+                            <div class="playerName">Oner</div>
+                            <div class="playerStat">Top 5% Caçadores</div>
+                        </div>
+                        <div class="moveArrow next">
+                            <i class="material-icons">arrow_forward_ios</i>
+                        </div>
+                    </div>
+                    <div class="mvp">
+                        <div class="mvpTitle">
+                            <span class="mainTitle">Destaque do último confronto</span>
+                            <span class="subTitle">vs BLG</span>
+                        </div>
+                        <div class="mvpContent">
+                            <div class="playerIcon">
+                                <img src="../assets/playerIcons/faker.png" alt="">
+                                <div class="playerPosition">Mid</div>
+                            </div>
+                            <div class="itemMvp">
+                                <img src="../assets/icons/bow.svg" alt="" class="itemIcon">
+                                <div class="mvpStat">25k de Dano</div>
+                            </div>
+                            <div class="itemMvp">
+                                <img src="../assets/icons/coins.svg" alt="" class="itemIcon">
+                                <div class="mvpStat">▲1500g @ 15</div>
+                            </div>
+                            <div class="itemMvp">
+                                <img src="../assets/icons/aim.svg" alt="" class="itemIcon">
+                                <div class="mvpStat">~ 12.3 KDA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mainContainerLower">
+                    <div class="players">
+                        <div id="playerCard1" onclick="switchPopupJogador()">
+                        </div>
+                        <div id="playerCard2" onclick="switchPopupJogador()">
+                        </div>
+                        <div id="playerCard3" onclick="switchPopupJogador()">
+                        </div>
+                        <div id="playerCard4" onclick="switchPopupJogador()">
+                        </div>
+                        <div id="playerCard5" onclick="switchPopupJogador()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
+
+<script>
+    function switchPopupJogador() {
+        document.getElementById("popupJogador").classList.toggle("hidden");
+    }
+
+    function switchSidebar() {
+        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
+    }
+
+    function switchTeamList() {
+        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
+    }
+
+    // renderiza a lista de times. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    renderTeamList(document.getElementById("teamListContainer"), [
+        {
+            name: "T1",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Gen.G",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "KT Rolster",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Hanwha Life",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "DRX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Liiv SANDBOX",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Kwangdong Freecs",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "Nongshim RedForce",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        },
+        {
+            name: "OK Savings Bank BRION",
+            logoUrl: "../assets/icons/t1logo.png"
+        }
+    ]);
+
+    // renderiza a sidebar. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time", {
+        name: "Mitohara",
+        role: "Coach",
+        imageUrl: "../assets/playerIcons/faker.png",
+        nameTeam: "T1",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    // renderiza o compontente de identificação do time.
+    renderTeamProfile(document.getElementById('teamProfile'), {
+        name: "T1",
+        coach: "Coach: Mata",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    // renderiza os playerCards, substituir por retorno do backend com um forEach.
+    renderPlayerCard(document.getElementById('playerCard1'), {
+        name: "Doran",
+        position: "Top",
+        roleIconUrl: "../assets/icons/Top_icon.png",
+        imageUrl: "../assets/playerIcons/Doran.png",
+        stats: [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 553 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▼250g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 3.54 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard2'), {
+        name: "Oner",
+        position: "Jungle",
+        roleIconUrl: "../assets/icons/Jungle_icon.png",
+        imageUrl: "../assets/playerIcons/Oner.png",
+        stats: [
+            { iconUrl: "../assets/icons/swords.svg", value: "34% First Bloods" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▲976g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 9.24 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard3'), {
+        name: "Faker",
+        position: "Mid",
+        roleIconUrl: "../assets/icons/Middle_icon.png",
+        imageUrl: "../assets/playerIcons/faker.png",
+        stats: [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 698 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▲960g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 12.3 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard4'), {
+        name: "Peyz",
+        position: "Bot",
+        roleIconUrl: "../assets/icons/Bottom_icon.png",
+        imageUrl: "../assets/playerIcons/Peyz.png",
+        stats: [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 893 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▲2250g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 10.2 KDA" }
+        ]
+    });
+    renderPlayerCard(document.getElementById('playerCard5'), {
+        name: "Keria",
+        position: "Support",
+        roleIconUrl: "../assets/icons/Support_icon_WR.png",
+        imageUrl: "../assets/playerIcons/Keria.png",
+        stats: [
+            { iconUrl: "../assets/icons/target.svg", value: "3.1 Visão/Min" },
+            { iconUrl: "../assets/icons/visibility.svg", value: " 6.5 Deny @ 30" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 18.2 KDA" }
+        ]
+    });
+
+
+    // renderiza o gráfico de desempenho do jogador.
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['DPM', 'KDA', 'KP%', 'GPM', 'CSPM', 'G@15', 'Wards/min', 'DtPM', 'Torres'],
+            datasets: [{
+                label: 'Faker',
+                data: [88, 82, 75, 71, 85, 80, 55, 40, 60],
+                borderColor: '#0F8B8B',
+                backgroundColor: '#0F8B8B80'
+            }]
+        },
+        options: {
+            scales: {
+                responsive: true,
+                maintainAspectRatio: false,
+                r: {
+                    min: 0,
+                    max: 100,
+                    angleLines: {
+                        color: '#444'
+                    },
+                    grid: {
+                        color: '#44444460'
+                    },
+                    pointLabels: {
+                        color: '#fff',
+                        font: {
+                            size: 14,
+                            weight: 600,
+                            family: "Montserrat"
+                        }
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: false
+            }
+        }
+    });
+</script>

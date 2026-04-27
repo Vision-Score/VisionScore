@@ -1,0 +1,483 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  /* O Anjo da Guarda contra scroll horizontal */
+
+  font-family: "Montserrat";
+}
+
+.main {
+  width: 100%;
+  height: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #242424;
+
+  padding: 0 2% 2% 2%;
+}
+
+.header {
+  width: 100%;
+  height: 12vh;
+  box-sizing: border-box;
+  padding: 1.5% 4% 0 4%;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .burgerMenu {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    i {
+      font-size: 45px;
+      color: #e4e4e4;
+      transition: all .1s ease-in-out;
+      cursor: pointer;
+    }
+
+    i:hover {
+      transform: scale(1.1);
+    }
+  }
+
+
+
+  .navBar {
+    height: 100%;
+
+    position: absolute;
+    left: 0;
+    right: 1%;
+    margin: 0 auto;
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 20px;
+
+    button {
+      height: 6vh;
+
+      text-decoration: none;
+      font-size: 23px;
+      font-weight: 400;
+      font-family: "Montserrat";
+
+      border: none;
+      border-bottom: solid 2px transparent;
+
+      background-color: transparent;
+      color: #e4e4e4;
+      cursor: pointer;
+
+      &.active {
+        border-bottom: solid 2px #e4e4e4;
+        font-weight: 800;
+        cursor: default;
+      }
+
+      &:hover {
+        border-bottom: solid 2px #e4e4e4;
+      }
+    }
+  }
+
+  .viewTeams {
+    height: 100%;
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    i {
+      font-size: 45px;
+      color: #e4e4e4;
+      transition: all .1s ease-in-out;
+      cursor: pointer;
+    }
+
+    i:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainContainer {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2%;
+
+  gap: 1%;
+}
+
+.mainContainerUpper {
+  width: 100%;
+  height: auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  .highlights {
+    flex: 1;
+    height: 45vh;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+
+    gap: 2%;
+
+    background-color: #1F1F1F;
+
+    border-radius: 2vh;
+    border: 2px solid #0F8B8B;
+
+    box-shadow: 0px 0px 10px 5px #00000060;
+
+    .moveArrow {
+      height: 100%;
+      width: 10%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+
+      transition: all .1s ease-in-out;
+
+      i {
+        font-size: 32px;
+        color: #e4e4e4;
+        cursor: pointer;
+      }
+
+      &.back {
+        border-top-left-radius: 2vh;
+        border-bottom-left-radius: 2vh;
+
+        i {
+          margin-left: 5%;
+        }
+      }
+
+      &.next {
+        border-top-right-radius: 2vh;
+        border-bottom-right-radius: 2vh;
+
+        i {
+          margin-right: 5%;
+        }
+      }
+
+      &:hover {
+        background-color: #00000050;
+      }
+    }
+
+    .highlightBox {
+      flex: 1;
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: end;
+
+
+      .playerIcon {
+        width: 100%;
+        height: 45%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 100%;
+          aspect-ratio: 1;
+
+          outline: 4px solid #0F8B8B;
+
+          border-radius: 100%;
+        }
+
+        .playerPosition {
+          width: fit-content;
+          height: auto;
+          margin-top: -15px;
+          /* Margem negativa para sobrepor a imagem */
+
+          padding: 4px 12px;
+
+          border-radius: 2vh;
+
+          background-color: #045757;
+          color: #e4e4e4;
+          font-weight: 600;
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          z-index: 3;
+        }
+      }
+
+      .playerName {
+        width: 100%;
+        height: 10%;
+
+        margin-top: 10%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        color: #e4e4e4;
+
+        font-family: "Open Sans";
+        font-weight: 800;
+        font-size: 20px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        text-align: center;
+
+      }
+
+      .playerStat {
+        width: 100%;
+        height: 8%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        color: #e4e4e4;
+
+        font-family: "Open Sans";
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        text-align: center;
+
+        margin-bottom: 5%;
+      }
+
+      &.center {
+        flex: 1.2;
+
+        justify-content: center;
+
+        .playerName {
+          margin-top: 15%;
+        }
+      }
+    }
+  }
+
+  .mvp {
+    flex: 1;
+    height: 45vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    padding: 1%;
+
+    background-color: #1F1F1F;
+
+    border-radius: 2vh;
+    border: 2px solid #0F8B8B;
+
+    box-shadow: 0px 0px 10px 5px #00000060;
+
+    .mvpTitle {
+      width: 100%;
+      height: 20%;
+
+      font-weight: 400;
+
+      font-family: "Montserrat";
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: 0%;
+
+
+      color: #e4e4e4;
+      border-bottom: solid 2px #0F8B8B;
+
+      margin-bottom: 5%;
+
+      .subTitle {
+        font-size: 14px;
+        font-weight: 400;
+      }
+    }
+
+    .mvpContent {
+      flex: 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .playerIcon {
+        width: 25%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 80%;
+          aspect-ratio: 1;
+
+          outline: 4px solid #0F8B8B;
+
+          border-radius: 100%;
+        }
+
+        .playerPosition {
+          width: fit-content;
+          height: auto;
+          margin-top: -15px;
+
+          padding: 4px 12px;
+
+          border-radius: 2vh;
+
+          background-color: #045757;
+          color: #e4e4e4;
+          font-weight: 600;
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          z-index: 3;
+        }
+      }
+
+      .itemMvp {
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .itemIcon {
+          width: 40%;
+          aspect-ratio: 1;
+
+          margin-bottom: 10%;
+
+          filter: brightness(0) invert(.9);
+        }
+
+        .mvpStat {
+          width: 100%;
+          height: 8%;
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          color: #e4e4e4;
+
+          font-family: "Open Sans";
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          text-align: center;
+
+          margin-bottom: 5%;
+
+
+        }
+      }
+
+
+    }
+
+  }
+}
+
+.mainContainerLower {
+  width: 100%;
+  height: 100%;
+
+  margin-top: 1%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .players {
+    flex: 1;
+    height: 35vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    gap: 2%;
+
+
+  }
+}

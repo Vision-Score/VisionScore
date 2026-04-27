@@ -1,0 +1,49 @@
+@if(player) {
+<div class="mainContainer">
+    <div class="header">
+        <div class="profile">
+            <div class="playerIcon">
+                <img [src]="player.icon" alt="">
+            </div>
+            <div class="playerInfoContainer">
+                <div class="playerInfo">
+                    <div class="team">
+                        <img [src]="player.teamLogo" alt="">
+                    </div>
+                    <div class="name">
+                        {{ player.name }}
+                    </div>
+                    <div class="position">
+                        {{ player.position }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="change-player-container">
+            <div class="player-selector">
+                <i class="material-icons">swap_horiz</i>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="badges">
+            @for(badge of player.badges; track $index) {
+            <app-badge [badgeIcon]="badge.icon" [badgeName]="badge.name"></app-badge>
+            }
+        </div>
+        <div class="stats">
+            @for(stat of player.stats; track $index) {
+            <app-stat [statName]="stat.name" [statValue]="stat.value" [statIcon]="stat.icon"></app-stat>
+            }
+        </div>
+    </div>
+</div>
+} @else {
+<div class="mainContainer empty">
+    <div class="search">
+        Selecione o Jogador
+        <i class="material-icons">arrow_downward_alt</i>
+    </div>
+</div>
+}
