@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" href="../css/dashboards.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboards.css">
+    <link rel="stylesheet" href="../css/editar-contas.css">
+    <script src="../js/renderComponents.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div id="sidebarContainer">
+        </div>
+        <div class="header">
+            <div class="burgerMenu" onclick="switchSidebar()">
+                <i class="material-icons">menu</i>
+            </div>
+        </div>
+        <div class="content">
+            <div class="mainContainer">
+                <div class="editar-contas-header">
+                    <div class="editar-contas-title">Usuários</div>
+                    <div class="editar-contas-interactibles">
+                        <div class="search-bar">
+                            <input type="text" id="searchInput" placeholder="Buscar por nome ou tag">
+                            <i class="material-icons">search</i>
+                        </div>
+                        <button class="add-user-btn" onclick="abrirModalCriarConta()"> + <i
+                                class="material-icons">person</i></button>
+                    </div>
+                </div>
+                <div class="editar-contas-content">
+                    <div class="editar-contas-menu-filtro">
+                        <div id="id">Id</div>
+                        <div id="foto">Foto</div>
+                        <div id="nome">Nome</div>
+                        <div id="equipe">Equipe</div>
+                        <div id="status">Status</div>
+                        <div id="acoes">Ações</div>
+                    </div>
+                    <div class="editar-contas-user-list">
+                        <div class="editar-contas-user">
+                            <div class="id">1</div>
+                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
+                            <div class="nome">Faker</div>
+                            <div class="equipe">T1</div>
+                            <div class="status">Ativo</div>
+                            <div class="acoes">
+                                <button>Editar</button>
+                                <button>Excluir</button>
+                            </div>
+                        </div>
+                        <div class="editar-contas-user">
+                            <div class="id">1</div>
+                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
+                            <div class="nome">Faker</div>
+                            <div class="equipe">T1</div>
+                            <div class="status">Ativo</div>
+                            <div class="acoes">
+                                <button>Editar</button>
+                                <button>Excluir</button>
+                            </div>
+                        </div>
+                        <div class="editar-contas-user">
+                            <div class="id">1</div>
+                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
+                            <div class="nome">Faker</div>
+                            <div class="equipe">T1</div>
+                            <div class="status">Ativo</div>
+                            <div class="acoes">
+                                <button>Editar</button>
+                                <button>Excluir</button>
+                            </div>
+                        </div>
+                        <div class="editar-contas-user">
+                            <div class="id">1</div>
+                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
+                            <div class="nome">Faker</div>
+                            <div class="equipe">T1</div>
+                            <div class="status">Ativo</div>
+                            <div class="acoes">
+                                <button>Editar</button>
+                                <button>Excluir</button>
+                            </div>
+                        </div>
+                        <div class="editar-contas-user">
+                            <div class="id">1</div>
+                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
+                            <div class="nome">Faker</div>
+                            <div class="equipe">T1</div>
+                            <div class="status">Ativo</div>
+                            <div class="acoes">
+                                <button>Editar</button>
+                                <button>Excluir</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="editar-contas-pagination">
+                        <div class="editar-contas-pagination-item active">1</div>
+                        <div class="editar-contas-pagination-item">2</div>
+                        <div class="editar-contas-pagination-item">3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    renderSidebar(document.getElementById("sidebarContainer"), "", {
+        name: "Mitohara",
+        role: "Coach",
+        imageUrl: "../assets/playerIcons/faker.png",
+        nameTeam: "T1",
+        logoUrl: "../assets/icons/t1logo.png"
+    });
+
+    function switchSidebar() {
+        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
+    }
+</script>
