@@ -37,12 +37,12 @@ function cadastrar() {
         console.log("Entrei no then do cadastro!");
 
         if (resposta.ok) {
-
+            
             setTimeout(() => {
-                loader.style.display = 'none';
-                alert("Cadastro realizado com sucesso! Redirecionando para o login...");
-                window.location.href = "login.html";
-            }, 1000);
+                    loader.style.display = 'none';
+                    alert("Cadastro realizado com sucesso! Redirecionando para o login...");
+                    window.location.href = "login.html";
+                }, 2000);
         } else {
             resposta.text().then(texto => {
                 loader.style.display = 'none';
@@ -51,7 +51,7 @@ function cadastrar() {
                 }
             });
         }
-    }).catch(function (erro) {
+    }).catch(function (erro) {  
         loader.style.display = 'none';
         console.error(erro);
         alert("Erro ao tentar realizar cadastro.");

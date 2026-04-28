@@ -1,240 +1,318 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
+    <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="../css/dashboards.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    <title>AquaTech | Dashboards</title>
+
+    
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/estilo.css" />
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-        rel="stylesheet">
-    <script src="../js/renderComponents.js"></script>
+
+    <!-- scripts do Chart.js - 2022-1 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 </head>
 
+<!-- <body onload=" atualizarFeed()"> -->
+
 <body>
-    <div class="main">
 
-        <div id="sidebarContainer">
+    <div class="janela">
+        <div class="header-left">
+            <h1>AquaTech</h1>
+
+            <div class="hello">
+                <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./cards.html">
+                    <h3>Aquários</h3>
+                </a>
+            </div>
+
+            <div class="btn-nav">
+
+                <h3>Gráficos</h3>
+
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./mural.html">
+                    <h3>Mural de Avisos</h3>
+                </a>
+            </div>
+
+            <div class="btn-logout" onclick="limparSessao()">
+                <h3>Sair</h3>
+            </div>
+
         </div>
 
-        <div id="teamListContainer">
-        </div>
-
-        <div class="header">
-            <div class="burgerMenu" onclick="switchSidebar()">
-                <i class="material-icons">menu</i>
+        <div class="dash">
+            <div id="alerta">
             </div>
-            <div class="navBar">
-                <button class="active">Visão geral</button>
-                <button onclick="window.location.href = 'dashboard-time.html'">Meu Time</button>
+
+            <div class="btns-dash" id="btnAquario">
+                <!-- O gráfico é chamado de acordo com o id (fk_aquario) do banco  -->
             </div>
-            <div class="lastGames">
-                <div class="lastGamesTitle">Últimos jogos</div>
-                <div class="lastGamesGraph">
-                    <div class="lastGameWin">V</div>
-                    <div class="lastGameWin">V</div>
-                    <div class="lastGameWin">V</div>
-                    <div class="lastGameWin">V</div>
-                    <div class="lastGameLoss">D</div>
-                </div>
-            </div>
-            <div class="viewTeams" onclick="switchTeamList()">
-                <i class="material-icons">filter_alt</i>
-            </div>
-        </div>
-        <div class="content">
-            <div class="contentTitle">
-                Como seu time tem performado?
-            </div>
-            <div class="mainContainer">
-                <div class="mainContainerUpper">
-                    <div class="strategicProfile">
-                        <div class="strategicProfileTitle">
-                            Perfil Estratégico
-                        </div>
-                        <div class="strategicProfileContent">
-                            <div class="ProfileItem">
-                                <img src="../assets/icons/stopwatch.svg" alt="" class="icon">
-                                <div class="itemTitle">Pressão Early:</div>
-                                <div class="itemValue">Alta</div>
-                            </div>
-                            <div class="ProfileItem">
-                                <img src="../assets/icons/target.svg" alt="" class="icon">
-                                <div class="itemTitle">Controle de Objetivo:</div>
-                                <div class="itemValue">Médio</div>
-                            </div>
-                            <div class="ProfileItem">
-                                <img src="../assets/icons/visibility.svg" alt="" class="icon">
-                                <div class="itemTitle">Setup de Visão:</div>
-                                <div class="itemValue">Forte</div>
-                            </div>
-                            <div class="ProfileItem">
-                                <img src="../assets/icons/swords.svg" alt="" class="icon">
-                                <div class="itemTitle">Execução de Teamfight:</div>
-                                <div class="itemValue">Forte</div>
-                            </div>
-                            <div class="ProfileItem">
-                                <img src="../assets/icons/hourglass.svg" alt="" class="icon">
-                                <div class="itemTitle">Late Game:</div>
-                                <div class="itemValue">Fraco</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gameIdentity">
-                        <div class="gameIdentityTitle">
-                            Identidade de Jogo
-                        </div>
-                        <div class="gameIdentityContent">
-                            <div class="identityItem">
-                                <svg width="42" height="100" viewBox="0 0 42 51" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M15.0469 0.528125C15.9187 -0.203125 17.2031 -0.175 18.0375 0.6125C19.1906 1.7 20.2219 2.9 21.2156 4.11875C22.4813 5.66563 24 7.70937 25.4625 10.1375C25.95 9.5 26.4 8.9375 26.7937 8.45938C26.8969 8.3375 27 8.20625 27.1031 8.075C27.8438 7.15625 28.7625 6.00313 29.9906 6.00313C31.2469 6.00313 32.1281 7.11875 32.8781 8.075C33 8.23438 33.1219 8.38437 33.2438 8.525C34.2094 9.6875 35.4937 11.3656 36.7781 13.4375C39.3281 17.5531 41.9906 23.4125 41.9906 29.9937C41.9906 41.5906 32.5875 50.9938 20.9906 50.9938C9.39375 50.9938 0 41.6 0 30.0031C0 21.4625 3.85312 14.0656 7.54688 8.90938C9.4125 6.3125 11.2688 4.23125 12.6656 2.80625C13.4344 2.01875 14.2125 1.24063 15.0563 0.5375L15.0469 0.528125ZM21.1594 42.0031C23.5312 42.0031 25.6313 41.3469 27.6094 40.0344C31.5562 37.2781 32.6156 31.7656 30.2438 27.4344C29.8219 26.5906 28.7438 26.5344 28.1344 27.2469L25.7719 29.9937C25.1531 30.7062 24.0375 30.6875 23.4562 29.9469C21.8344 27.875 18.8531 24.0969 17.3344 22.1656C16.8281 21.5187 15.9094 21.4156 15.3187 21.9875C13.6031 23.6562 10.4906 27.3125 10.4906 31.7656C10.4906 38.1969 15.2344 42.0031 21.15 42.0031H21.1594Z"
-                                        fill="white" />
-                                </svg>
-
-                                <div class="identityText">Early Agressivo</div>
-                            </div>
-                            <div class="identityItem">
-                                <svg width="74" height="100" viewBox="0 0 74 61" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M40.7086 14.8301L34.7072 13.2816C33.9555 13.091 33.4005 12.4359 33.3195 11.6378C33.2386 10.8397 33.6433 10.0773 34.3256 9.71998L39.0435 7.28998L34.0365 3.41867C33.4005 2.93029 33.1345 2.07264 33.3889 1.28647C33.6433 0.500293 34.3602 0 35.1581 0H53.6598C57.1519 0 60.4475 1.69147 62.5405 4.57411L69.2011 13.7223C69.9181 14.711 70.3112 15.9141 70.3112 17.1529C70.3112 20.3095 67.8251 22.8705 64.7607 22.8705H62.2746C60.3088 22.8705 58.4239 22.0724 57.0363 20.643L55.4984 19.0588H51.798V21.6198C51.798 24.5739 53.2782 27.3255 55.7065 28.8979L68.0332 36.8311C71.7451 39.2253 74 43.4064 74 47.9209C74 55.1394 68.3223 61 61.3032 61L3.74004 60.9881C3.35845 60.9881 2.97685 60.9404 2.62994 60.8213C1.5661 60.4878 0.698837 59.6778 0.270986 58.6057C0.120661 58.2127 0.0165889 57.7838 0.00502537 57.3312C-0.0181017 56.8905 0.0397159 56.4616 0.155351 56.0566C0.47913 54.9608 1.26545 54.0674 2.30617 53.6266C2.65307 53.4837 3.0231 53.3884 3.4047 53.3646L50.1098 49.0764C51.0695 48.993 51.8096 48.1591 51.8096 47.1586C51.8096 46.6464 51.613 46.158 51.2661 45.8006L46.1319 40.5118C42.6629 36.9383 40.7086 32.0902 40.7086 27.0396V14.8301ZM59.2103 8.61219C59.2103 8.60027 59.2103 8.58836 59.2103 8.57645C59.2103 8.56454 59.2103 8.55263 59.2103 8.54071V8.61219ZM59.0599 9.49365L53.6945 8.11189C53.6713 8.26674 53.6598 8.4216 53.6598 8.57645C53.6598 10.1607 54.8971 11.4353 56.435 11.4353C57.6607 11.4353 58.6899 10.6253 59.0599 9.49365ZM15.1417 13.8772C17.0265 12.15 19.8133 11.9475 21.9063 13.3888L37.0083 23.752V27.0277C37.0083 30.9348 37.9796 34.7465 39.7835 38.1056H12.9562C12.1814 38.1056 11.4876 37.6054 11.2216 36.8668C10.9557 36.1283 11.1638 35.2826 11.7536 34.7584L19.7786 27.671L2.13271 30.4702C1.32327 30.6013 0.525384 30.1605 0.178478 29.3982C-0.168427 28.6358 0.0165889 27.7305 0.629456 27.1588L15.1417 13.8772Z"
-                                        fill="white" />
-                                </svg>
-
-                                <div class="identityText">Prioriza Dragão</div>
-                            </div>
-                            <div class="identityItem">
-                                <svg width="93" height="100" viewBox="0 0 93 100" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M70.25 60C70.25 56.9468 69.6486 53.9234 68.4802 51.1026C67.3118 48.2818 65.5992 45.7187 63.4402 43.5598C61.2813 41.4008 58.7182 39.6882 55.8974 38.5198C53.0766 37.3514 50.0532 36.75 47 36.75C43.9468 36.75 40.9234 37.3514 38.1026 38.5198C35.2818 39.6882 32.7187 41.4008 30.5598 43.5598C28.4008 45.7187 26.6882 48.2818 25.5198 51.1026C24.3514 53.9234 23.75 56.9468 23.75 60C23.75 63.0532 24.3514 66.0766 25.5198 68.8974C26.6882 71.7182 28.4008 74.2813 30.5598 76.4402C32.7187 78.5992 35.2818 80.3118 38.1026 81.4802C40.9234 82.6486 43.9468 83.25 47 83.25C50.0532 83.25 53.0766 82.6486 55.8974 81.4802C58.7182 80.3118 61.2813 78.5992 63.4402 76.4402C65.5992 74.2813 67.3118 71.7182 68.4802 68.8974C69.6486 66.0766 70.25 63.0532 70.25 60ZM16 60C16 51.7783 19.2661 43.8933 25.0797 38.0797C30.8933 32.2661 38.7783 29 47 29C55.2217 29 63.1067 32.2661 68.9203 38.0797C74.7339 43.8933 78 51.7783 78 60C78 68.2217 74.7339 76.1067 68.9203 81.9203C63.1067 87.7339 55.2217 91 47 91C38.7783 91 30.8933 87.7339 25.0797 81.9203C19.2661 76.1067 16 68.2217 16 60ZM47 69.6875C49.5693 69.6875 52.0333 68.6669 53.8501 66.8501C55.6669 65.0333 56.6875 62.5693 56.6875 60C56.6875 57.4307 55.6669 54.9667 53.8501 53.1499C52.0333 51.3331 49.5693 50.3125 47 50.3125C44.4307 50.3125 41.9667 51.3331 40.1499 53.1499C38.3331 54.9667 37.3125 57.4307 37.3125 60C37.3125 62.5693 38.3331 65.0333 40.1499 66.8501C41.9667 68.6669 44.4307 69.6875 47 69.6875ZM47 42.5625C51.6247 42.5625 56.06 44.3997 59.3302 47.6698C62.6003 50.94 64.4375 55.3753 64.4375 60C64.4375 64.6247 62.6003 69.06 59.3302 72.3302C56.06 75.6003 51.6247 77.4375 47 77.4375C42.3753 77.4375 37.94 75.6003 34.6698 72.3302C31.3997 69.06 29.5625 64.6247 29.5625 60C29.5625 55.3753 31.3997 50.94 34.6698 47.6698C37.94 44.3997 42.3753 42.5625 47 42.5625ZM43.125 60C43.125 58.9723 43.5333 57.9867 44.26 57.26C44.9867 56.5333 45.9723 56.125 47 56.125C48.0277 56.125 49.0133 56.5333 49.74 57.26C50.4667 57.9867 50.875 58.9723 50.875 60C50.875 61.0277 50.4667 62.0133 49.74 62.74C49.0133 63.4667 48.0277 63.875 47 63.875C45.9723 63.875 44.9867 63.4667 44.26 62.74C43.5333 62.0133 43.125 61.0277 43.125 60Z"
-                                        fill="white" />
-                                </svg>
-
-                                <div class="identityText">Strong Bot Side</div>
-                            </div>
-                            <div class="identityItem">
-                                <svg width="67" height="100" viewBox="0 0 67 68" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M31.4295 0.740363C32.5921 -0.246788 34.2772 -0.246788 35.4398 0.740363L40.3777 4.94242C41.5141 5.91623 41.8276 7.55704 41.1614 8.89102C41.0047 9.21118 40.7957 9.62472 40.5605 10.1183C45.0281 12.6795 48.0456 17.5619 48.0456 23.1647C48.0456 28.7674 45.0281 33.6498 40.5605 36.2111C40.7957 36.7047 40.9916 37.1182 41.1614 37.4384C41.8276 38.7723 41.5141 40.4131 40.3777 41.387L35.5182 45.5223V48.1636C38.5096 46.0692 41.8407 43.7214 45.5375 41.1335C51.1285 37.2116 54.4726 30.7284 54.4726 23.7917V22.3109C54.4726 19.1227 53.5451 16.0012 51.8078 13.3465C51.1415 12.3194 51.2069 10.972 52.0298 10.0649C52.892 9.1178 54.2767 8.9844 55.3217 9.69142C58.914 12.1059 67 18.6958 67 29.5812C67 35.7842 64.3613 41.4003 61.5397 45.6424C58.7181 49.9111 55.583 52.9793 54.3158 54.1532C53.2969 55.1003 51.8339 55.2071 50.7105 54.5534L41.4619 49.1774L37.1903 52.1789L43.1339 56.3543C43.3691 56.3009 43.6173 56.2609 43.8785 56.2609C45.6159 56.2609 47.0136 57.6883 47.0136 59.4625C47.0136 61.2367 45.6159 62.6641 43.8785 62.6641C42.2849 62.6641 40.9655 61.4501 40.7695 59.8627L35.5182 56.1809V60.0361C36.7723 60.7698 37.6083 62.1571 37.6083 63.7312C37.6083 66.0924 35.7403 68 33.4282 68C31.116 68 29.248 66.0924 29.248 63.7312C29.248 62.1571 30.084 60.7698 31.3381 60.0361V56.2876L26.0737 59.9827C25.8386 61.5035 24.5323 62.6641 22.9778 62.6641C21.2404 62.6641 19.8427 61.2367 19.8427 59.4625C19.8427 57.6883 21.2404 56.2609 22.9778 56.2609C23.2652 56.2609 23.5525 56.3009 23.8269 56.381L29.8097 52.1789L25.5381 49.1774L16.2895 54.5534C15.1531 55.2071 13.7031 55.1003 12.6841 54.1532C11.417 52.9793 8.28193 49.8978 5.46032 45.6424C2.65178 41.4003 0 35.7842 0 29.5812C0 18.6825 8.08598 12.0926 11.6783 9.69142C12.7364 8.9844 14.108 9.1178 14.9702 10.0649C15.8062 10.9854 15.8585 12.3327 15.1922 13.3465C13.4549 16.0012 12.5274 19.1227 12.5274 22.3109V23.7917C12.5274 30.7151 15.8715 37.2116 21.4625 41.1335C25.1724 43.7481 28.4773 46.0559 31.3381 48.0702V45.5223L26.4787 41.387C25.3422 40.4131 25.0287 38.7723 25.6949 37.4384C25.8516 37.1182 26.0606 36.7047 26.2958 36.2111C21.8282 33.6498 18.8107 28.7674 18.8107 23.1647C18.8107 17.5619 21.8282 12.6795 26.2958 10.1183C26.0606 9.62472 25.8647 9.21118 25.6949 8.89102C25.0287 7.55704 25.3422 5.91623 26.4787 4.94242L31.4295 0.740363ZM28.7647 16.0679C26.544 17.602 25.0809 20.2032 25.0809 23.1513C25.0809 26.0995 26.544 28.7007 28.7647 30.2348C29.653 27.6736 30.3061 25.1123 30.3061 23.1513C30.3061 21.1904 29.666 18.6291 28.7647 16.0679ZM38.1047 30.2348C40.3254 28.7007 41.7885 26.0995 41.7885 23.1513C41.7885 20.2032 40.3254 17.602 38.1047 16.0679C37.2164 18.6291 36.5633 21.1904 36.5633 23.1513C36.5633 25.1123 37.2034 27.6736 38.1047 30.2348Z"
-                                        fill="white" />
-                                </svg>
-
-                                <div class="identityText">Macro Decisivo</div>
-                            </div>
-                            <div class="identityItem">
-                                <svg width="62" height="100" viewBox="0 0 62 62" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M30.9871 0C31.5812 0 32.1754 0.12176 32.7179 0.353103L57.0529 10.0817C59.8945 11.2141 62.0129 13.8562 61.9999 17.0463C61.9354 29.1249 56.6654 51.2243 34.41 61.2694C32.2529 62.2435 29.7471 62.2435 27.59 61.2694C5.32172 51.2243 0.064642 29.1249 5.87512e-05 17.0463C-0.0128579 13.8562 2.10547 11.2141 4.94713 10.0817L29.2692 0.353103C29.8117 0.12176 30.3929 0 30.9871 0ZM30.9871 8.13354V54.1709C48.812 46.0373 53.6041 28.0169 53.7204 17.229L30.9871 8.14572V8.13354Z"
-                                        fill="white" />
-                                </svg>
-
-
-                                <div class="identityText">Controla Visão</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mainContainerLower">
-                    <div class="pieChart">
-                        CHART JS VAI AQUI
-                    </div>
-                    <div class="mainKPIs">
-                        <div class="kpi">
-                            <div class="tituloKpi">Tempo médio para primeiro abate</div>
-                            <div class="conteudoKpi">26s</div>
-                            <div class="subtituloKpi">3° da liga</div>
-                        </div>
-                        <div class="kpi">
-                            <div class="tituloKpi">Tempo médio para primeiro abate</div>
-                            <div class="conteudoKpi">26s</div>
-                            <div class="subtituloKpi">3° da liga</div>
-                        </div>
-                        <div class="kpi">
-                            <div class="tituloKpi">Tempo médio para primeiro abate</div>
-                            <div class="conteudoKpi">26s</div>
-                            <div class="subtituloKpi">3° da liga</div>
-                        </div>
-                    </div>
-                </div>
+            <div id="graficos">
             </div>
         </div>
     </div>
+
+
 </body>
 
 </html>
 
 <script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
-    renderSidebar(document.getElementById("sidebarContainer"), "dashboard", {
-        name: "Mitohara",
-        role: "Coach",
-        imageUrl: "../assets/playerIcons/faker.png",
-        nameTeam: "T1",
-        logoUrl: "../assets/icons/t1logo.png"
-    });
+    let proximaAtualizacao;
 
-    renderTeamList(document.getElementById("teamListContainer"), [
-        {
-            name: "T1",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Gen.G",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "KT Rolster",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Hanwha Life Esports",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "DRX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Liiv SANDBOX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Dplus KIA",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Kwangdong Freecs",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Nongshim RedForce",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "BRION",
-            logoUrl: "../assets/icons/t1logo.png"
+    window.onload = exibirAquariosDoUsuario();
+
+    function exibirAquariosDoUsuario() {
+        var aquarios = JSON.parse(sessionStorage.AQUARIOS);
+        aquarios.forEach(item => {
+            document.getElementById("btnAquario").innerHTML += `
+            <button class="btn-chart" onclick="exibirAquario(${item.id})" id="btnAquario${item.id}">${item.descricao}</button>
+            `
+
+            document.getElementById("graficos").innerHTML += `
+                <div id="grafico${item.id}" class="display-none">
+                    <h3 class="tituloGraficos">
+                        <span id="tituloAquario${item.id}">${item.descricao}</span>
+                    </h3>
+                    <div class="graph">
+                        <canvas id="myChartCanvas${item.id}"></canvas>
+                    </div>
+                    <div class="label-captura">
+                        <p id="avisoCaptura${item.id}" style="color: white"></p>
+                    </div>
+                </div>
+            `
+
+            obterDadosGrafico(item.id)
+        });
+
+        if (aquarios.length > 0) {
+            exibirAquario(aquarios[0].id)
         }
-    ]);
-
-    function switchSidebar() {
-        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
     }
 
-    function switchTeamList() {
-        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
+    function alterarTitulo(idAquario) {
+        var tituloAquario = document.getElementById(`tituloAquario${idAquario}`)
+        var descricao = JSON.parse(sessionStorage.AQUARIOS).find(item => item.id == idAquario).descricao;
+        tituloAquario.innerHTML = "Últimas medidas de Temperatura e Umidade do <span style='color: #e6005a'>" + descricao + "</span>"
+    }
+
+    function exibirAquario(idAquario) {
+        let todosOsGraficos = JSON.parse(sessionStorage.AQUARIOS);
+
+        for (i = 0; i < todosOsGraficos.length; i++) {
+            // exibindo - ou não - o gráfico
+            if (todosOsGraficos[i].id != idAquario) {
+                let elementoAtual = document.getElementById(`grafico${todosOsGraficos[i].id}`)
+                if (elementoAtual.classList.contains("display-block")) {
+                    elementoAtual.classList.remove("display-block")
+                }
+                elementoAtual.classList.add("display-none")
+
+                // alterando estilo do botão
+                let btnAtual = document.getElementById(`btnAquario${todosOsGraficos[i].id}`)
+                if (btnAtual.classList.contains("btn-pink")) {
+                    btnAtual.classList.remove("btn-pink")
+                }
+                btnAtual.classList.add("btn-white")
+            }
+        }
+
+        // exibindo - ou não - o gráfico
+        let graficoExibir = document.getElementById(`grafico${idAquario}`)
+        graficoExibir.classList.remove("display-none")
+        graficoExibir.classList.add("display-block")
+
+        // alterando estilo do botão
+        let btnExibir = document.getElementById(`btnAquario${idAquario}`)
+        btnExibir.classList.remove("btn-white")
+        btnExibir.classList.add("btn-pink")
+    }
+
+    // O gráfico é construído com três funções:
+    // 1. obterDadosGrafico -> Traz dados do Banco de Dados para montar o gráfico da primeira vez
+    // 2. plotarGrafico -> Monta o gráfico com os dados trazidos e exibe em tela
+    // 3. atualizarGrafico -> Atualiza o gráfico, trazendo novamente dados do Banco
+
+    // Esta função *obterDadosGrafico* busca os últimos dados inseridos em tabela de medidas.
+    // para, quando carregar o gráfico da primeira vez, já trazer com vários dados.
+    // A função *obterDadosGrafico* também invoca a função *plotarGrafico*
+
+    //     Se quiser alterar a busca, ajuste as regras de negócio em src/controllers
+    //     Para ajustar o "select", ajuste o comando sql em src/models
+    function obterDadosGrafico(idAquario) {
+
+        alterarTitulo(idAquario)
+
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+
+        fetch(`/medidas/ultimas/${idAquario}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+
+                    plotarGrafico(resposta, idAquario);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
+    // Esta função *plotarGrafico* usa os dados capturados na função anterior para criar o gráfico
+    // Configura o gráfico (cores, tipo, etc), materializa-o na página e, 
+    // A função *plotarGrafico* também invoca a função *atualizarGrafico*
+    function plotarGrafico(resposta, idAquario) {
+
+        console.log('iniciando plotagem do gráfico...');
+
+        // Criando estrutura para plotar gráfico - labels
+        let labels = [];
+
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [{
+                label: 'Umidade',
+                data: [],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            },
+            {
+                label: 'Temperatura',
+                data: [],
+                fill: false,
+                borderColor: 'rgb(199, 52, 52)',
+                tension: 0.1
+            }]
+        };
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(resposta)
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            labels.push(registro.momento_grafico);
+            dados.datasets[0].data.push(registro.umidade);
+            dados.datasets[1].data.push(registro.temperatura);
+        }
+
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(labels)
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura para plotar gráfico - config
+        const config = {
+            type: 'line',
+            data: dados,
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.getElementById(`myChartCanvas${idAquario}`),
+            config
+        );
+
+        setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
     }
 
 
+    // Esta função *atualizarGrafico* atualiza o gráfico que foi renderizado na página,
+    // buscando a última medida inserida em tabela contendo as capturas, 
+
+    //     Se quiser alterar a busca, ajuste as regras de negócio em src/controllers
+    //     Para ajustar o "select", ajuste o comando sql em src/models
+    function atualizarGrafico(idAquario, dados, myChart) {
+
+
+
+        fetch(`/medidas/tempo-real/${idAquario}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (novoRegistro) {
+
+                    obterdados(idAquario);
+                    // alertar(novoRegistro, idAquario);
+                    console.log(`Dados recebidos: ${JSON.stringify(novoRegistro)}`);
+                    console.log(`Dados atuais do gráfico:`);
+                    console.log(dados);
+
+                    let avisoCaptura = document.getElementById(`avisoCaptura${idAquario}`)
+                    avisoCaptura.innerHTML = ""
+
+
+                    if (novoRegistro[0].momento_grafico == dados.labels[dados.labels.length - 1]) {
+                        console.log("---------------------------------------------------------------")
+                        console.log("Como não há dados novos para captura, o gráfico não atualizará.")
+                        avisoCaptura.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> Foi trazido o dado mais atual capturado pelo sensor. <br> Como não há dados novos a exibir, o gráfico não atualizará."
+                        console.log("Horário do novo dado capturado:")
+                        console.log(novoRegistro[0].momento_grafico)
+                        console.log("Horário do último dado capturado:")
+                        console.log(dados.labels[dados.labels.length - 1])
+                        console.log("---------------------------------------------------------------")
+                    } else {
+                        // tirando e colocando valores no gráfico
+                        dados.labels.shift(); // apagar o primeiro
+                        dados.labels.push(novoRegistro[0].momento_grafico); // incluir um novo momento
+
+                        dados.datasets[0].data.shift();  // apagar o primeiro de umidade
+                        dados.datasets[0].data.push(novoRegistro[0].umidade); // incluir uma nova medida de umidade
+
+                        dados.datasets[1].data.shift();  // apagar o primeiro de temperatura
+                        dados.datasets[1].data.push(novoRegistro[0].temperatura); // incluir uma nova medida de temperatura
+
+                        myChart.update();
+                    }
+
+                    // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
+                    proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+                // Altere aqui o valor em ms se quiser que o gráfico atualize mais rápido ou mais devagar
+                proximaAtualizacao = setTimeout(() => atualizarGrafico(idAquario, dados, myChart), 2000);
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
 </script>
