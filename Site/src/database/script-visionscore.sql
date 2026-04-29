@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS vision_score;
-CREATE DATABASE IF NOT EXISTS vision_score;
-USE vision_score;
+DROP DATABASE IF EXISTS visionscore;
+CREATE DATABASE IF NOT EXISTS visionscore;
+USE visionscore;
 
 CREATE TABLE  cadastro (
 id_usuario INT PRIMARY KEY AUTO_INCREMENT,
