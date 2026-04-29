@@ -414,23 +414,19 @@ function renderSidebar(container, activePage, profileData) {
                     <i class="material-icons" style="${styles.sbItemIcon}">group</i>
                     <span class="sb-item-label" style="${styles.sbItemLabel}">Meu Time</span>
                 </div>
-                <div class="sb-item ${activePage === 'dashboard-time-adversario' ? 'sb-active' : ''}" style="${styles.sbItem}">
-                    <i class="material-icons" style="${styles.sbItemIcon}">group</i>
-                    <span class="sb-item-label" style="${styles.sbItemLabel}">Outras Equipes</span>
-                </div>
-                <div class="sb-item ${activePage === 'compare' ? 'sb-active' : ''}" style="${styles.sbItem}">
+                <div class="sb-item ${activePage === 'compare' ? 'sb-active' : ''}" style="${styles.sbItem} onclick="window.location.href = 'http://32.196.238.3:4200'"">
                     <i class="material-icons" style="${styles.sbItemIcon}">menu_book</i>
                     <span class="sb-item-label" style="${styles.sbItemLabel}">Comparar</span>
                 </div>
-                <div class="sb-item ${activePage === 'settings' ? 'sb-active' : ''}" style="${styles.sbItem}">
+                <div class="sb-item ${activePage === 'settings' ? 'sb-active' : ''}" style="${styles.sbItem} onclick="window.location.href = 'editar-contas.html'""> 
                     <i class="material-icons" style="${styles.sbItemIcon}">settings</i>
                     <span class="sb-item-label" style="${styles.sbItemLabel}">Configurações</span>
                 </div>
             </div>
             <div class="sb-footer" style="${styles.sbFooter}">
                 <div class="sb-profile" style="${styles.sbProfile}">
-                    <div class="sb-profile-icon" style="${styles.sbProfileIcon}">
-                        <img style="${styles.sbProfileImg}" src="../assets/playerIcons/faker.png" alt="">
+                    <div class="sb-profile-icon" style="${styles.sbProfileIcon}" onclick="abrirModalPerfil()" title="Editar perfil">
+                        <img style="${styles.sbProfileImg}; cursor: pointer;" src="../assets/playerIcons/faker.png" alt="">
                     </div>
                     <div class="sb-profile-content" style="${styles.sbProfileContent}">
                         <div class="sb-profile-name" style="${styles.sbProfileName}">${user.name}</div>
@@ -444,6 +440,146 @@ function renderSidebar(container, activePage, profileData) {
         </div>
     </div>
     `;
+
+    // Modal de perfil
+    const modalHtml = `
+    <style>
+        .editar-contas-modal-fundo {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #00000090;
+            z-index: 200000;
+            align-items: center;
+            justify-content: center;
+        }
+        .editar-contas-modal-fundo.editar-contas-modal-visivel {
+            display: flex;
+        }
+        .editar-contas-modal-editar {
+            width: 580px;
+            padding: 48px 48px 40px 48px;
+            background-color: #1F1F1F;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .editar-contas-modal-foto {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            border: 3px solid #0F8B8B;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .editar-contas-modal-foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .editar-contas-modal-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .editar-contas-modal-campo {
+            width: 100%;
+            height: 48px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: #003B3B80;
+            border: solid 2px #0F8B8B;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .editar-contas-modal-campo label {
+            padding: 0 14px;
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 14px;
+            color: #e4e4e4;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .editar-contas-modal-campo input,
+        .editar-contas-modal-campo select {
+            flex: 1;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-family: Montserrat;
+            font-weight: 400;
+            font-size: 14px;
+            color: #e4e4e4;
+            padding-right: 12px;
+        }
+        .editar-contas-modal-campo select {
+            cursor: pointer;
+            background-color: #003B3B;
+        }
+        .editar-contas-modal-campo select option {
+            background-color: #1F1F1F;
+            color: #e4e4e4;
+        }
+        .editar-contas-modal-btn-salvar {
+            width: 100%;
+            height: 46px;
+            background-color: #003B3B80;
+            border: solid 2px #0F8B8B;
+            color: #e4e4e4;
+            border-radius: 8px;
+            font-family: Montserrat;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .editar-contas-modal-btn-salvar:hover {
+            background-color: #0F8B8B80;
+        }
+    </style>
+
+    <div class="editar-contas-modal-fundo" id="modalPerfilFundo" onclick="fecharModalPerfil()">
+        <div class="editar-contas-modal-editar" onclick="event.stopPropagation()">
+            <div class="editar-contas-modal-foto">
+                <img src="${user.imageUrl || '../assets/playerIcons/faker.png'}" alt="Foto do usuário">
+            </div>
+            <div class="editar-contas-modal-form">
+                <div class="editar-contas-modal-campo">
+                    <label>Nome:</label>
+                    <input type="text" value="${user.name || ''}">
+                </div>
+                <div class="editar-contas-modal-campo">
+                    <label>Email:</label>
+                    <input type="email" value="${user.email || ''}">
+                </div>
+                <div class="editar-contas-modal-campo">
+                    <label>Senha:</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+            </div>
+            <button class="editar-contas-modal-btn-salvar">Salvar</button>
+        </div>
+    </div>
+
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    window.abrirModalPerfil = function() {
+        document.getElementById('modalPerfilFundo').classList.add('editar-contas-modal-visivel');
+    };
+    window.fecharModalPerfil = function() {
+        document.getElementById('modalPerfilFundo').classList.remove('editar-contas-modal-visivel');
+    };
 
     container.innerHTML = htmlSidebar;
 
