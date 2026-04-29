@@ -16,6 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
     <script src="../js/renderComponents.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -147,8 +148,10 @@
                     </div>
                 </div>
                 <div class="mainContainerLower">
-                    <div class="pieChart">
-                        CHART JS VAI AQUI
+                    <div class="roleChart">
+                        <div>
+                            <canvas id="myChart"></canvas>
+                        </div>
                     </div>
                     <div class="mainKPIs">
                         <div class="kpi">
@@ -237,5 +240,30 @@
         document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
     }
 
+
+
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['TOP', 'JG', 'MID', 'ADC', 'SUP'],
+            datasets: [{
+                label: '# of Votes',
+                data: [23, 18, 31, 15, 27],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            },
+            scales: {}
+        }
+    });
 
 </script>

@@ -446,6 +446,24 @@ body {
   }
 }
 
+.roleChart #myChart {
+  height: 30vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
+  padding: 1rem;
+
+  background-color: #1F1F1F;
+  border: 2px solid #0F8B8B;
+
+  border-radius: 2vh;
+
+  box-shadow: 0px 0px 10px 5px #00000060;
+}
+
 .mainContainerLower {
   width: 100%;
   height: auto;
