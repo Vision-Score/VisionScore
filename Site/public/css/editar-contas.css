@@ -167,28 +167,6 @@
             color: #e4e4e4;
         }
 
-        button {
-            width: 5vw;
-            height: 5vh;
-            background-color: #F4151580;
-            border: solid 2px red;
-            color: white;
-            font-family: Open Sans;
-            font-weight: 700;
-            font-size: 20px;
-            border-radius: 1vh;
-            cursor: pointer;
-            transition: 0.5s;
-
-            padding: 1%;
-
-            margin: 3px;
-
-            &:hover {
-                background-color: #F41515;
-            }
-        }
-
         .nome,
         .foto,
         .id {
@@ -196,9 +174,17 @@
             justify-content: center;
         }
 
-
         .equipe {
             width: 700px;
+
+            img {
+                width: auto;
+                height: 36px;
+                object-fit: contain;
+                border-radius: 0;
+                border: none;
+                outline: none;
+            }
         }
 
         .status {
@@ -207,6 +193,7 @@
 
         .acoes {
             justify-content: center;
+            gap: 8px;
         }
 
         .foto {
@@ -227,6 +214,67 @@
         &:nth-child(even) {
             background-color: #00000000;
         }
+    }
+}
+
+.editar-contas-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 18px;
+    border-radius: 6px;
+    font-family: Open Sans;
+    font-weight: 700;
+    font-size: 14px;
+    width: auto !important;
+}
+
+.editar-contas-status-badge.ativo {
+    background-color: #003B3B80;
+    border: solid 2px #0F8B8B;
+    color: #0F8B8B;
+}
+
+.editar-contas-status-badge.inativo {
+    background-color: #e4e4e410;
+    border: solid 2px #e4e4e460;
+    color: #e4e4e480;
+}
+
+.editar-contas-btn-editar,
+.editar-contas-btn-excluir {
+    width: 6vw;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Open Sans;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 1vh;
+    cursor: pointer;
+    transition: 0.5s;
+    padding: 1%;
+    margin: 3px;
+}
+
+.editar-contas-btn-editar {
+    background-color: #003B3B80;
+    border: solid 2px #0F8B8B;
+    color: #e4e4e4;
+
+    &:hover {
+        background-color: #0F8B8B80;
+    }
+}
+
+.editar-contas-btn-excluir {
+    background-color: #F4151580;
+    border: solid 2px #F41515;
+    color: #e4e4e4;
+
+    &:hover {
+        background-color: #F41515;
     }
 }
 
@@ -261,5 +309,228 @@
             color: #e4e4e4;
             background-color: #0F8B8B80;
         }
+    }
+}
+
+.editar-contas-modal-fundo {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000090;
+    z-index: 200000;
+    align-items: center;
+    justify-content: center;
+}
+
+.editar-contas-modal-fundo.editar-contas-modal-visivel {
+    display: flex;
+}
+
+.editar-contas-modal-editar {
+    width: 580px;
+    padding: 48px 48px 40px 48px;
+    background-color: #1F1F1F;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.editar-contas-modal-foto {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    border: 3px solid #0F8B8B;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.editar-contas-modal-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.editar-contas-modal-campo {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #003B3B80;
+    border: solid 2px #0F8B8B;
+    border-radius: 8px;
+    overflow: hidden;
+
+    label {
+        padding: 0 14px;
+        font-family: Montserrat;
+        font-weight: 600;
+        font-size: 14px;
+        color: #e4e4e4;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    input,
+    select {
+        flex: 1;
+        height: 100%;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        font-family: Montserrat;
+        font-weight: 400;
+        font-size: 14px;
+        color: #e4e4e4;
+        padding-right: 12px;
+    }
+
+    select {
+        cursor: pointer;
+        background-color: #003B3B;
+    }
+
+    select option {
+        background-color: #1F1F1F;
+        color: #e4e4e4;
+    }
+}
+
+.editar-contas-modal-status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.editar-contas-modal-toggle {
+    width: 50px;
+    height: 26px;
+    border-radius: 13px;
+    background-color: #003B3B80;
+    border: solid 2px #0F8B8B;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.editar-contas-modal-toggle.ativo {
+    background-color: #0F8B8B60;
+    justify-content: flex-end;
+}
+
+.editar-contas-modal-toggle-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    background-color: #e4e4e4;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.editar-contas-modal-toggle-label {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 14px;
+    color: #e4e4e4;
+}
+
+.editar-contas-modal-btn-salvar {
+    width: 100%;
+    height: 46px;
+    background-color: #003B3B80;
+    border: solid 2px #0F8B8B;
+    color: #e4e4e4;
+    border-radius: 8px;
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: #0F8B8B80;
+    }
+}
+
+.editar-contas-modal-excluir {
+    width: 520px;
+    padding: 48px 48px;
+    background-color: #1F1F1F;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+
+    p {
+        font-family: Montserrat;
+        font-weight: 700;
+        font-size: 18px;
+        color: #e4e4e4;
+        text-align: center;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+.editar-contas-modal-excluir-btns {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.editar-contas-modal-btn-cancelar {
+    flex: 1;
+    height: 46px;
+    background-color: #0F8B8B80;
+    border: solid 2px #0F8B8B;
+    color: #e4e4e4;
+    border-radius: 8px;
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: #0F8B8B;
+    }
+}
+
+.editar-contas-modal-btn-confirmar {
+    flex: 1;
+    height: 46px;
+    background-color: #8B0F0F80;
+    border: solid 2px #F41515;
+    color: #e4e4e4;
+    border-radius: 8px;
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: #F4151580;
     }
 }
