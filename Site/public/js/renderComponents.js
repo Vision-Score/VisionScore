@@ -432,7 +432,7 @@ function renderSidebar(container, activePage, profileData) {
                         <div class="sb-profile-name" style="${styles.sbProfileName}">${user.name}</div>
                         <div class="sb-profile-role" style="${styles.sbProfileRole}">${user.role}</div>
                     </div>
-                    <div class="sb-logout sb-profile-logout" style="${styles.sbProfileLogout}">
+                    <div class="sb-logout sb-profile-logout" style="${styles.sbProfileLogout}" onclick="window.location.href='../login.html'">
                         <i class="material-icons" style="font-size: 25px; color: #e4e4e4; transition: all .1s ease-in-out;">logout</i>
                     </div>
                 </div>
