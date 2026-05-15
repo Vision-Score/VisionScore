@@ -6,6 +6,7 @@
     --cor-escuro: #0A0A0A;
     --descricao: #575757;
     --borda-link-recuperar-senha: rgb(87, 87, 87, 0.3);
+    --cor-erro: #D62828;
 }
 
 @keyframes fadeSlideUp {
@@ -178,6 +179,28 @@ input:not(:placeholder-shown)~label {
 input:focus,
 input:not(:placeholder-shown) {
     border-bottom: solid 2px var(--cor-segundaria)
+}
+
+.input-email-container,
+.input-senha-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-email-container span,
+.input-senha-container span {
+    color: var(--cor-erro);
+    font-size: 0.8rem;
+    display: none;
+}
+
+.invalido-label {
+    color: var(--cor-erro) !important;
+}
+
+.invalido-input {
+    border-bottom: solid 2px var(--cor-erro) !important;
 }
 
 .icone-senha {
