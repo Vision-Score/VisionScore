@@ -6,6 +6,8 @@ const botaoLogin = document.getElementById('btn-login');
 
 const loader = document.querySelector('.loader');
 
+let emailPreenchido = null;
+let senhaPreenchida = null;
 
 const mostrarSenha = () => {
     inputSenha.type = "text";
@@ -18,6 +20,55 @@ const esconderSenha = () => {
     iconeMostrarSenha.style.display = "block";
     iconeEsconderSenha.style.display = "none";
 };
+
+const validacaoCampoEmail = () => {
+    const spanErroEmail = document.getElementById('span-erro-email');
+    const email = inputEmail.value;
+
+    if (email.trim() === "" || !email.includes('@') || !email.endsWith('.com')) {
+        inputEmail.classList.add('invalido-input');
+        spanErroEmail.style.display = 'block';
+        inputEmail.nextElementSibling.classList.add('invalido-label');
+        emailPreenchido = false;
+    } else {
+        inputEmail.classList.remove('invalido-input');
+        spanErroEmail.style.display = 'none';
+        inputEmail.nextElementSibling.classList.remove('invalido-label');
+        emailPreenchido = true;
+    }
+
+    validacaoBotaoLogin();
+}
+
+const validacaoCampoSenha = () => {
+    const senha = inputSenha.value;
+    const labelSenha = inputSenha.nextElementSibling?.nextElementSibling?.nextElementSibling;
+    const spanErroSenha = document.getElementById('span-erro-senha');
+
+    if (senha.length < 1) {
+        inputSenha.classList.add('invalido-input');
+        labelSenha.classList.add('invalido-label');
+        spanErroSenha.style.display = 'block';
+        senhaPreenchida = false;
+    } else {
+        inputSenha.classList.remove('invalido-input');
+        labelSenha.classList.remove('invalido-label');
+        spanErroSenha.style.display = 'none';
+        senhaPreenchida = true;
+    }
+
+    validacaoBotaoLogin();
+}
+
+const validacaoBotaoLogin = () => {
+    if (emailPreenchido && senhaPreenchida) {
+        botaoLogin.disabled = false;
+        botaoLogin.classList.remove('botao-desabilitado');
+    } else {
+        botaoLogin.disabled = true;
+        botaoLogin.classList.add('botao-desabilitado');
+    }
+}
 
 function entrar() {
     loader.style.display = 'flex';
@@ -71,3 +122,5 @@ function entrar() {
 iconeMostrarSenha.addEventListener('click', mostrarSenha);
 iconeEsconderSenha.addEventListener('click', esconderSenha);
 botaoLogin.addEventListener('click', entrar);
+inputEmail.addEventListener('input', validacaoCampoEmail);
+inputSenha.addEventListener('input', validacaoCampoSenha);
