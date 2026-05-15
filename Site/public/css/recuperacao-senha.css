@@ -6,6 +6,7 @@
     --cor-escuro: #0A0A0A;
     --descricao: #575757;
     --borda-link-recuperar-senha: rgb(87, 87, 87, 0.3);
+    --cor-erro: #D62828;
 }
 
 @keyframes fadeSlideUp {
@@ -109,6 +110,12 @@ p {
     font-size: 1.2rem;
 }
 
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .input-flutuante {
     position: relative;
 }
@@ -149,17 +156,18 @@ input:not(:placeholder-shown) {
     border-bottom: solid 2px var(--cor-segundaria)
 }
 
-.icone-senha {
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.icone-senha:hover {
-    color: var(--cor-segundaria);
-}
-
-#text-icone {
+span {
+    color: var(--cor-erro);
+    font-size: 0.8rem;
     display: none;
+}
+
+.invalido-label {
+    color: var(--cor-erro) !important;
+}
+
+.invalido-input {
+    border-bottom: solid 2px var(--cor-erro) !important;
 }
 
 .container-botao {

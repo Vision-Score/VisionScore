@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Vision Score</title>
+    <title>Recuperação de Senha - Vision Score</title>
     <link rel="stylesheet" href="css/recuperacao-senha.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,19 +26,25 @@
             <h2>Recupere seu Acesso</h2>
 
             <p>
-                Informe seu e-mail abaixo e enviaremos um link para restaurar sua entrada no sistema
+                Informe seu e-mail abaixo e enviaremos um código para restaurar sua entrada no sistema
             </p>
         </div>
 
-        <div class="input-flutuante">
-            <input type="email" placeholder="" id="input-email" autocomplete="off">
+        <div class="input-container">
+            <div class="input-flutuante">
+                <input type="email" placeholder="" id="input-email" autocomplete="off">
 
-            <label for="input-email">E-mail de cadastro</label>
+                <label for="input-email">E-mail de cadastro</label>
+            </div>
+
+            <span id="span-invalido-email">Formato de e-mail inválido</span>
         </div>
 
 
         <div class="container-botao">
-            <button type="button" id="btn-recuperar-senha">Enviar Link de Recuperação</button>
+            <button type="button" id="btn-recuperar-senha" class="botao-desabilitado">
+                Enviar Código de Recuperação
+            </button>
 
             <a href="./login.html">Voltar ao Login</a>
         </div>
@@ -57,4 +63,4 @@
 </body>
 
 </html>
-<script src="./js/login.js"></script>
+<script src="./js/recuperacao-senha.js"></script>
