@@ -3,6 +3,17 @@ const btnRecuperarSenha = document.getElementById('btn-recuperar-senha');
 
 let emailPreenchido = false;
 
+const mostrarNotificacao = (msg) => {
+    document.getElementById('modal-msg').textContent = msg;
+    document.getElementById('overlay').classList.add('overlay-visivel');
+};
+
+btnRecuperarSenha.addEventListener('click', () => {
+    if (!emailPreenchido) {
+        mostrarNotificacao("Informe um e-mail para a recuperação de senha.");
+    }
+});
+
 const validarCampoEmail = () => {
     const spanErroEmail = document.getElementById('span-invalido-email');
     const email = inputEmail.value;
