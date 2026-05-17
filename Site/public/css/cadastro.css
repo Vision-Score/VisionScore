@@ -7,6 +7,18 @@
     --cor-escuro: #222222;
 }
 
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -17,11 +29,25 @@
 
 body {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
-    background-color: #101010;
+    background-image: url("../assets/AmbessaCadastro.png");
+    background-size: cover;
+    background-position: center;
     position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: "";
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(109deg, rgba(10, 12, 16, 0.99) 15%, rgba(10, 12, 16, 0.7) 70%, rgba(10, 12, 16, 0.99) 90%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
 
 .loader {
@@ -48,6 +74,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.2rem;
+    z-index: 1;
 }
 
 .subtitulo {
@@ -57,13 +84,18 @@ body {
 .container-cadastro {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
     flex-direction: column;
-    width: 50%;
-    height: 90vh;
+    width: 35%;
+    min-height: 75vh;
     background-color: var(--cor-escuro);
-    border-radius: 25px;
+    border-radius: 10px;
     color: white;
+    padding: 1.5rem 2rem;
+    border-left: solid 5px var(--cor-principal);
+    margin-left: 4rem;
+    z-index: 1;
+    animation: fadeSlideUp 0.8s ease-in-out;
 }
 
 .logo img {
@@ -81,15 +113,18 @@ body {
 
 input {
     width: 38%;
-    height: 25px;
-    padding: 10px;
-    border-radius: 4px;
+    font-size: 1.05rem;
+    background: transparent;
     border: none;
-    background-color: #575757;
-    color: white;
-    border: 1px solid white;
+    border-bottom: solid 2px #575757;
     outline: none;
-    font-size: 16px;
+    padding: 0.7rem 0.3rem;
+    color: var(--cor-clara);
+    transition: all 0.5s;
+}
+
+input:focus {
+    border-bottom: solid 2px var(--cor-segundaria);
 }
 
 input::placeholder {
@@ -98,13 +133,13 @@ input::placeholder {
 }
 
 button {
-    width: 50%;
+    width: 35%;
     height: 50px;
     border-radius: 4px;
     border: none;
     background-color: var(--cor-segundaria);
     color: #ffff;
-    font-size: 23px;
+    font-size: 17px;
     font-weight: 700;
     cursor: pointer;
     transition: all ease 0.3s;
@@ -120,7 +155,7 @@ button:active {
 
 a {
     text-decoration: none;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--cor-clara);
     position: relative;
@@ -211,10 +246,11 @@ a:active {
 @media (max-width: 1024px) {
 
     .container-cadastro {
-        width: 80%;
-        height: auto;
-        padding: 40px 20px;
-        gap: 25px;
+    width: 80%;
+    min-height: auto;
+    padding: 40px 20px;
+    gap: 25px;
+   margin-left: 0;
     }
 
     .form {
