@@ -9,10 +9,29 @@ const loader = document.querySelector('.loader');
 let emailPreenchido = null;
 let senhaPreenchida = null;
 
-const mostrarNotificacao = (msg) => {
-    document.getElementById('modal-msg').textContent = msg;
+const mostrarNotificacao = (mensagem, acao = null) => {
+    document.getElementById('modal-mensagem').textContent = mensagem;
+    const modal = document.querySelector('.modal');
+    const btnOk = document.getElementById('modal-btn');
+    if (acao) {
+        modal.classList.remove('modal-erro');
+        modal.classList.add('modal-sucesso');
+        btnOk.style.display = 'none';
+        setTimeout(() => {
+            document.getElementById('overlay').classList.remove('overlay-visivel');
+            acao();
+        }, 2000);
+    } else {
+        modal.classList.remove('modal-sucesso');
+        modal.classList.add('modal-erro');
+        btnOk.style.display = 'block';
+    }
     document.getElementById('overlay').classList.add('overlay-visivel');
 };
+
+document.getElementById('modal-btn').addEventListener('click', () => {
+    document.getElementById('overlay').classList.remove('overlay-visivel');
+});
 
 const mostrarSenha = () => {
     inputSenha.type = "text";
@@ -93,12 +112,14 @@ function entrar() {
     }).then(function (resposta) {
         if (resposta.ok) {
             resposta.json().then(json => {
-                setInterval(() => {
+                setTimeout(() => {
                     loader.style.display = 'none';
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id;
-                    window.location = "./dashboard/dashboard.html";
+                    mostrarNotificacao("Login realizado com sucesso! Redirecionando...", () => {
+                        window.location = "./dashboard/dashboard.html";
+                    });
                 }, 1000);
             });
         } else {

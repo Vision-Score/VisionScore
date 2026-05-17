@@ -5,6 +5,30 @@ const inputSenha = document.getElementById('input-senha');
 const inputEmpresa = document.getElementById('input-empresa');
 const botaoCadastrar = document.getElementById('btn-cadastrar');
 
+
+const mostrarNotificacao = (mensagem, acao = null) => {
+    document.getElementById('modal-mensagem').textContent = mensagem;
+    const modal = document.querySelector('.modal');
+    const btnOk = document.getElementById('modal-btn');
+    if (acao) {
+        modal.classList.remove('modal-erro');
+        btnOk.style.display = 'none';
+        setTimeout(() => {
+            document.getElementById('overlay').classList.remove('overlay-visivel');
+            acao();
+        }, 2000);
+    } else {
+        modal.classList.add('modal-erro');
+        btnOk.style.display = 'block';
+    }
+    document.getElementById('overlay').classList.add('overlay-visivel');
+};
+
+document.getElementById('modal-btn').addEventListener('click', () => {
+    document.getElementById('overlay').classList.remove('overlay-visivel');
+});
+
+
 function cadastrar() {
     var nomeVar = inputNome.value;
     var telefoneVar = inputTelefone.value;
@@ -16,10 +40,16 @@ function cadastrar() {
     loader.style.display = 'flex';
 
     if (nomeVar == "" || emailVar == "" || senhaVar == "" || empresaVar == "") {
-        alert("Preencha todos os campos obrigatórios.");
+        mostrarNotificacao("Preencha todos os campos obrigatórios.");
         loader.style.display = 'none';
         return false;
     }
+
+    if (!emailVar.includes('@') || !emailVar.endsWith('.com')) {
+    mostrarNotificacao("Formato de e-mail inválido.");
+    loader.style.display = 'none';
+    return false;
+}
 
     fetch("/usuarios/cadastrar", {
         method: "POST",
@@ -37,17 +67,21 @@ function cadastrar() {
         console.log("Entrei no then do cadastro!");
 
         if (resposta.ok) {
-
             setTimeout(() => {
                 loader.style.display = 'none';
-                alert("Cadastro realizado com sucesso! Redirecionando para o login...");
-                window.location.href = "login.html";
+                mostrarNotificacao("Cadastro realizado com sucesso! Redirecionando para o login...", () => {
+                    window.location.href = "login.html";
+                });
             }, 1000);
         } else {
             resposta.text().then(texto => {
                 loader.style.display = 'none';
                 if (texto.includes("Duplicate entry")) {
-                    alert("Email já cadastrado!");
+                    if (texto.includes("cod_equipe")) {
+                        mostrarNotificacao("Código de equipe já cadastrado.");
+                    } else {
+                        mostrarNotificacao("E-mail já cadastrado.");
+                    }
                 }
             });
         }

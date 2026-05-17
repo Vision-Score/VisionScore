@@ -147,6 +147,66 @@ a:active {
     opacity: 0.6;
 }
 
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay-visivel {
+    display: flex;
+}
+
+.modal {
+    background-color: rgb(23, 28, 25);
+    border: 1px solid #1f7937;
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 700px;
+    width: 90%;
+    height: 180px;
+    text-align: center;
+}
+
+
+.modal span {
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.modal-erro {
+    background-color: black;
+    border: 1px solid #791f1f;
+}
+
+.modal-erro span {
+    color: #ffffff;
+}
+
+.modal-erro #modal-btn {
+    background-color: #422c2c;
+    color: #ffffff;
+    width: 8rem;
+    height: auto;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    margin-left: 0;
+}
+
+.modal-erro #modal-btn:hover {
+    background-color: #791f1f;
+}
+
 
 @media (max-width: 1024px) {
 
