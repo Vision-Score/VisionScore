@@ -1,5 +1,6 @@
 package br.com.importer.config;
 
+import br.com.importer.exception.ImportacaoException;
 import br.com.importer.util.EnvLoader;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,11 +16,11 @@ public class DatabaseConfig {
         String username = EnvLoader.get("DB_USERNAME");
         String password = EnvLoader.get("DB_PASSWORD", "");
 
-        if (url == null || username == null) {
-            throw new IllegalStateException(
-                "Configurações de banco de dados não encontradas. " +
-                "Defina DB_URL e DB_USERNAME no arquivo .env"
-            );
+        if (url == null || url.isBlank()) {
+            throw new ImportacaoException("DB_URL não definido no arquivo .env");
+        }
+        if (username == null || username.isBlank()) {
+            throw new ImportacaoException("DB_USERNAME não definido no arquivo .env");
         }
 
         BasicDataSource dataSource = new BasicDataSource();
