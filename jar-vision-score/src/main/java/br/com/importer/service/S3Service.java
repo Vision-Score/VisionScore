@@ -1,5 +1,6 @@
 package br.com.importer.service;
 
+import br.com.importer.exception.ImportacaoException;
 import br.com.importer.util.EnvLoader;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -27,7 +28,7 @@ public class S3Service {
         this.prefix     = EnvLoader.get("S3_PREFIX", "");
 
         if (bucketName == null || bucketName.isBlank()) {
-            throw new IllegalStateException("S3_BUCKET_NAME não definido no arquivo .env");
+            throw new ImportacaoException("S3_BUCKET_NAME não definido no arquivo .env");
         }
     }
 
@@ -45,17 +46,23 @@ public class S3Service {
             requestBuilder.prefix(prefix);
         }
 
-        List<String> arquivos = s3Client.listObjectsV2Paginator(requestBuilder.build())
-                .contents()
-                .stream()
-                .map(S3Object::key)
-                .filter(key -> key.toLowerCase().endsWith(".xlsx"))
-                .collect(Collectors.toList());
+        try {
+            List<String> arquivos = s3Client.listObjectsV2Paginator(requestBuilder.build())
+                    .contents()
+                    .stream()
+                    .map(S3Object::key)
+                    .filter(key -> key.toLowerCase().endsWith(".xlsx"))
+                    .collect(Collectors.toList());
 
-        System.out.println("[S3Service] " + arquivos.size() + " arquivo(s) .xlsx encontrado(s).");
-        arquivos.forEach(k -> System.out.println("  → " + k));
+            System.out.println("[S3Service] " + arquivos.size() + " arquivo(s) .xlsx encontrado(s).");
+            arquivos.forEach(k -> System.out.println("  → " + k));
 
-        return arquivos;
+            return arquivos;
+        } catch (ImportacaoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ImportacaoException("Erro ao listar arquivos no bucket '" + bucketName + "': " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -65,11 +72,15 @@ public class S3Service {
     public ResponseInputStream<GetObjectResponse> download(String key) {
         System.out.println("[S3Service] Baixando: " + key);
 
-        GetObjectRequest request = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
+        try {
+            GetObjectRequest request = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
 
-        return s3Client.getObject(request);
+            return s3Client.getObject(request);
+        } catch (Exception e) {
+            throw new ImportacaoException("Erro ao baixar o arquivo '" + key + "' do S3: " + e.getMessage(), e);
+        }
     }
 }
