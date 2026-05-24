@@ -94,47 +94,74 @@ const validacaoBotaoLogin = () => {
     }
 }
 
-function entrar() {
+async function entrar() {
     loader.style.display = 'flex';
-    var emailVar = inputEmail.value;
-    var senhaVar = inputSenha.value;
+    const emailVar = inputEmail.value;
+    const senhaVar = inputSenha.value;
 
-    if (emailVar == "" || senhaVar == "") {
+    if (!emailVar || !senhaVar) {
         loader.style.display = 'none';
         mostrarNotificacao("Preencha o e-mail e a senha.");
         return false;
     }
 
-    fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailServer: emailVar, senhaServer: senhaVar })
-    }).then(function (resposta) {
-        if (resposta.ok) {
-            resposta.json().then(json => {
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    sessionStorage.EMAIL_USUARIO = json.email;
-                    sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.ID_USUARIO = json.id;
-                    mostrarNotificacao("Login realizado com sucesso! Redirecionando...", () => {
-                        window.location = "./dashboard/dashboard.html";
-                    });
-                }, 1000);
-            });
-        } else {
-            resposta.text().then(texto => {
-                loader.style.display = 'none';
-                mostrarNotificacao(texto);
-            });
+    try {
+        const resposta = await fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ emailServer: emailVar, senhaServer: senhaVar })
+        });
+
+        if (!resposta.ok) {
+            mostrarNotificacao(await resposta.text());
+            return false;
         }
-    }).catch(function (erro) {
-        loader.style.display = 'none';
+
+        const json = await resposta.json();
+
+        const [jsonTime, jsonElenco] = await Promise.all([
+            getTime(json.codEquipe).then(r => r.json()),
+            getElenco(json.codEquipe).then(r => r.json())
+        ]);
+
+        sessionStorage.setItem("usuario", JSON.stringify(json));
+        sessionStorage.setItem("time", JSON.stringify(jsonTime));
+        sessionStorage.setItem("elenco", JSON.stringify(jsonElenco));
+
+        window.location.href = "dashboard/dashboard-time.html";
+
+    } catch (erro) {
         console.log(erro);
         mostrarNotificacao("Erro ao tentar realizar login.");
-    });
+    } finally {
+        loader.style.display = 'none';
+    }
+}
 
-    return false;
+function getElenco(idEquipe) {
+    return fetch(`/jogadores/listarElenco/${idEquipe}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+    }).then(function (resposta) {
+        console.log(resposta);
+        return resposta;
+    }).catch(function (erro) {
+        console.log(erro);
+        throw erro;
+    });
+}
+
+function getTime(idEquipe) {
+    return fetch(`/times/buscar/${idEquipe}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+    }).then(function (resposta) {
+        console.log(resposta);
+        return resposta;
+    }).catch(function (erro) {
+        console.log(erro);
+        throw erro;
+    });
 }
 
 iconeMostrarSenha.addEventListener('click', mostrarSenha);

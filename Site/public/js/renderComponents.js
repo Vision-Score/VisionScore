@@ -63,6 +63,152 @@ function renderTeamProfile(container, data) {
     `;
 };
 
+function renderPopupJogador(container, data) {
+    if (!container) return;
+
+    const config = {
+        name: data.name || "Jogador",
+        imageUrl: data.imageUrl || "../assets/playerIcons/faker.png",
+        position: data.position || "Mid",
+        teamLogoUrl: data.teamLogoUrl || "../assets/icons/t1logo.png",
+        stats: data.stats || [],
+        badges: data.badges || [],
+        quickStats: data.quickStats || [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 553 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▼250g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 12.3 KDA" }
+        ]
+    };
+
+    const renderStats = (statsArray) => {
+        if (!statsArray || statsArray.length === 0) return '';
+        return statsArray.map(stat => {
+            const trendClass = stat.trend === 'down' ? 'down' : 'up';
+            return `
+                <div class="infoBox">
+                    <span class="infoLabel">${stat.label}</span>
+                    <div class="infoStats">
+                        <div class="infoTrend ${trendClass}">
+                            <i class="material-icons">arrow_${trendClass}ward</i>
+                            <span class="infoPlayerValue">${stat.playerValue}</span>
+                        </div>
+                        <span class="infoSeparator">|</span>
+                        <div class="infoTrend">
+                            <span class="infoMedianValue">${stat.medianValue}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+    const renderBadges = (badgesArray) => {
+        if (!badgesArray || badgesArray.length === 0) return '';
+        return badgesArray.map(badge => `
+            <div class="badge">
+                <img src="${badge.imageUrl}" alt="${badge.title}" class="badgeImage">
+                <span class="badgeTitle">${badge.title}</span>
+            </div>
+        `).join('');
+    };
+
+    const renderQuickStats = (quickStatsArray) => {
+        if (!quickStatsArray || quickStatsArray.length === 0) return '';
+        return quickStatsArray.map(stat => `
+            <div class="playerInfo">
+                <img src="${stat.iconUrl}" alt="Stat Icon">
+                <span>${stat.value}</span>
+            </div>
+        `).join('');
+    };
+
+    container.innerHTML = `
+        <div class="popupJogadorContent">
+            <div class="sideBar">
+                <div class="sideUpper" onclick="switchPopupJogador()">
+                    <i class="material-icons">arrow_back</i>
+                </div>
+                <div class="playerIcon">
+                    <img src="${config.imageUrl}" alt="${config.name}">
+                    <div class="playerPosition">${config.position}</div>
+                </div>
+                <div class="playerName">${config.name}</div>
+                ${renderQuickStats(config.quickStats)}
+                <div class="teamlogo">
+                    <img src="${config.teamLogoUrl}" alt="Team Logo">
+                </div>
+            </div>
+            <div class="mainContent">
+                <div class="mainUpper">
+                    <div class="compareButton" onclick="compareJogadores('${config.name}')">
+                        <i class="material-icons">compare_arrows</i>
+                        <span>Comparar</span>
+                    </div>
+                </div>
+                <div class="mainLower">
+                    <div class="mainLowerUpper">
+                        <div class="playerInformation">
+                            ${renderStats(config.stats)}
+                        </div>
+                        <div class="radarGraph">
+                            <div class="canvasContainer">
+                                <canvas id="playerRadarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mainLowerLower">
+                        ${renderBadges(config.badges)}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const ctx = document.getElementById('playerRadarChart');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['DPM', 'KDA', 'KP%', 'GPM', 'CSPM', 'G@15', 'Wards/min', 'DtPM', 'Torres'],
+            datasets: [{
+                label: data.name,
+                data: data.radarData || [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                borderColor: '#0F8B8B',
+                backgroundColor: '#0F8B8B80'
+            }]
+        },
+        options: {
+            scales: {
+                responsive: true,
+                maintainAspectRatio: false,
+                r: {
+                    min: 0,
+                    max: 100,
+                    angleLines: {
+                        color: '#444'
+                    },
+                    grid: {
+                        color: '#44444460'
+                    },
+                    pointLabels: {
+                        color: '#fff',
+                        font: {
+                            size: 14,
+                            weight: 600,
+                            family: "Montserrat"
+                        }
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: false
+            }
+        }
+    });
+}
+
 function renderPlayerCard(container, data) {
     if (!container) return;
 
@@ -123,6 +269,7 @@ function renderPlayerCard(container, data) {
             width: auto;
             height: auto;
             margin: 2% 0;
+            padding: 2%;
             color: #e4e4e4;
             font-family: Open Sans, sans-serif;
             font-weight: 600;
@@ -574,10 +721,10 @@ function renderSidebar(container, activePage, profileData) {
 
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-    window.abrirModalPerfil = function() {
+    window.abrirModalPerfil = function () {
         document.getElementById('modalPerfilFundo').classList.add('editar-contas-modal-visivel');
     };
-    window.fecharModalPerfil = function() {
+    window.fecharModalPerfil = function () {
         document.getElementById('modalPerfilFundo').classList.remove('editar-contas-modal-visivel');
     };
 
