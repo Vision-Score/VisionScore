@@ -1,5 +1,6 @@
 package br.com.importer.service;
 
+import br.com.importer.exception.ImportacaoException;
 import com.github.pjfanning.xlsx.StreamingReader;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -81,8 +82,10 @@ public class ExcelParserService {
                 }
             }
 
+        } catch (ImportacaoException e) {
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao processar arquivo XLSX: " + e.getMessage(), e);
+            throw new ImportacaoException("Erro ao processar arquivo XLSX: " + e.getMessage(), e);
         }
 
         return linhasLidas;

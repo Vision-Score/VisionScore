@@ -305,7 +305,6 @@ button:active {
 
 .modal {
     background-color: black;
-    border: 1px solid #791f1f;
     border-radius: 8px;
     padding: 2rem;
     display: flex;
@@ -317,6 +316,15 @@ button:active {
     width: 90%;
     height: 180px;
     text-align: center;
+}
+
+.modal-erro {
+    border: 1px solid #791f1f;
+}
+
+.modal-sucesso {
+    background-color: rgb(23, 28, 25);
+    border: 1px solid #1f7937;
 }
 
 
@@ -343,6 +351,8 @@ button:active {
 .modal button:hover {
     background-color: #791f1f;
 }
+
+
 
 @media (max-width: 1024px) {
 
