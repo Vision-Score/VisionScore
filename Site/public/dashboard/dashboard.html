@@ -148,10 +148,7 @@
                     </div>
                 </div>
                 <div class="mainContainerLower">
-                    <div class="roleChart">
-                        <div>
-                            <canvas id="myChart"></canvas>
-                        </div>
+                    <div id="strategiesContainer" class="strategiesContainer">
                     </div>
                     <div class="mainKPIs">
                         <div class="kpi">
@@ -188,6 +185,19 @@
         nameTeam: "T1",
         logoUrl: "../assets/icons/t1logo.png"
     });
+
+    let strategies = [
+        { nome: "Rush B", data: "25/05/2024", icone: "../assets/icons/aim.svg", texto: "Esta é uma estratégia que consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },
+        { nome: "Split Push", data: "20/05/2024", icone: "../assets/icons/target.svg", texto: "Esta estratégia consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },
+        { nome: "Rush B", data: "25/05/2024", icone: "../assets/icons/aim.svg", texto: "Esta estratégia consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },
+
+    ];
+    renderStrategies(document.getElementById("strategiesContainer"), strategies)
+
+    function removeStrategy(index) {
+        strategies.splice(index, 1);
+        renderStrategies(document.getElementById("strategiesContainer"), strategies);
+    }
 
     renderTeamList(document.getElementById("teamListContainer"), [
         {
