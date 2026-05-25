@@ -18,7 +18,17 @@ function buscarPorId(id) {
     return database.executar(instrucaoSql);
 }
 
+function getHighlightUltimoJogo(idEquipe) {
+    console.log("ACESSEI O TIMES MODEL \n function getHighlightUltimoJogo(): ", idEquipe)
+    var instrucaoSql = `
+        SELECT * FROM vw_destaque_ultimo_confronto WHERE fkEquipe = ${idEquipe} LIMIT 1;
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     listar,
-    buscarPorId
+    buscarPorId,
+    getHighlightUltimoJogo
 }

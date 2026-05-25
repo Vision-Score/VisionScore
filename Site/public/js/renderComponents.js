@@ -168,13 +168,21 @@ function renderPopupJogador(container, data) {
     new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['DPM', 'KDA', 'KP%', 'GPM', 'CSPM', 'G@15', 'Wards/min', 'DtPM', 'Torres'],
-            datasets: [{
-                label: data.name,
-                data: data.radarData || [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                borderColor: '#0F8B8B',
-                backgroundColor: '#0F8B8B80'
-            }]
+            labels: ['DPM', 'Kills', 'Deaths', 'Assists', 'KP%', 'GPM', 'CSPM', 'Wards/min'],
+            datasets: [
+                {
+                    label: data.name,
+                    data: data.radarData || [0, 0, 0, 0, 0, 0, 0, 0],
+                    borderColor: '#0F8B8B',
+                    backgroundColor: '#0F8B8B40'
+                },
+                {
+                    label: 'Média da Role',
+                    data: data.radarMediaRole || [0, 0, 0, 0, 0, 0, 0, 0],
+                    borderColor: '#ffffff40',
+                    backgroundColor: '#ffffff15'
+                }
+            ]
         },
         options: {
             scales: {
@@ -1436,22 +1444,22 @@ function renderStrategyModal(strategy) {
         if (editMode) {
             nomeInput.removeAttribute('readonly');
             textoInput.removeAttribute('readonly');
-            
+
             nomeInput.style.backgroundColor = '#003B3B40';
             textoInput.style.backgroundColor = '#003B3B80';
-            
+
             actionsView.style.display = 'none';
             actionsEdit.style.display = 'flex';
         } else {
             nomeInput.setAttribute('readonly', true);
             textoInput.setAttribute('readonly', true);
-            
+
             nomeInput.style.backgroundColor = 'transparent';
             textoInput.style.backgroundColor = '#003B3B40';
-            
+
             nomeInput.value = strategy.nome || '';
             textoInput.value = strategy.texto || '';
-            
+
             actionsView.style.display = 'flex';
             actionsEdit.style.display = 'none';
         }
@@ -1643,4 +1651,43 @@ function renderCreateStrategyModal() {
     window.fecharModalCreateStrategy = function () {
         document.getElementById('modalCreateStrategyFundo').classList.remove('createStrategyModalVisivel');
     };
+}
+
+function renderHighlightUltimoJogo(container, data) {
+    if (!container) return;
+
+    const config = {
+        playerName: data.nome || "Jogador",
+        playerImageUrl: data.imageUrl || "../assets/playerIcons/faker.png",
+        playerPosition: data.funcao || "Mid",
+        adversarioTeam: data.adversario || "Adversário",
+        dano: data.dano || 0,
+        ouro: data.ouro || 0,
+        kda: data.kda || "0.00"
+    };
+
+    container.innerHTML = `
+        <div class="mvpTitle">
+            <span class="mainTitle">Destaque do último confronto</span>
+            <span class="subTitle">vs ${config.adversarioTeam}</span>
+        </div>
+        <div class="mvpContent">
+            <div class="playerIcon">
+                <img src="${config.playerImageUrl}" alt="${config.playerName}">
+                <div class="playerPosition">${config.playerPosition}</div>
+            </div>
+            <div class="itemMvp">
+                <img src="../assets/icons/bow.svg" alt="Dano" class="itemIcon">
+                <div class="mvpStat">${(config.dano / 1000).toFixed(1)}k de Dano</div>
+            </div>
+            <div class="itemMvp">
+                <img src="../assets/icons/coins.svg" alt="Ouro" class="itemIcon">
+                <div class="mvpStat">▲${(config.ouro / 30).toFixed(1)}GpM</div>
+            </div>
+            <div class="itemMvp">
+                <img src="../assets/icons/aim.svg" alt="KDA" class="itemIcon">
+                <div class="mvpStat">~ ${config.kda} KDA</div>
+            </div>
+        </div>
+    `;
 }

@@ -9,6 +9,16 @@ function listarElenco(id) {
     return database.executar(instrucaoSql);
 }
 
+function getMediasGerais() {
+    console.log("ACESSEI O JOGADORES MODEL \n function getMediasGerais()")
+    var instrucaoSql = `
+        select * from vw_medias_por_role;
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
-    listarElenco
+    listarElenco,
+    getMediasGerais
 }

@@ -8,5 +8,12 @@ router.get("/listarElenco/:id", function (req, res) {
     jogadoresController.listarElenco(req, res);
 });
 
+router.get("/getMediasGerais", function (req, res) {
+    jogadoresController.getMediasGerais(req, res);
+});
+
+router.get("/getHighlightUltimoJogo/:id", function (req, res) {
+    jogadoresController.getHighlightUltimoJogo(req, res);
+});
 
 module.exports = router;

@@ -13,4 +13,8 @@ router.get("/buscar/:id", function (req, res) {
     timesController.buscarPorId(req, res);
 });
 
+router.get("/getHighlightUltimoJogo/:id", function (req, res) {
+    timesController.getHighlightUltimoJogo(req, res);
+});
+
 module.exports = router;

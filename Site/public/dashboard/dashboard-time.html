@@ -16,11 +16,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../js/renderComponents.js"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=progress_activity" />
 </head>
 
 <body>
+    <div class="loader" style="display: none;">
+        <span class="material-symbols-outlined">
+            progress_activity
+        </span>
+    </div>
     <div class="main">
         <div id="sidebarContainer">
         </div>
@@ -78,29 +83,7 @@
                             <i class="material-icons">arrow_forward_ios</i>
                         </div>
                     </div>
-                    <div class="mvp">
-                        <div class="mvpTitle">
-                            <span class="mainTitle">Destaque do último confronto</span>
-                            <span class="subTitle">vs BLG</span>
-                        </div>
-                        <div class="mvpContent">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/faker.png" alt="">
-                                <div class="playerPosition">Mid</div>
-                            </div>
-                            <div class="itemMvp">
-                                <img src="../assets/icons/bow.svg" alt="" class="itemIcon">
-                                <div class="mvpStat">25k de Dano</div>
-                            </div>
-                            <div class="itemMvp">
-                                <img src="../assets/icons/coins.svg" alt="" class="itemIcon">
-                                <div class="mvpStat">▲1500g @ 15</div>
-                            </div>
-                            <div class="itemMvp">
-                                <img src="../assets/icons/aim.svg" alt="" class="itemIcon">
-                                <div class="mvpStat">~ 12.3 KDA</div>
-                            </div>
-                        </div>
+                    <div class="mvp" id="highlight">
                     </div>
                 </div>
                 <div class="mainContainerLower">
@@ -119,154 +102,11 @@
                 </div>
             </div>
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="../js/criarObjetos.js"></script>
+        <script src="../js/renderComponents.js"></script>
+        <script src="../js/dashboard-time.js"></script>
 </body>
 
 </html>
-
-<script>
-    const usuario = JSON.parse(sessionStorage.getItem("usuario"));
-    const equipe = JSON.parse(sessionStorage.getItem("time"));
-    const elenco = JSON.parse(sessionStorage.getItem("elenco"));
-    const ordem = ["Top", "Jungle", "Mid", "Bot", "Support"];
-    const elencoOrdenado = elenco.sort((a, b) => ordem.indexOf(a.funcao) - ordem.indexOf(b.funcao));
-
-    function switchPopupJogador(index) {
-        if (document.getElementById("popupJogador").classList.contains("hidden")) {
-            renderPopupJogador(document.getElementById("popupJogador"), {
-                name: elencoOrdenado[index].nome,
-                position: elencoOrdenado[index].funcao,
-                imageUrl: "../assets/playerIcons/Doran.png",
-                teamLogoUrl: "../assets/icons/t1logo.png",
-                quickStats: [
-                    { iconUrl: "../assets/icons/bow.svg", value: `~ ${(elencoOrdenado[index].mediaDano / 30).toFixed(1)} DpM` },
-                    { iconUrl: "../assets/icons/coins.svg", value: `${(elencoOrdenado[index].mediaOuro / 30).toFixed(1)} g@15` },
-                    { iconUrl: "../assets/icons/aim.svg", value: `~ ${((+elencoOrdenado[index].mediaElims + +elencoOrdenado[index].mediaAssists) / +elencoOrdenado[index].mediaMortes).toFixed(1)} KDA` }
-                ],
-                stats: [
-                    { label: "Dano por Minuto (DpM)", playerValue: (elencoOrdenado[index].mediaDano / 30).toFixed(1), medianValue: "-", trend: "up" },
-                    { label: "Abates Mortes Assistências (KDA)", playerValue: ((+elencoOrdenado[index].mediaElims + +elencoOrdenado[index].mediaAssists) / +elencoOrdenado[index].mediaMortes).toFixed(1), medianValue: "-", trend: "up" },
-                    { label: "Participação em Abates (KP%)", playerValue: "-", medianValue: "-", trend: "up" },
-                    { label: "Ouro por Minuto (GPM)", playerValue: (elencoOrdenado[index].mediaOuro / 30).toFixed(1), medianValue: "-", trend: "up" },
-                    { label: "Diferença de Ouro @ 15m (G@15)", playerValue: "-", medianValue: "-", trend: "up" },
-                    { label: "Creep Score por Minuto (CSPM)", playerValue: "-", medianValue: "-", trend: "up" },
-                    { label: "Wards por Minuto", playerValue: "-", medianValue: "-", trend: "up" },
-                    { label: "Dano em Torres por Minuto", playerValue: "-", medianValue: "-", trend: "down" },
-                    { label: "Torres abatidas por Jogo", playerValue: "-", medianValue: "-", trend: "up" }
-                ],
-                badges: [
-                    { imageUrl: "../assets/Damage_rating.png", title: "Top Damage" },
-                    { imageUrl: "../assets/icons/Availability.png", title: "Acumula Gold" },
-                    { imageUrl: "../assets/icons/Toughness_rating.png", title: "Morre pouco" }
-                ],
-                radarData: [
-                    Math.min((elencoOrdenado[index].mediaDano / 30) / 10, 100),                                                                    // DPM
-                    Math.min(((+elencoOrdenado[index].mediaElims + +elencoOrdenado[index].mediaAssists) / +elencoOrdenado[index].mediaMortes) * 15, 100),                      // KDA
-                    0,                                                                                                                // KP% - sem dado
-                    Math.min((elencoOrdenado[index].mediaOuro / 30) / 5, 100),                                                                     // GPM
-                    0,                                                                                                                // CSPM - sem dado
-                    0,                                                                                                                // G@15 - sem dado
-                    0,                                                                                                                // Wards/min - sem dado
-                    0,                                                                                                                // DtPM - sem dado
-                    0                                                                                                                 // Torres - sem dado
-                ]
-            });
-        }
-        document.getElementById("popupJogador").classList.toggle("hidden");
-    }
-
-
-
-    function switchSidebar() {
-        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
-    }
-
-    function switchTeamList() {
-        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
-    }
-
-    // renderiza a lista de times. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
-    renderTeamList(document.getElementById("teamListContainer"), [
-        {
-            name: "T1",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Gen.G",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "KT Rolster",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Hanwha Life",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "DRX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Liiv SANDBOX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Kwangdong Freecs",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Nongshim RedForce",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "OK Savings Bank BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        }
-    ]);
-
-
-    // renderiza a sidebar. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
-    renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time", {
-        name: usuario.nome,
-        role: "Coach",
-        email: usuario.email,
-        imageUrl: "../assets/playerIcons/faker.png",
-        nameTeam: equipe.nome,
-        logoUrl: "../assets/icons/t1logo.png"
-    });
-
-    // renderiza o compontente de identificação do time.
-    renderTeamProfile(document.getElementById('teamProfile'), {
-        name: equipe.nome,
-        coach: `Coach: ${usuario.nome}`,
-        logoUrl: "../assets/icons/t1logo.png"
-    });
-
-    // renderiza os playerCards, substituir por retorno do backend com um forEach.
-    function renderizarJogadores(elenco) {
-        elenco.forEach((jogador, index) => {
-            let infoJogador = {
-                name: jogador.nome,
-                position: jogador.funcao,
-                roleIconUrl: `../assets/icons/${jogador.funcao}_icon.png`,
-                imageUrl: "../assets/playerIcons/Doran.png",
-                stats: [
-                    { iconUrl: "../assets/icons/bow.svg", value: `~ ${(jogador.mediaDano / 30).toFixed(1)} DpM` }, // quando tempo funcionar no banco, remover /30.
-                    { iconUrl: "../assets/icons/coins.svg", value: `${(jogador.mediaOuro / 30).toFixed(1)} g@15` },
-                    { iconUrl: "../assets/icons/aim.svg", value: `~ ${((+jogador.mediaElims + +jogador.mediaAssists) / +jogador.mediaMortes).toFixed(1)} KDA` }
-                ]
-            }
-            renderPlayerCard(document.getElementById(`playerCard${index + 1}`), infoJogador);
-        });
-    }
-
-    renderizarJogadores(elenco);
-
-
-    // renderiza o gráfico de desempenho do jogador.
-
-</script>

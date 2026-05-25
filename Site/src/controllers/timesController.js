@@ -43,7 +43,29 @@ function buscarPorId(req, res) {
     }
 }
 
+function getHighlightUltimoJogo(req, res) {
+    var idEquipe = req.params.id;
+
+    if (idEquipe == undefined) {
+        res.status(400).send("Seu id está indefinido!");
+    } else {
+        timesModel.getHighlightUltimoJogo(idEquipe)
+            .then(function (resultado) {
+                if (resultado.length > 0) {
+                    res.status(200).json(resultado);
+                } else {
+                    res.status(204).send("Nenhum jogador encontrado!");
+                }
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     listar,
     buscarPorId,
+    getHighlightUltimoJogo
 }

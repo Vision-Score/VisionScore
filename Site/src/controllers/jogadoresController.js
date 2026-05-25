@@ -21,6 +21,23 @@ function listarElenco(req, res) {
     }
 }
 
+function getMediasGerais(req, res) {
+    jogadoresModel.getMediasGerais()
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum jogador encontrado!");
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        })
+}
+
+
 module.exports = {
-    listarElenco
+    listarElenco,
+    getMediasGerais
 }
