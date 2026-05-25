@@ -982,6 +982,30 @@ function renderTeamList(container, teams) {
     `;
 
     container.innerHTML = htmlTeamList;
+
+    const searchInput = container.querySelector('.tl-search input');
+    const contentContainer = container.querySelector('.tl-content');
+
+    const updateTeamCards = filteredTeams => {
+        contentContainer.innerHTML = filteredTeams.map(team => `
+            <div class="tl-team" style="${styles.tlTeam}" onclick="window.location.href='dashboard-time-adversario.html'">
+                <img style="${styles.tlTeamImg}" src="${team.logoUrl}" alt="Logo do ${team.name}">
+                <div class="tl-team-name" style="${styles.tlTeamName}">${team.name}</div>
+                <div class="tl-analyze-btn" style="${styles.tlAnalyzeButton}">
+                    <span style="font-family: Montserrat; font-size: 14px; color: #e4e4e460; transition: color .1s ease-in-out;">Analisar</span>
+                    <i class="material-icons tl-analyze-icon" style="${styles.tlAnalyzeIcon}">arrow_forward_ios</i>
+                </div>
+            </div>
+        `).join('');
+    };
+
+    if (searchInput) {
+        searchInput.addEventListener('input', event => {
+            const query = event.target.value.trim().toLowerCase();
+            const filtered = teams.filter(team => team.name.toLowerCase().includes(query));
+            updateTeamCards(filtered);
+        });
+    }
 };
 
 function renderStrategies(container, strategies) {
@@ -1663,7 +1687,8 @@ function renderHighlightUltimoJogo(container, data) {
         adversarioTeam: data.adversario || "Adversário",
         dano: data.dano || 0,
         ouro: data.ouro || 0,
-        kda: data.kda || "0.00"
+        kda: data.kda || "0.00",
+        championUrl: data.championUrl || "../assets/cassiopeia_1.jpg"
     };
 
     container.innerHTML = `
@@ -1674,20 +1699,27 @@ function renderHighlightUltimoJogo(container, data) {
         <div class="mvpContent">
             <div class="playerIcon">
                 <img src="${config.playerImageUrl}" alt="${config.playerName}">
-                <div class="playerPosition">${config.playerPosition}</div>
+                <div class="playerPosition">${config.playerName}</div>
             </div>
             <div class="itemMvp">
                 <img src="../assets/icons/bow.svg" alt="Dano" class="itemIcon">
-                <div class="mvpStat">${(config.dano / 1000).toFixed(1)}k de Dano</div>
+                <div class="mvpStat" style="font-weight: 900; font-size: 1.4em;">${(config.dano / 1000).toFixed(1)}k de Dano</div>
             </div>
             <div class="itemMvp">
                 <img src="../assets/icons/coins.svg" alt="Ouro" class="itemIcon">
-                <div class="mvpStat">▲${(config.ouro / 30).toFixed(1)}GpM</div>
+                <div class="mvpStat" style="font-weight: 900; font-size: 1.4em;">${(config.ouro / 30).toFixed(1)} GpM</div>
             </div>
             <div class="itemMvp">
                 <img src="../assets/icons/aim.svg" alt="KDA" class="itemIcon">
-                <div class="mvpStat">~ ${config.kda} KDA</div>
+                <div class="mvpStat" style="font-weight: 900; font-size: 1.4em;"> ${config.kda} KDA</div>
             </div>
         </div>
     `;
+    container.style.backgroundImage = `url(${config.championUrl})`;
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPositionY = 'top';
+    container.style.backgroundBlendMode = 'soft-light';
+    container.style.backgroundColor = '#00272760';
+    container.style.boxShadow = 'inset 10px 100px 60px 10px #00272760, inset 0 0 0 10000px rgba(18, 25, 29, 0.3)';
+    
 }
