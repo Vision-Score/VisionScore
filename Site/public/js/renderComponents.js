@@ -975,3 +975,672 @@ function renderTeamList(container, teams) {
 
     container.innerHTML = htmlTeamList;
 };
+
+function renderStrategies(container, strategies) {
+
+    const styles = {
+        strategiesContainer: `
+            flex: 1;
+            height: 30vh;
+            max-height: 30vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            background-color: #1F1F1F;
+            border: 2px solid #0F8B8B;
+            border-radius: 2vh;
+            box-shadow: 0px 0px 10px 5px #00000060;
+            color: #fff;
+        `,
+        strategies: `
+            flex: 20;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.75rem;
+            gap: 0.75rem;
+            box-shadow: inset 0px 0px 10px 5px #00000060;
+            color: #fff;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-wrap: nowrap;
+            box-sizing: border-box;
+        `,
+        arrowBack: `
+            flex: 1%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #0F8B8B;
+            border-top-left-radius: 1.2vh;
+            border-bottom-left-radius: 1.2vh;
+            transition: all .1s ease-in-out;
+            cursor: pointer;
+        `,
+        arrowForward: `
+            flex: 1%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #0F8B8B;
+            border-top-right-radius: 1.2vh;
+            border-bottom-right-radius: 1.2vh;
+            transition: all .1s ease-in-out;
+            cursor: pointer;
+        `,
+        arrowIcon: `
+            font-size: 32px;
+            color: #e4e4e4;
+        `,
+        emptyStrategies: `
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #242424;
+            border-radius: 2vh;
+            gap: 10px;
+        `,
+        emptyStrategiesText: `
+            font-family: 'Montserrat';
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+            color: #ffffff60 !important;
+        `,
+        emptyStrategiesButton: `
+            width: 40%;
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer !important;
+            transition: all .1s ease-in-out;
+        `,
+        createButton: `
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 2vh;
+            background-color: #00000060;
+            color: #e4e4e480;
+            font-family: 'Montserrat';
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+            transition: all .1s ease-in-out;
+            cursor: pointer !important;
+            gap: 10px;
+        `,
+        createButtonIcon: `
+            font-size: 24px;
+            color: #e4e4e480;
+            transition: all .1s ease-in-out;
+        `
+    };
+
+    let emptyStrategies = `
+        <div style="${styles.emptyStrategies}">
+            <div style="${styles.emptyStrategiesText}">Você não possui estratégias salvas.</div>
+            <div style="${styles.emptyStrategiesButton}">
+                <button style="${styles.createButton}"
+                    onmouseenter="this.style.backgroundColor='#00000070';this.style.color='#e4e4e4';this.querySelector('i').style.color='#e4e4e4';"
+                    onmouseleave="this.style.backgroundColor='#00000060';this.style.color='#e4e4e480';this.querySelector('i').style.color='#e4e4e480';"
+                    onclick="renderCreateStrategyModal(); abrirModalCreateStrategy();">
+                    <i class="material-icons" style="${styles.createButtonIcon}">note_add</i>Criar estratégia
+                </button>
+            </div>
+        </div>
+    `;
+
+    container.style.cssText = styles.strategiesContainer;
+
+    const scrollId = `strategies-scroll-${container.id || 'default'}`;
+
+    container.innerHTML = `
+        <div style="${styles.arrowBack}"
+            onmouseenter="this.style.backgroundColor='#0F8B8B77';"
+            onmouseleave="this.style.backgroundColor='#0F8B8B';"
+            onclick="document.getElementById('${scrollId}').scrollBy({ left: -200, behavior: 'smooth' });">
+            <i class="material-icons" style="${styles.arrowIcon}">chevron_left</i>
+        </div>
+        <div id="${scrollId}" style="${styles.strategies}">
+            ${strategies.length > 0 ? buildStrategyCards(strategies) : emptyStrategies}
+        </div>
+        <div style="${styles.arrowForward}"
+            onmouseenter="this.style.backgroundColor='#0F8B8B77';"
+            onmouseleave="this.style.backgroundColor='#0F8B8B';"
+            onclick="document.getElementById('${scrollId}').scrollBy({ left: 200, behavior: 'smooth' });">
+            <i class="material-icons" style="${styles.arrowIcon}">chevron_right</i>
+        </div>
+    `;
+};
+
+function buildStrategyCards(strategies) {
+
+    const styles = {
+        strategyCard: `
+            flex: 1 0 120px;
+            min-width: 120px;
+            height: calc(100% - 1.5rem);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4%;
+            background-color: #242424;
+            border-radius: 2vh;
+            box-shadow: 0px 0px 5px 2.5px #00000060;
+            cursor: pointer;
+            transition: all .1s ease-in-out;
+            color: #fff;
+        `,
+        strategyCardTitle: `
+            font-family: 'Montserrat';
+            font-weight: 800;
+            font-size: 16px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+        `,
+        strategyCardDate: `
+            font-family: 'Montserrat';
+            font-weight: 200;
+            font-size: 16px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            vertical-align: middle;
+        `,
+        strategyCardIcon: `
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `,
+        strategyCardIconImg: `
+            width: 48px;
+            height: 48px;
+            filter: invert(100%);
+        `,
+        strategyCardActions: `
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: auto;
+        `,
+        actionButton: `
+            background-color: #00000040;
+            border-radius: 1.2vh;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            height: auto;
+            transition: all .1s ease-in-out;
+            color: #e4e4e4;
+        `
+    };
+
+    let result = '';
+
+    for (let i = 0; i < strategies.length; i++) {
+        result += `
+            <div style="${styles.strategyCard}"
+                onmouseenter="this.style.backgroundColor='#2F2F2F';"
+                onmouseleave="this.style.backgroundColor='#242424';"
+                onclick='renderStrategyModal(${JSON.stringify(strategies[i]).replace(/'/g, "&#39;")}); abrirModalStrategy();'>
+                <div style="${styles.strategyCardTitle}">${strategies[i].nome}</div>
+                <div style="${styles.strategyCardDate}">${strategies[i].data}</div>
+                <div style="${styles.strategyCardIcon}">
+                    <img src="${strategies[i].icone}" alt="" style="${styles.strategyCardIconImg}">
+                </div>
+                <div style="${styles.strategyCardActions}">
+                    <button style="${styles.actionButton}"
+                        onmouseenter="this.style.backgroundColor='#00000085';this.style.color='#e4e4e4';"
+                        onmouseleave="this.style.backgroundColor='#00000040';"
+                        onclick="removeStrategy(${i}); event.stopPropagation();">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    result += `
+        <div style="${styles.strategyCard}"
+            onmouseenter="this.style.backgroundColor='#2F2F2F';"
+            onmouseleave="this.style.backgroundColor='#242424';"
+            onclick="renderCreateStrategyModal(); abrirModalCreateStrategy();">
+            <div style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+                <div style="width: 80px; height: 80px; background-color: #00000080; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="material-icons" style="font-size: 48px; color: #0F8B8B;">add</i>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return result;
+};
+
+function renderStrategyModal(strategy) {
+    const existingModal = document.getElementById('modalStrategyFundo');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modalHtml = `
+    <style>
+        .strategyModalFundo {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #00000090;
+            z-index: 200000;
+            align-items: center;
+            justify-content: center;
+        }
+        .strategyModalFundo.strategyModalVisivel {
+            display: flex;
+        }
+        .strategyModalEditar {
+            width: 80%;
+            height: 80%;
+            padding: 48px 48px 40px 48px;
+            background-color: #1F1F1F;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            border: 2px solid #0F8B8B;
+            box-shadow: 0px 0px 10px 5px #00000060;
+        }
+        .strategyModalFoto {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            border: 3px solid #0F8B8B;
+            background-color: #242424;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .strategyModalFoto img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            filter: invert(100%);
+        }
+        .strategyModalForm {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .strategyModalCampo {
+            width: 100%;
+            height: 48px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: transparent;
+            border-bottom: solid 2px #0F8B8B;
+            border-radius: 0;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .strategyModalCampo label {
+            padding: 0 14px 0 0;
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 16px;
+            color: #0F8B8B;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .strategyModalCampo input {
+            flex: 1;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 16px;
+            color: #e4e4e4;
+        }
+        .strategyModalTexto {
+            flex: 1;
+            width: 100%;
+            background-color: #003B3B40;
+            border: solid 2px #0F8B8B;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: Montserrat;
+            font-weight: 400;
+            font-size: 14px;
+            color: #e4e4e4;
+            line-height: 150%;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .strategyModalBtnSalvar {
+            width: auto;
+            align-self: flex-end;
+            height: 46px;
+            padding: 0 24px;
+            background-color: #003B3B80;
+            border: solid 2px #0F8B8B;
+            color: #e4e4e4;
+            border-radius: 8px;
+            font-family: Montserrat;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .strategyModalBtnSalvar:hover {
+            background-color: #0F8B8B80;
+        }
+        .strategyModalBtnCancelar {
+            width: auto;
+            align-self: flex-end;
+            height: 46px;
+            padding: 0 24px;
+            background-color: transparent;
+            border: solid 2px #0F8B8B;
+            color: #e4e4e4;
+            border-radius: 8px;
+            font-family: Montserrat;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .strategyModalBtnCancelar:hover {
+            background-color: #003B3B40;
+        }
+    </style>
+
+    <div class="strategyModalFundo" id="modalStrategyFundo" onclick="fecharModalStrategy()">
+        <div class="strategyModalEditar" onclick="event.stopPropagation()">
+            <div class="strategyModalFoto">
+                <img src="${strategy.icone}" alt="Ícone da estratégia">
+            </div>
+            <div class="strategyModalForm">
+                <div class="strategyModalCampo">
+                    <label>Nome da Estratégia:</label>
+                    <input type="text" id="strategyModalNome" value="${strategy.nome}" readonly>
+                </div>
+                <div class="strategyModalCampo">
+                    <label>Criada em:</label>
+                    <input type="text" value="${strategy.data}" readonly style="opacity: 0.7;">
+                </div>
+                <textarea class="strategyModalTexto" id="strategyModalTexto" readonly>${strategy.texto || ''}</textarea>
+            </div>
+            
+            <div id="strategyModalActionsView" style="display: flex; width: 100%; justify-content: flex-end;">
+                <button class="strategyModalBtnSalvar" onclick="toggleEditModeStrategy(true)">Editar Estratégia</button>
+            </div>
+            
+            <div id="strategyModalActionsEdit" style="display: none; width: 100%; justify-content: flex-end; gap: 10px;">
+                <button class="strategyModalBtnCancelar" onclick="toggleEditModeStrategy(false)">Cancelar</button>
+                <button class="strategyModalBtnSalvar" onclick="fecharModalStrategy()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    window.toggleEditModeStrategy = function (editMode) {
+        const nomeInput = document.getElementById('strategyModalNome');
+        const textoInput = document.getElementById('strategyModalTexto');
+        const actionsView = document.getElementById('strategyModalActionsView');
+        const actionsEdit = document.getElementById('strategyModalActionsEdit');
+
+        if (editMode) {
+            nomeInput.removeAttribute('readonly');
+            textoInput.removeAttribute('readonly');
+            
+            nomeInput.style.backgroundColor = '#003B3B40';
+            textoInput.style.backgroundColor = '#003B3B80';
+            
+            actionsView.style.display = 'none';
+            actionsEdit.style.display = 'flex';
+        } else {
+            nomeInput.setAttribute('readonly', true);
+            textoInput.setAttribute('readonly', true);
+            
+            nomeInput.style.backgroundColor = 'transparent';
+            textoInput.style.backgroundColor = '#003B3B40';
+            
+            nomeInput.value = strategy.nome || '';
+            textoInput.value = strategy.texto || '';
+            
+            actionsView.style.display = 'flex';
+            actionsEdit.style.display = 'none';
+        }
+    };
+
+    window.abrirModalStrategy = function () {
+        document.getElementById('modalStrategyFundo').classList.add('strategyModalVisivel');
+    };
+    window.fecharModalStrategy = function () {
+        document.getElementById('modalStrategyFundo').classList.remove('strategyModalVisivel');
+    };
+}
+
+function renderCreateStrategyModal() {
+    const existingModal = document.getElementById('modalCreateStrategyFundo');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modalHtml = `
+    <style>
+        .createStrategyModalFundo {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #00000090;
+            z-index: 200000;
+            align-items: center;
+            justify-content: center;
+        }
+        .createStrategyModalFundo.createStrategyModalVisivel {
+            display: flex;
+        }
+        .createStrategyModalEditar {
+            width: 80%;
+            height: 80%;
+            padding: 48px 48px 40px 48px;
+            background-color: #1F1F1F;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            border: 2px solid #0F8B8B;
+            box-shadow: 0px 0px 10px 5px #00000060;
+        }
+        .createStrategyModalFoto {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            border: 3px solid #0F8B8B;
+            background-color: #242424;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .createStrategyModalFoto img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            filter: invert(100%);
+        }
+        .createStrategyModalForm {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .createStrategyModalCampo {
+            width: 100%;
+            height: 48px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: transparent;
+            border-bottom: solid 2px #0F8B8B;
+            border-radius: 0;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .createStrategyModalCampo label {
+            padding: 0 14px 0 0;
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 16px;
+            color: #0F8B8B;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .createStrategyModalCampo input {
+            flex: 1;
+            height: 100%;
+            background-color: #003B3B40;
+            border: none;
+            outline: none;
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 16px;
+            color: #e4e4e4;
+            padding: 0 12px;
+            border-radius: 4px;
+        }
+        .createStrategyModalTexto {
+            flex: 1;
+            width: 100%;
+            background-color: #003B3B40;
+            border: solid 2px #0F8B8B;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: Montserrat;
+            font-weight: 400;
+            font-size: 14px;
+            color: #e4e4e4;
+            line-height: 150%;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .createStrategyModalBtnSalvar {
+            width: auto;
+            align-self: flex-end;
+            height: 46px;
+            padding: 0 24px;
+            background-color: #003B3B80;
+            border: solid 2px #0F8B8B;
+            color: #e4e4e4;
+            border-radius: 8px;
+            font-family: Montserrat;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .createStrategyModalBtnSalvar:hover {
+            background-color: #0F8B8B80;
+        }
+        .createStrategyModalBtnCancelar {
+            width: auto;
+            align-self: flex-end;
+            height: 46px;
+            padding: 0 24px;
+            background-color: transparent;
+            border: solid 2px #0F8B8B;
+            color: #e4e4e4;
+            border-radius: 8px;
+            font-family: Montserrat;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .createStrategyModalBtnCancelar:hover {
+            background-color: #003B3B40;
+        }
+    </style>
+
+    <div class="createStrategyModalFundo" id="modalCreateStrategyFundo" onclick="fecharModalCreateStrategy()">
+        <div class="createStrategyModalEditar" onclick="event.stopPropagation()">
+            <div class="createStrategyModalFoto">
+                <img src="../assets/icons/aim.svg" alt="Ícone da estratégia">
+            </div>
+            <div class="createStrategyModalForm">
+                <div class="createStrategyModalCampo">
+                    <label>Nome da Estratégia:</label>
+                    <input type="text" id="createStrategyNome" placeholder="Ex: Rush B">
+                </div>
+                <textarea class="createStrategyModalTexto" id="createStrategyTexto" placeholder="Descreva os detalhes da tática..."></textarea>
+            </div>
+            
+            <div style="display: flex; width: 100%; justify-content: flex-end; gap: 10px;">
+                <button class="createStrategyModalBtnCancelar" onclick="fecharModalCreateStrategy()">Cancelar</button>
+                <button class="createStrategyModalBtnSalvar" onclick="fecharModalCreateStrategy()">Criar Estratégia</button>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    window.abrirModalCreateStrategy = function () {
+        document.getElementById('modalCreateStrategyFundo').classList.add('createStrategyModalVisivel');
+    };
+    window.fecharModalCreateStrategy = function () {
+        document.getElementById('modalCreateStrategyFundo').classList.remove('createStrategyModalVisivel');
+    };
+}
