@@ -242,6 +242,8 @@ body {
 
           outline: 4px solid #0F8B8B;
 
+          background-color: #00000090;
+
           border-radius: 100%;
         }
 
@@ -390,6 +392,8 @@ body {
           outline: 4px solid #0F8B8B;
 
           border-radius: 100%;
+
+          background-color: #00000090;
         }
 
         .playerPosition {

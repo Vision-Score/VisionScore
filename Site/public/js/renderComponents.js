@@ -226,7 +226,7 @@ function renderPlayerCard(container, data) {
 
     const config = {
         name: data.name || "Jogador",
-        imageUrl: data.imageUrl || "../assets/playerIcons/faker.png",
+        imageUrl: data.imageUrl || data.urlFotoJogador || "../assets/playerIcons/faker.png",
         roleIconUrl: data.roleIconUrl || `../assets/icons/${data.position || 'Top'}_icon.png`,
         stats: data.stats || []
     };
@@ -266,12 +266,15 @@ function renderPlayerCard(container, data) {
             justify-content: center;
         `,
         playerImage: `
-            margin-top: 4%;
+            background-color: #00000090;
+            display: block;
+            margin: 4% auto 0;
             width: 40%;
             aspect-ratio: 1;
             outline: 2px solid #0F8B8B;
             border-radius: 100%;
             object-fit: cover;
+            object-position: center center;
         `,
         playerName: `
             width: auto;
@@ -1682,7 +1685,7 @@ function renderHighlightUltimoJogo(container, data) {
 
     const config = {
         playerName: data.nome || "Jogador",
-        playerImageUrl: data.imageUrl || "../assets/playerIcons/faker.png",
+        playerImageUrl: data.urlFotoJogador || "../assets/playerIcons/faker.png",
         playerPosition: data.funcao || "Mid",
         adversarioTeam: data.adversario || "Adversário",
         dano: data.dano || 0,
@@ -1698,7 +1701,7 @@ function renderHighlightUltimoJogo(container, data) {
         </div>
         <div class="mvpContent">
             <div class="playerIcon">
-                <img src="${config.playerImageUrl}" alt="${config.playerName}">
+                <img src="${config.playerImageUrl}" alt="${config.playerName}" style="aspect-ratio: 1/1; object-fit: cover;">
                 <div class="playerPosition">${config.playerName}</div>
             </div>
             <div class="itemMvp">
@@ -1721,5 +1724,5 @@ function renderHighlightUltimoJogo(container, data) {
     container.style.backgroundBlendMode = 'soft-light';
     container.style.backgroundColor = '#00272760';
     container.style.boxShadow = 'inset 10px 100px 60px 10px #00272760, inset 0 0 0 10000px rgba(18, 25, 29, 0.3)';
-    
+
 }

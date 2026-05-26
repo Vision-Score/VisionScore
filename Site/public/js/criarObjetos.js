@@ -50,7 +50,7 @@ function montarDadosPopup(jogador, mediasGerais) {
     return {
         name: jogador.nome,
         position: jogador.funcao,
-        imageUrl: "../assets/playerIcons/Doran.png",
+        imageUrl: jogador.urlFotoJogador || "../assets/playerIcons/Doran.png",
         teamLogoUrl: "../assets/icons/t1logo.png",
         quickStats: montarQuickStats(jogador),
         stats: montarStats(jogador, mediaRole),
@@ -69,7 +69,7 @@ function montarDadosCard(jogador) {
         name: jogador.nome,
         position: jogador.funcao,
         roleIconUrl: `../assets/icons/${jogador.funcao}_icon.png`,
-        imageUrl: "../assets/playerIcons/Doran.png",
+        imageUrl: jogador.urlFotoJogador || "../assets/playerIcons/Doran.png",
         stats: montarQuickStats(jogador)
     };
 }

@@ -12,7 +12,10 @@ function listar() {
 function buscarPorId(id) {
     console.log("ACESSEI O TIMES MODEL \n function buscarPorId(): ", id)
     var instrucaoSql = `
-        SELECT id_equipe, nome, sigla, dtCriacao FROM equipe WHERE id_equipe = '${id}';
+        SELECT e.id_equipe, e.nome, e.sigla, e.dtCriacao, ie.urlImagem
+        FROM equipe e
+        LEFT JOIN imagem_equipe ie ON ie.nomeEquipe = e.nome
+        WHERE e.id_equipe = ${id};;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

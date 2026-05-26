@@ -78,7 +78,7 @@ public class ImagemService {
             if (registros.isEmpty()) break;
 
             for (String[] r : registros)
-                batch.add(new Object[]{r[0], r[1]}); // nomeJogador, urlImagem
+                batch.add(new Object[]{r[0], r[1]});
 
             if (registros.size() < PAGE_SIZE) break;
             page++;
@@ -112,7 +112,7 @@ public class ImagemService {
             if (registros.isEmpty()) break;
 
             for (String[] r : registros)
-                batch.add(new Object[]{r[0], r[1]}); // nomeEquipe, urlImagem
+                batch.add(new Object[]{r[0], r[1]});
 
             if (registros.size() < PAGE_SIZE) break;
             page++;
@@ -173,8 +173,8 @@ public class ImagemService {
     private List<String[]> parseEquipes(String json) {
         List<String[]> result = new ArrayList<>();
         for (String obj : splitObjetos(json)) {
-            String nome = extrairCampo(obj, "name");
-            String url  = extrairCampo(obj, "image_url");
+            String nome = extrairCampoRaiz(obj, "name");
+            String url  = extrairCampoRaiz(obj, "image_url");
             if (nome != null && !nome.isBlank())
                 result.add(new String[]{nome, url});
         }
@@ -194,6 +194,28 @@ public class ImagemService {
             return fim < 0 ? null : obj.substring(inicio + 1, fim);
         }
         if (obj.startsWith("null", inicio)) return null;
+        return null;
+    }
+
+    private String extrairCampoRaiz(String obj, String campo) {
+        String chave = "\"" + campo + "\":";
+        int depth = 0;
+
+        for (int i = 0; i < obj.length(); i++) {
+            char c = obj.charAt(i);
+            if (c == '{') depth++;
+            else if (c == '}') depth--;
+            else if (depth == 1 && obj.startsWith(chave, i)) {
+                int inicio = i + chave.length();
+                while (inicio < obj.length() && obj.charAt(inicio) == ' ') inicio++;
+                if (obj.charAt(inicio) == '"') {
+                    int fim = obj.indexOf('"', inicio + 1);
+                    return fim < 0 ? null : obj.substring(inicio + 1, fim);
+                }
+                if (obj.startsWith("null", inicio)) return null;
+                return null;
+            }
+        }
         return null;
     }
 
