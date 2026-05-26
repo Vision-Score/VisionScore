@@ -1,6 +1,5 @@
 package br.com.importer.service;
 
-import br.com.importer.util.EnvLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.BufferedReader;
@@ -16,15 +15,14 @@ import java.util.List;
  */
 public class ImagemService {
 
-    private static final String BASE_URL   = "https://api.pandascore.co";
-    private static final int    PAGE_SIZE  = 100;
+    private static final String BASE_URL  = "https://api.pandascore.co";
+    private static final int    PAGE_SIZE = 100;
+    private static final String TOKEN     = "SEU_TOKEN_AQUI";
 
     private final JdbcTemplate jdbcTemplate;
-    private final String       token;
 
     public ImagemService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.token        = "7bfgUWCabLmRaeG93MRjn8hasq0lpq2W8ht2LxAugmP1jGvymDk"; // ← chumbado
     }
 
     // =========================================================================
@@ -33,11 +31,9 @@ public class ImagemService {
 
     public void executar() {
         System.out.println("\n[ImagemService] Iniciando sincronização de imagens...");
-
         criarTabelas();
         sincronizarJogadores();
         sincronizarEquipes();
-
         System.out.println("[ImagemService] ✓ Sincronização de imagens concluída!");
     }
 
@@ -48,15 +44,14 @@ public class ImagemService {
     private void criarTabelas() {
         jdbcTemplate.execute("""
             CREATE TABLE IF NOT EXISTS imagem_jogador (
-                nomeJogador VARCHAR(100) PRIMARY KEY,
+                nomeJogador VARCHAR(255) PRIMARY KEY,
                 urlImagem   TEXT
             )
         """);
 
         jdbcTemplate.execute("""
             CREATE TABLE IF NOT EXISTS imagem_equipe (
-                slugEquipe  VARCHAR(100) PRIMARY KEY,
-                nomeEquipe  VARCHAR(100),
+                nomeEquipe  VARCHAR(255) PRIMARY KEY,
                 urlImagem   TEXT
             )
         """);
@@ -82,9 +77,8 @@ public class ImagemService {
             List<String[]> registros = parseJogadores(json);
             if (registros.isEmpty()) break;
 
-            for (String[] r : registros) {
+            for (String[] r : registros)
                 batch.add(new Object[]{r[0], r[1]}); // nomeJogador, urlImagem
-            }
 
             if (registros.size() < PAGE_SIZE) break;
             page++;
@@ -117,18 +111,17 @@ public class ImagemService {
             List<String[]> registros = parseEquipes(json);
             if (registros.isEmpty()) break;
 
-            for (String[] r : registros) {
-                batch.add(new Object[]{r[0], r[1], r[2]}); // slugEquipe, nomeEquipe, urlImagem
-            }
+            for (String[] r : registros)
+                batch.add(new Object[]{r[0], r[1]}); // nomeEquipe, urlImagem
 
             if (registros.size() < PAGE_SIZE) break;
             page++;
         }
 
         jdbcTemplate.batchUpdate("""
-            INSERT INTO imagem_equipe (slugEquipe, nomeEquipe, urlImagem)
-            VALUES (?, ?, ?)
-            ON DUPLICATE KEY UPDATE nomeEquipe = VALUES(nomeEquipe), urlImagem = VALUES(urlImagem)
+            INSERT INTO imagem_equipe (nomeEquipe, urlImagem)
+            VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE urlImagem = VALUES(urlImagem)
         """, batch);
 
         System.out.printf("[ImagemService] equipes ✓ → %d registros sincronizados.%n", batch.size());
@@ -144,7 +137,7 @@ public class ImagemService {
                     BASE_URL, endpoint, PAGE_SIZE, page);
 
             HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
-            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("Authorization", "Bearer " + TOKEN);
             conn.setRequestProperty("Accept", "application/json");
             conn.setConnectTimeout(10_000);
             conn.setReadTimeout(30_000);
@@ -163,7 +156,7 @@ public class ImagemService {
     }
 
     // =========================================================================
-    //  Parsers JSON (manual, sem dependência externa)
+    //  Parsers JSON
     // =========================================================================
 
     private List<String[]> parseJogadores(String json) {
@@ -180,19 +173,14 @@ public class ImagemService {
     private List<String[]> parseEquipes(String json) {
         List<String[]> result = new ArrayList<>();
         for (String obj : splitObjetos(json)) {
-            String slug = extrairCampo(obj, "slug");
             String nome = extrairCampo(obj, "name");
             String url  = extrairCampo(obj, "image_url");
-            if (slug != null && !slug.isBlank())
-                result.add(new String[]{slug, nome, url});
+            if (nome != null && !nome.isBlank())
+                result.add(new String[]{nome, url});
         }
         return result;
     }
 
-    /**
-     * Extrai o valor de um campo simples de string no JSON.
-     * Não usa biblioteca externa — suficiente para campos planos.
-     */
     private String extrairCampo(String obj, String campo) {
         String chave = "\"" + campo + "\":";
         int idx = obj.indexOf(chave);
@@ -209,9 +197,6 @@ public class ImagemService {
         return null;
     }
 
-    /**
-     * Divide o array JSON em objetos individuais de forma simples.
-     */
     private List<String> splitObjetos(String json) {
         List<String> objs = new ArrayList<>();
         int depth = 0, start = -1;
