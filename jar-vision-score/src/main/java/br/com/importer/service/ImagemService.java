@@ -133,7 +133,7 @@ public class ImagemService {
 
     private String fetchPagina(String endpoint, int page) {
         try {
-            String urlStr = String.format("%s%s?page[size]=%d&page[number]=%d",
+            String urlStr = String.format("%s%s?page%%5Bsize%%5D=%d&page%%5Bnumber%%5D=%d",
                     BASE_URL, endpoint, PAGE_SIZE, page);
 
             HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
