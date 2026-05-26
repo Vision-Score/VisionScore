@@ -69,9 +69,9 @@ public class Main {
 
             // Índices
             System.out.println("\n[Main] Criando índices...");
-            jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS idx_dj_equipe  ON desempenho_jogador(fkEquipe)");
-            jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS idx_dj_jogador ON desempenho_jogador(fkJogador)");
-            jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS idx_dj_jogo    ON desempenho_jogador(fkJogo)");
+            try { jdbcTemplate.execute("CREATE INDEX idx_dj_equipe  ON desempenho_jogador(fkEquipe)"); } catch (Exception ignored) {}
+            try { jdbcTemplate.execute("CREATE INDEX idx_dj_jogador ON desempenho_jogador(fkJogador)"); } catch (Exception ignored) {}
+            try { jdbcTemplate.execute("CREATE INDEX idx_dj_jogo    ON desempenho_jogador(fkJogo)"); } catch (Exception ignored) {}
             System.out.println("[Main] ✓ Índices criados.");
 
             // Imagens
