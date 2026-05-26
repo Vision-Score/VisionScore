@@ -17,7 +17,7 @@ public class ImagemService {
 
     private static final String BASE_URL  = "https://api.pandascore.co";
     private static final int    PAGE_SIZE = 100;
-    private static final String TOKEN     = "SEU_TOKEN_AQUI";
+    private static final String TOKEN     = "7bfgUWCabLmRaeG93MRjn8hasq0lpq2W8ht2LxAugmP1jGvymDk";
 
     private final JdbcTemplate jdbcTemplate;
 
