@@ -95,15 +95,11 @@ const validacaoBotaoLogin = () => {
 }
 
 function entrar() {
+    if (!emailPreenchido || !senhaPreenchida) return false
+
     loader.style.display = 'flex';
     var emailVar = inputEmail.value;
     var senhaVar = inputSenha.value;
-
-    if (emailVar == "" || senhaVar == "") {
-        loader.style.display = 'none';
-        mostrarNotificacao("Preencha o e-mail e a senha.");
-        return false;
-    }
 
     fetch("/usuarios/autenticar", {
         method: "POST",
