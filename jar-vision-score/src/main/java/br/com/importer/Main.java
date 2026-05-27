@@ -10,13 +10,15 @@ import br.com.importer.service.S3Service;
 import br.com.importer.util.EnvLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import software.amazon.awssdk.services.s3.S3Client;
+import br.com.importer.service.EmailService;
+import br.com.importer.service.NotificacaoTreinadorService;
 
 /**
  * Ponto de entrada da aplicação.
- *
+ * <p>
  * Como executar:
- *   java -jar s3-xlsx-importer-1.0.0.jar
- *
+ * java -jar s3-xlsx-importer-1.0.0.jar
+ * <p>
  * O arquivo .env deve estar na mesma pasta que o JAR.
  */
 public class Main {
@@ -38,28 +40,30 @@ public class Main {
         S3Client s3Client = new S3Provider().getS3Client();
 
         // 3. Instancia repositórios
-        LigaRepository             ligaRepo              = new LigaRepository(jdbcTemplate);
-        TorneioRepository          torneioRepo           = new TorneioRepository(jdbcTemplate);
-        SeriesRepository           seriesRepo            = new SeriesRepository(jdbcTemplate);
-        ConfrontoRepository        confrontoRepo         = new ConfrontoRepository(jdbcTemplate);
-        JogoRepository             jogoRepo              = new JogoRepository(jdbcTemplate);
-        EquipeRepository           equipeRepo            = new EquipeRepository(jdbcTemplate);
-        JogadorRepository          jogadorRepo           = new JogadorRepository(jdbcTemplate);
-        DesempenhoEquipeRepository desempenhoEquipeRepo  = new DesempenhoEquipeRepository(jdbcTemplate);
-        DesempenhoJogadorRepository desempenhoJogadorRepo = new DesempenhoJogadorRepository(jdbcTemplate);
-        EventoRepository           eventoRepo            = new EventoRepository(jdbcTemplate);
-        LogRepository              logRepo               = new LogRepository(jdbcTemplate);
+        LigaRepository ligaRepo = new LigaRepository(jdbcTemplate);
+        TorneioRepository torneioRepo = new TorneioRepository(jdbcTemplate);
+        SeriesRepository seriesRepo = new SeriesRepository(jdbcTemplate);
+        ConfrontoRepository confrontoRepo = new ConfrontoRepository(jdbcTemplate);
+        JogoRepository jogoRepo = new JogoRepository(jdbcTemplate);
+        EquipeRepository equipeRepo = new EquipeRepository(jdbcTemplate);
+        JogadorRepository jogadorRepo = new JogadorRepository(jdbcTemplate);
+        DesempenhoEquipeRepository desempenhoEquipeRepo =
+                new DesempenhoEquipeRepository(jdbcTemplate);
+        DesempenhoJogadorRepository desempenhoJogadorRepo =
+                new DesempenhoJogadorRepository(jdbcTemplate);
+        EventoRepository eventoRepo = new EventoRepository(jdbcTemplate);
+        LogRepository logRepo = new LogRepository(jdbcTemplate);
 
         // 4. Instancia serviços
-        S3Service           s3Service = new S3Service(s3Client);
-        ExcelParserService  parser    = new ExcelParserService();
+        S3Service s3Service = new S3Service(s3Client);
+        ExcelParserService parser = new ExcelParserService();
 
         ImportService importService = new ImportService(
-            s3Service, parser,
-            ligaRepo, torneioRepo, seriesRepo, confrontoRepo, jogoRepo,
-            equipeRepo, jogadorRepo,
-            desempenhoEquipeRepo, desempenhoJogadorRepo,
-            eventoRepo, logRepo
+                s3Service, parser,
+                ligaRepo, torneioRepo, seriesRepo, confrontoRepo, jogoRepo,
+                equipeRepo, jogadorRepo,
+                desempenhoEquipeRepo, desempenhoJogadorRepo,
+                eventoRepo, logRepo
         );
 
         // 5. Executa a importação
@@ -69,9 +73,19 @@ public class Main {
 
             // Índices
             System.out.println("\n[Main] Criando índices...");
-            try { jdbcTemplate.execute("CREATE INDEX idx_dj_equipe  ON desempenho_jogador(fkEquipe)"); } catch (Exception ignored) {}
-            try { jdbcTemplate.execute("CREATE INDEX idx_dj_jogador ON desempenho_jogador(fkJogador)"); } catch (Exception ignored) {}
-            try { jdbcTemplate.execute("CREATE INDEX idx_dj_jogo    ON desempenho_jogador(fkJogo)"); } catch (Exception ignored) {}
+            try {
+                jdbcTemplate.execute("CREATE INDEX idx_dj_equipe  ON desempenho_jogador(fkEquipe)");
+            } catch (Exception ignored) {
+            }
+            try {
+                jdbcTemplate.execute("CREATE INDEX idx_dj_jogador ON desempenho_jogador" +
+                        "(fkJogador)");
+            } catch (Exception ignored) {
+            }
+            try {
+                jdbcTemplate.execute("CREATE INDEX idx_dj_jogo    ON desempenho_jogador(fkJogo)");
+            } catch (Exception ignored) {
+            }
             System.out.println("[Main] ✓ Índices criados.");
 
             // Imagens
@@ -83,6 +97,25 @@ public class Main {
             System.out.printf("%n[Main] ✓ Importação finalizada em %.1f segundos.%n",
                     (fim - inicio) / 1000.0);
             jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
+
+            // Notificações por e-mail para treinadores
+            System.out.println("\n[Main] Enviando notificações por e-mail para treinadores...");
+
+            try {
+                TreinadorRepository treinadorRepository = new TreinadorRepository(jdbcTemplate);
+                EmailService emailService = new EmailService();
+
+                NotificacaoTreinadorService notificacaoTreinadorService =
+                        new NotificacaoTreinadorService(treinadorRepository, emailService);
+
+                notificacaoTreinadorService.notificarDadosNovos();
+
+            } catch (Exception emailException) {
+                System.err.println("[Main] ⚠ Importação concluída, mas houve erro ao enviar " +
+                        "e-mails: "
+                        + emailException.getMessage());
+            }
+
         } catch (Exception e) {
             System.err.println("[Main] ✗ Erro durante a importação: " + e.getMessage());
             e.printStackTrace();
