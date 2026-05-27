@@ -93,6 +93,8 @@ function cadastrar() {
     var emailVar = inputEmail.value;
     var senhaVar = inputSenha.value;
     var empresaVar = inputEquipe.value;
+    var cargoVar = 1;
+    var fk_gestor = null;
 
     
     loader.style.display = 'flex';
@@ -137,7 +139,10 @@ if (!senhaValida(senhaVar)) {
             telefoneServer: telefoneVar,
             emailServer: emailVar,
             senhaServer: senhaVar,
-            codEquipeServer: empresaVar
+            codEquipeServer: empresaVar,
+            cargoServer: cargoVar,
+            fkGestorServer: fk_gestor
+
         })
     }).then(function (resposta) {
         console.log("Entrei no then do cadastro!");

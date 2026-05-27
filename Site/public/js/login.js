@@ -117,18 +117,20 @@ async function entrar() {
             return false;
         }
 
-        const json = await resposta.json();
+        let json = await resposta.json();
 
         const [jsonTime, jsonElenco] = await Promise.all([
             getTime(json.codEquipe).then(r => r.json()),
             getElenco(json.codEquipe).then(r => r.json())
         ]);
 
+        json.nameTeam = jsonTime.nome;
+
         sessionStorage.setItem("usuario", JSON.stringify(json));
         sessionStorage.setItem("time", JSON.stringify(jsonTime));
         sessionStorage.setItem("elenco", JSON.stringify(jsonElenco));
 
-        window.location.href = "dashboard/dashboard-time.html";
+        window.location.href = json.cargo == 1 ? "/dashboard/editar-contas.html" : "/dashboard/dashboard.html";
 
     } catch (erro) {
         console.log(erro);

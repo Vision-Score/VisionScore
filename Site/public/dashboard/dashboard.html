@@ -177,14 +177,18 @@
 
 <script>
 
-    renderSidebar(document.getElementById("sidebarContainer"), "dashboard", {
-        name: "Mitohara",
-        role: "Coach",
-        email: "mitohara@t1.gg",
-        imageUrl: "../assets/playerIcons/faker.png",
-        nameTeam: "T1",
-        logoUrl: "../assets/icons/t1logo.png"
-    });
+    (function() {
+        const usuario = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const equipe = JSON.parse(sessionStorage.getItem("time")) || {};
+        renderSidebar(document.getElementById("sidebarContainer"), "dashboard", {
+            name: usuario.nome || usuario.name || "Mitohara",
+            role: usuario.cargo == 2 ? "Coach" : "Jogador",
+            email: usuario.email || "",
+            imageUrl: usuario.imageUrl || "../assets/playerIcons/faker.png",
+            nameTeam: equipe.nome || equipe.name || "T1",
+            logoUrl: equipe.urlImagem || equipe.logoUrl || "../assets/icons/t1logo.png"
+        });
+    })();
 
     let strategies = [
         { nome: "Rush B", data: "25/05/2024", icone: "../assets/icons/aim.svg", texto: "Esta é uma estratégia que consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },

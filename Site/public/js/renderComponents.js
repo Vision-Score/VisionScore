@@ -724,7 +724,19 @@ function renderSidebar(container, activePage, profileData) {
                     <input type="password" placeholder="••••••••">
                 </div>
             </div>
-            <button class="editar-contas-modal-btn-salvar">Salvar</button>
+            <div style="display:flex; width:100%; gap:12px; margin-top:8px; align-items:center;">
+                <div style="flex:0 0 40%; display:flex; align-items:center; justify-content:flex-start;">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <div id="notifToggle" data-on="0" style="width:46px; height:26px; border-radius:13px; background:#003B3B80; border:2px solid #0F8B8B; display:flex; align-items:center; padding:2px; box-sizing:border-box; justify-content:flex-start;">
+                            <div id="notifThumb" style="width:18px; height:18px; border-radius:50%; background:#e4e4e4; transition:all .2s;"></div>
+                        </div>
+                        <span style="font-family: Montserrat; font-weight:600; color:#e4e4e4; font-size:14px;">Receber notificações</span>
+                    </label>
+                </div>
+                <div style="flex:1;">
+                    <button class="editar-contas-modal-btn-salvar" id="btnSalvarPerfil">Salvar</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -739,12 +751,29 @@ function renderSidebar(container, activePage, profileData) {
         document.getElementById('modalPerfilFundo').classList.remove('editar-contas-modal-visivel');
     };
 
+    // Toggle behavior for notifications in profile modal
+    setTimeout(() => {
+        const notifToggle = document.getElementById('notifToggle');
+        const notifThumb = document.getElementById('notifThumb');
+        if (!notifToggle || !notifThumb) return;
+        notifToggle.addEventListener('click', () => {
+            const isOn = notifToggle.getAttribute('data-on') === '1';
+            if (isOn) {
+                notifToggle.setAttribute('data-on', '0');
+                notifToggle.style.justifyContent = 'flex-start';
+            } else {
+                notifToggle.setAttribute('data-on', '1');
+                notifToggle.style.justifyContent = 'flex-end';
+            }
+        });
+    }, 0);
+
     container.innerHTML = htmlSidebar;
 
     const teamProfileContainer = document.getElementById('teamProfileSidebar');
     let teamProfileData = {
         name: user.nameTeam,
-        coach: 'Coach: ' + user.name,
+        coach: 'Coach: ' + (JSON.parse(sessionStorage.getItem('time')).nomeTreinador || "N/A"),
         logoUrl: user.logoUrl
     };
     renderTeamProfile(teamProfileContainer, teamProfileData);
@@ -1725,4 +1754,68 @@ function renderHighlightUltimoJogo(container, data) {
     container.style.backgroundColor = '#00272760';
     container.style.boxShadow = 'inset 10px 100px 60px 10px #00272760, inset 0 0 0 10000px rgba(18, 25, 29, 0.3)';
 
+}
+
+function renderUsuarioEditarContas(container, data, containerPagination = null, pagina = 1) {
+    if (!container) return;
+
+    const usuarios = Array.isArray(data) ? data : [];
+
+    if (usuarios.length === 0) {
+        container.innerHTML = `
+            <div class="usuarios-vazio">
+                Você ainda não tem usuários cadastrados. Cadastre sua equipe para começar!
+                <div class="usuario-vazio-emoji"><span class="material-symbols-outlined">groups</span></div>
+            </div>
+        `;
+        if (containerPagination) {
+            containerPagination.innerHTML = '';
+        }
+        return;
+    }
+
+    const paginaAtual = Number.isInteger(pagina) && pagina > 0 ? pagina : 1;
+    const itensPorPagina = 5;
+    const totalPaginas = Math.max(1, Math.ceil(usuarios.length / itensPorPagina));
+    const paginaCorrigida = Math.min(paginaAtual, totalPaginas);
+    const inicio = (paginaCorrigida - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
+    const usuariosPaginados = usuarios.slice(inicio, fim);
+
+    const formatCargo = (cargo) => {
+        switch (cargo) {
+            case 2:
+                return 'Treinador';
+            case 3:
+                return 'Jogador';
+            default:
+                return 'N/A';
+        }
+    };
+
+    const cardsHtml = usuariosPaginados.map(usuario => `
+        <div class="editar-contas-user">
+            <div class="id">id: ${usuario.id}</div>
+            <div class="foto"><img src="../assets/playerIcons/faker.png" alt="${usuario.nome}"></div>
+            <div class="nome">${usuario.nome}</div>
+            <div class="cargo"><span class="editar-contas-cargo-badge">${formatCargo(usuario.cargo)}</span></div>
+            <div class="status"><span class="editar-contas-status-badge ativo">Ativo</span></div>
+            <div class="acoes">
+                <button class="editar-contas-btn-editar" onclick="abrirModalEditar(${usuario.id})">Editar</button>
+                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir(${usuario.id})">Deletar</button>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = cardsHtml;
+
+    if (containerPagination) {
+        const paginationHtml = Array.from({ length: totalPaginas }, (_, index) => {
+            const page = index + 1;
+            const activeClass = page === paginaCorrigida ? ' active' : '';
+            return `<div class="editar-contas-pagination-item${activeClass}" onclick="mudarPagina(${page}, this)">${page}</div>`;
+        }).join('');
+
+        containerPagination.innerHTML = paginationHtml;
+    }
 }

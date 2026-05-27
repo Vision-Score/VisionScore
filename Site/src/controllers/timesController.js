@@ -29,7 +29,8 @@ function buscarPorId(req, res) {
                         nome: resultado[0].nome,
                         sigla: resultado[0].sigla,
                         dtCriacao: resultado[0].dtCriacao,
-                        urlImagem: resultado[0].urlImagem
+                        urlImagem: resultado[0].urlImagem,
+                        nomeTreinador: resultado[0].nometreinador
                     });
                 } else if (resultado.length == 0) {
                     res.status(404).send("Equipe não encontrada!");

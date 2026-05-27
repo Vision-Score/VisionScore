@@ -1,5 +1,4 @@
-
-
+ 
 const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 const equipe = JSON.parse(sessionStorage.getItem("time"));
 const elenco = JSON.parse(sessionStorage.getItem("elenco"));
@@ -103,8 +102,7 @@ renderTeamList(
     document.getElementById("teamListContainer"),
     getStoredTeams()
 );
-renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time", { name: usuario.nome, role: "Coach", email: usuario.email, imageUrl: "../assets/playerIcons/faker.png", nameTeam: equipe.nome, logoUrl: JSON.parse(sessionStorage.getItem("time")).urlImagem || "../assets/icons/t1logo.png" });
-renderTeamProfile(document.getElementById('teamProfile'), { name: equipe.nome, coach: `Coach: ${usuario.nome}`, logoUrl: "../assets/icons/t1logo.png" });
+renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time", { name: usuario.nome, role: JSON.parse(sessionStorage.getItem("usuario")).cargo == 2 ? "Coach" : "Jogador", email: usuario.email, imageUrl: "../assets/playerIcons/faker.png", nameTeam: equipe.nome, logoUrl: JSON.parse(sessionStorage.getItem("time")).urlImagem || "../assets/icons/t1logo.png" });
+renderTeamProfile(document.getElementById('teamProfile'), { name: equipe.nome, coach: `Coach: ${JSON.parse(sessionStorage.getItem("time")).nomeTreinador || "N/A"}`, logoUrl: "../assets/icons/t1logo.png" });
 renderizarJogadores(elencoOrdenado);
 renderHighlightUltimoJogo(document.getElementById("highlight"), JSON.parse(sessionStorage.getItem("highlightUltimoJogo"))[0]);
-
