@@ -1,5 +1,6 @@
 package br.com.importer.service;
 
+import br.com.importer.exception.ImportacaoException;
 import br.com.importer.repository.*;
 import br.com.importer.util.EnvLoader;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -84,8 +85,7 @@ public class ImportService {
         List<String> arquivos = s3Service.listarArquivosXlsx();
 
         if (arquivos.isEmpty()) {
-            System.out.println("[ImportService] Nenhum arquivo .xlsx encontrado no bucket.");
-            return;
+            throw new ImportacaoException("Nenhum arquivo .xlsx encontrado no bucket. Verifique o S3_BUCKET_NAME e o S3_PREFIX no arquivo .env");
         }
 
         // Ordena para garantir a ordem correta de processamento independente do S3
