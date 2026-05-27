@@ -1,5 +1,52 @@
 var usuarioModel = require("../models/usuarioModel");
 
+// Gera e retorna o código; verifica se o e-mail existe no BD
+function recuperarSenha(req, res) {
+    var email = req.body.emailServer;
+
+    if (email == undefined) {
+        return res.status(400).send('E-mail está indefinido!');
+    }
+
+    usuarioModel.buscarPorEmail(email)
+        .then(function (resultado) {
+            if (resultado.length === 0) {
+                return res.status(404).send('E-mail não encontrado.');
+            }
+
+            // Gera código de 5 dígitos
+            const codigo = Math.floor(10000 + Math.random() * 90000).toString();
+            console.log(`\n🔑 CÓDIGO DE RECUPERAÇÃO para ${email}: ${codigo}\n`);
+
+            res.json({ codigo });
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
+function atualizarSenha(req, res) {
+    var email = req.body.emailServer;
+    var novaSenha = req.body.novaSenhaServer;
+
+    if (email == undefined) {
+        return res.status(400).send('E-mail está indefinido!');
+    }
+    if (novaSenha == undefined) {
+        return res.status(400).send('Nova senha está indefinida!');
+    }
+
+    usuarioModel.atualizarSenha(email, novaSenha)
+        .then(function (resultado) {
+            res.json({ mensagem: 'Senha atualizada com sucesso!' });
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 function autenticar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
@@ -72,5 +119,7 @@ function cadastrar(req, res) {
 
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    recuperarSenha,
+    atualizarSenha
 }

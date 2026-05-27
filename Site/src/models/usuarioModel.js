@@ -1,5 +1,21 @@
 var database = require("../database/config")
 
+function buscarPorEmail(email) {
+    var instrucaoSql = `
+        SELECT id_usuario FROM cadastro WHERE email = '${email}';
+    `;
+    console.log('Executando a instrução SQL: \n' + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function atualizarSenha(email, novaSenha) {
+    var instrucaoSql = `
+        UPDATE cadastro SET senha = '${novaSenha}' WHERE email = '${email}';
+    `;
+    console.log('Executando a instrução SQL: \n' + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 function autenticar(email, senha) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
     var instrucaoSql = `
@@ -11,7 +27,7 @@ function autenticar(email, senha) {
 
 function cadastrar(nome, telefone, email, senha, codEquipe) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, telefone, email, senha, codEquipe);
-    
+
     // Insira exatamente a query do banco aqui, lembrando da nomenclatura exata nos valores
     //  e na ordem de inserção dos dados.
     var instrucaoSql = `
@@ -23,5 +39,7 @@ function cadastrar(nome, telefone, email, senha, codEquipe) {
 
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    buscarPorEmail,
+    atualizarSenha
 };

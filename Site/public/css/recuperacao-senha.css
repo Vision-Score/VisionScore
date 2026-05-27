@@ -130,7 +130,7 @@ label {
     transition: all 0.5s;
 }
 
-input {
+#input-email {
     font-size: 1.15rem;
     background: transparent;
     border: none;
@@ -142,8 +142,8 @@ input {
     transition: all 0.5s;
 }
 
-input:focus~label,
-input:not(:placeholder-shown)~label {
+#input-email:focus~label,
+#input-email:not(:placeholder-shown)~label {
     top: -10px;
     left: 0;
     font-size: 1rem;
@@ -151,8 +151,8 @@ input:not(:placeholder-shown)~label {
     font-weight: 500;
 }
 
-input:focus,
-input:not(:placeholder-shown) {
+#input-email:focus,
+#input-email:not(:placeholder-shown) {
     border-bottom: solid 2px var(--cor-segundaria)
 }
 
@@ -323,6 +323,33 @@ button:active {
 
 .modal button:hover {
     background-color: #791f1f;
+}
+
+.code-input-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.code-input-container input {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: none;
+    border-bottom: solid 2px var(--descricao);
+    background-color: transparent;
+    color: var(--cor-clara);
+    outline: none;
+}
+
+.code-input-container input:focus,
+.code-input-container input:not(:placeholder-shown) {
+    border-bottom: solid 2px var(--cor-segundaria);
+}
+
+.invalid-code {
+    border-bottom: solid 2px var(--cor-erro) !important;
 }
 
 @media (max-width: 1024px) {
