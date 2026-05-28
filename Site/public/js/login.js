@@ -49,7 +49,7 @@ const validacaoCampoEmail = () => {
     const spanErroEmail = document.getElementById('span-erro-email');
     const email = inputEmail.value;
 
-    if (email.trim() === "" || !email.includes('@') || !email.endsWith('.com')) {
+    if (email.trim() === "" || !email.includes('@') || !email.includes('.')) {
         inputEmail.classList.add('invalido-input');
         spanErroEmail.style.display = 'block';
         inputEmail.nextElementSibling.classList.add('invalido-label');

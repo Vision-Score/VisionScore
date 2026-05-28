@@ -98,8 +98,48 @@ function buscarUsuariosPorGerente(req, res) {
     }
 }
 
+function atualizar(req, res) {
+    var idUsuario = req.params.idUsuario;
+    var nome = req.body.nomeServer;
+    var telefone = req.body.telefoneServer;
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
+    var cargo = req.body.cargoServer;
+
+
+    usuarioModel.atualizar(idUsuario, nome, telefone, email, senha, cargo)
+        .then(function (resultado) {
+            res.json(resultado);
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+
+}
+
+function deletar(req, res) {
+    var idUsuario = req.params.idUsuario;
+
+    if (idUsuario == undefined) {
+        res.status(400).send("Seu id está indefinido!");
+    } else {
+
+        usuarioModel.deletar(idUsuario)
+            .then(function (resultado) {
+                res.json(resultado);
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     autenticar,
     cadastrar,
-    buscarUsuariosPorGerente
+    buscarUsuariosPorGerente,
+    atualizar,
+    deletar
 }

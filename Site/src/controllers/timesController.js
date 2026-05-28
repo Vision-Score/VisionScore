@@ -23,7 +23,7 @@ function buscarPorId(req, res) {
     } else {
         timesModel.buscarPorId(id)
             .then(function (resultado) {
-                if (resultado.length == 1) {
+                if (resultado.length >= 1) {
                     res.status(200).json({
                         id: resultado[0].id_equipe,
                         nome: resultado[0].nome,

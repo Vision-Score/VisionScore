@@ -46,7 +46,6 @@ function formatarTelefoneInput(event) {
     event.target.value = telefone.slice(0, 15);
 }
 
-// load users async and render once available
 getUsuarios(JSON.parse(sessionStorage.getItem("usuario")).id)
     .then(fetched => {
         users = fetched;
@@ -92,14 +91,60 @@ function abrirModalEditar() {
 
 function fecharModalEditar() {
     document.getElementById("modalEditarFundo").classList.remove("editar-contas-modal-visivel");
+    const errorEl = document.getElementById('editarError');
+    if (errorEl) {
+        errorEl.style.display = 'none';
+        errorEl.innerText = '';
+    }
 }
 
-function abrirModalExcluir() {
+let usuarioDeletandoId = null;
+
+function abrirModalExcluir(usuarioId) {
+    usuarioDeletandoId = usuarioId;
     document.getElementById("modalExcluirFundo").classList.add("editar-contas-modal-visivel");
 }
 
 function fecharModalExcluir() {
     document.getElementById("modalExcluirFundo").classList.remove("editar-contas-modal-visivel");
+    usuarioDeletandoId = null;
+}
+
+async function confirmarDelecao() {
+    if (!usuarioDeletandoId) {
+        console.error("ID do usuário não definido");
+        return;
+    }
+
+    showLoader();
+
+    try {
+        await deletarUsuario(usuarioDeletandoId);
+        const gerenteSession = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const gerenteId = gerenteSession.id || gerenteSession.id_usuario || null;
+        users = await getUsuarios(gerenteId);
+        renderUsuarioEditarContas(document.getElementById("editarContasContainer"), users, paginationContainer, 1);
+        fecharModalExcluir();
+    } catch (error) {
+        console.error(error);
+        alert('Erro ao deletar usuário: ' + error.message);
+    } finally {
+        hideLoader();
+    }
+}
+
+function deletarUsuario(idUsuario) {
+    return fetch(`/usuarios/deletar/${idUsuario}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        }
+        return response.text().then(text => { throw new Error(text || response.statusText); });
+    });
 }
 
 function toggleStatus() {
@@ -113,7 +158,6 @@ function abrirModalCriarConta() {
         errorEl.style.display = 'none';
         errorEl.innerText = '';
     }
-    // clear inputs
     const nomeIn = document.getElementById('criarNome');
     const emailIn = document.getElementById('criarEmail');
     const senhaIn = document.getElementById('criarSenha');
@@ -214,6 +258,116 @@ async function criarConta() {
 function cadastrarUsuario(payload) {
     return fetch(`/usuarios/cadastrar`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    }).then(function (response) {
+        if (response.ok) {
+            return response.json();
+        }
+        return response.text().then(text => { throw new Error(text || response.statusText); });
+    });
+}
+
+let usuarioEditandoId = null;
+
+function abrirModalEditar(usuarioId) {
+    const usuarioEncontrado = users.find(u => u.id === usuarioId);
+    
+    if (!usuarioEncontrado) {
+        console.error("Usuário não encontrado");
+        return;
+    }
+
+    usuarioEditandoId = usuarioId;
+    
+    document.getElementById('editarNome').value = usuarioEncontrado.nome || '';
+    document.getElementById('editarEmail').value = usuarioEncontrado.email || '';
+    document.getElementById('editarTelefone').value = usuarioEncontrado.telefone || '';
+    document.getElementById('editarCargo').value = usuarioEncontrado.cargo || '2';
+    
+    const errorEl = document.getElementById('editarError');
+    if (errorEl) {
+        errorEl.style.display = 'none';
+        errorEl.innerText = '';
+    }
+    
+    document.getElementById("modalEditarFundo").classList.add("editar-contas-modal-visivel");
+}
+
+async function salvarEdicao() {
+    const nome = document.getElementById('editarNome')?.value || '';
+    const cargo = document.getElementById('editarCargo')?.value || '';
+    const email = document.getElementById('editarEmail')?.value || '';
+    const telefone = document.getElementById('editarTelefone')?.value || '';
+    const errorEl = document.getElementById('editarError');
+
+    showLoader();
+
+    if (!nome || !email) {
+        if (errorEl) {
+            errorEl.innerText = 'Preencha os campos de nome e email obrigatórios.';
+            errorEl.style.display = 'block';
+            errorEl.style.textAlign = 'center';
+        }
+        hideLoader();
+        return;
+    }
+
+    if (telefone && telefone.length !== 15) {
+        if (errorEl) {
+            errorEl.innerText = 'Telefone inválido. Use o formato (xx) xxxxx-xxxx.';
+            errorEl.style.display = 'block';
+            errorEl.style.textAlign = 'center';
+        }
+        hideLoader();
+        return;
+    }
+
+    if (email && !emailValido(email)) {
+        if (errorEl) {
+            errorEl.innerText = 'Formato de e-mail inválido. O e-mail precisa conter @ e ponto após o @.';
+            errorEl.style.display = 'block';
+            errorEl.style.textAlign = 'center';
+        }
+        hideLoader();
+        return;
+    }
+
+    const payload = {
+        nomeServer: nome,
+        emailServer: email,
+        cargoServer: Number(cargo),
+        telefoneServer: telefone
+    };
+
+    try {
+        await atualizarUsuario(usuarioEditandoId, payload);
+        const gerenteSession = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const gerenteId = gerenteSession.id || gerenteSession.id_usuario || null;
+        users = await getUsuarios(gerenteId);
+        renderUsuarioEditarContas(document.getElementById("editarContasContainer"), users, paginationContainer, 1);
+        fecharModalEditar();
+        if (errorEl) {
+            errorEl.style.display = 'none';
+            errorEl.innerText = '';
+        }
+    } catch (error) {
+        console.error(error);
+        if (errorEl) {
+            errorEl.innerText = 'Erro ao atualizar usuário: ' + error.message;
+            errorEl.style.display = 'block';
+            errorEl.style.textAlign = 'center';
+        }
+    } finally {
+        hideLoader();
+    }
+}
+
+function atualizarUsuario(idUsuario, payload) {
+    return fetch(`/usuarios/atualizar/${idUsuario}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },

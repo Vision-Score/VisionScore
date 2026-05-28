@@ -361,7 +361,7 @@ function renderPlayerCard(container, data) {
 function renderSidebar(container, activePage, profileData) {
     if (!container) return;
 
-    console.log(profileData)
+    console.log('Populando sidebar com dados do usuário:', profileData);
     const user = profileData;
 
     const styles = {
@@ -713,16 +713,17 @@ function renderSidebar(container, activePage, profileData) {
             <div class="editar-contas-modal-form">
                 <div class="editar-contas-modal-campo">
                     <label>Nome:</label>
-                    <input type="text" value="${user.name || ''}">
+                    <input type="text" id="editarPerfilNome" value="${user.name || ''}">
                 </div>
                 <div class="editar-contas-modal-campo">
                     <label>Email:</label>
-                    <input type="email" value="${user.email || ''}">
+                    <input type="email" id="editarPerfilEmail" value="${user.email || (JSON.parse(sessionStorage.getItem('usuario')) || {}).email || ''}">
                 </div>
                 <div class="editar-contas-modal-campo">
                     <label>Senha:</label>
-                    <input type="password" placeholder="••••••••">
+                    <input type="password" id="editarPerfilSenha" placeholder="••••••••">
                 </div>
+                <div id="editarPerfilError" style="color:#c92a2a; margin-top:8px; display:none; font-size:0.95rem; text-align:center;"></div>
             </div>
             <div style="display:flex; width:100%; gap:12px; margin-top:8px; align-items:center;">
                 <div style="flex:0 0 40%; display:flex; align-items:center; justify-content:flex-start;">
@@ -734,7 +735,7 @@ function renderSidebar(container, activePage, profileData) {
                     </label>
                 </div>
                 <div style="flex:1;">
-                    <button class="editar-contas-modal-btn-salvar" id="btnSalvarPerfil">Salvar</button>
+                    <button class="editar-contas-modal-btn-salvar" id="btnSalvarPerfil" onclick="salvarPerfil()">Salvar</button>
                 </div>
             </div>
         </div>
@@ -742,13 +743,160 @@ function renderSidebar(container, activePage, profileData) {
 
     `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    if (!document.getElementById('modalPerfilFundo')) {
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
 
     window.abrirModalPerfil = function () {
+        const usuarioSession = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const nomeEl = document.getElementById('editarPerfilNome');
+        const emailEl = document.getElementById('editarPerfilEmail');
+        if (nomeEl) nomeEl.value = usuarioSession.nome || usuarioSession.name || '';
+        if (emailEl) emailEl.value = usuarioSession.email || '';
+
         document.getElementById('modalPerfilFundo').classList.add('editar-contas-modal-visivel');
     };
+    
     window.fecharModalPerfil = function () {
         document.getElementById('modalPerfilFundo').classList.remove('editar-contas-modal-visivel');
+        const errorEl = document.getElementById('editarPerfilError');
+        if (errorEl) {
+            errorEl.style.display = 'none';
+            errorEl.innerText = '';
+        }
+        const senhaEl = document.getElementById('editarPerfilSenha');
+        if (senhaEl) {
+            senhaEl.value = '';
+        }
+    };
+
+    window.salvarPerfil = async function () {
+        const nome = document.getElementById('editarPerfilNome')?.value || '';
+        const email = document.getElementById('editarPerfilEmail')?.value || '';
+        const senha = document.getElementById('editarPerfilSenha')?.value || '';
+        const errorEl = document.getElementById('editarPerfilError');
+
+        let loader = document.querySelector('.loader') || document.getElementById('loaderEditarContas');
+        if (!loader) {
+            const dynamicLoaderHtml = `
+            <div class="loader" id="perfilLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.8); z-index: 1000000;">
+                <span style="width: 70px; height: 70px; border: 6px solid rgba(228, 228, 228, 0.25); border-top-color: #e4e4e4; border-radius: 50%; animation: spin 1s linear infinite;"></span>
+            </div>
+            <style>
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            </style>
+            `;
+            document.body.insertAdjacentHTML('beforeend', dynamicLoaderHtml);
+            loader = document.getElementById('perfilLoader');
+        }
+        if (loader) {
+            loader.style.position = 'fixed';
+            loader.style.zIndex = '1000000';
+            loader.style.top = '0';
+            loader.style.left = '0';
+            loader.style.width = '100%';
+            loader.style.height = '100%';
+            loader.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            loader.style.alignItems = 'center';
+            loader.style.justifyContent = 'center';
+            loader.style.display = 'flex';
+        }
+
+        if (!nome || !email) {
+            if (errorEl) {
+                errorEl.innerText = 'Preencha os campos de nome e email obrigatórios.';
+                errorEl.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
+            return;
+        }
+
+        const emailValido = (emailStr) => {
+            const posicaoArroba = emailStr.indexOf("@");
+            const posicaoPontoDepoisArroba = emailStr.indexOf(".", posicaoArroba);
+            return posicaoArroba > 0 && posicaoPontoDepoisArroba > posicaoArroba + 1;
+        };
+
+        if (!emailValido(email)) {
+            if (errorEl) {
+                errorEl.innerText = 'Formato de e-mail inválido. O e-mail precisa conter @ e ponto após o @.';
+                errorEl.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
+            return;
+        }
+
+        if (senha) {
+            const senhaValida = (senhaStr) => {
+                const temMinimoSeisCaracteres = senhaStr.length >= 6;
+                const temNumero = /[0-9]/.test(senhaStr);
+                const temMaiuscula = /[A-Z]/.test(senhaStr);
+                const temMinuscula = /[a-z]/.test(senhaStr);
+                return temMinimoSeisCaracteres && temNumero && temMaiuscula && temMinuscula;
+            };
+
+            if (!senhaValida(senha)) {
+                if (errorEl) {
+                    errorEl.innerText = 'A senha precisa ter no mínimo 6 caracteres, 1 número, 1 letra maiúscula e 1 letra minúscula.';
+                    errorEl.style.display = 'block';
+                }
+                if (loader) loader.style.display = 'none';
+                return;
+            }
+        }
+
+        const usuarioSession = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const idUsuario = usuarioSession.id || usuarioSession.id_usuario;
+
+        if (!idUsuario) {
+            if (errorEl) {
+                errorEl.innerText = 'Erro: Usuário não identificado na sessão.';
+                errorEl.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
+            return;
+        }
+
+        const payload = {
+            nomeServer: nome,
+            emailServer: email
+        };
+        if (senha) {
+            payload.senhaServer = senha;
+        }
+
+        try {
+            const response = await fetch(`/usuarios/atualizar/${idUsuario}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || response.statusText);
+            }
+
+            usuarioSession.nome = nome;
+            usuarioSession.email = email;
+            sessionStorage.setItem("usuario", JSON.stringify(usuarioSession));
+
+            fecharModalPerfil();
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            if (errorEl) {
+                errorEl.innerText = 'Erro ao atualizar perfil: ' + error.message;
+                errorEl.style.display = 'block';
+            }
+        } finally {
+            if (loader) loader.style.display = 'none';
+        }
     };
 
     // Toggle behavior for notifications in profile modal
@@ -1460,7 +1608,7 @@ function renderStrategyModal(strategy) {
         }
     </style>
 
-    <div class="strategyModalFundo" id="modalStrategyFundo" onclick="fecharModalStrategy()">
+    <div class="strategyModalFundo" id="modalStrategyFundo" data-estrategia-id="${strategy.id}" onclick="fecharModalStrategy()">
         <div class="strategyModalEditar" onclick="event.stopPropagation()">
             <div class="strategyModalFoto">
                 <img src="${strategy.icone}" alt="Ícone da estratégia">
@@ -1483,7 +1631,7 @@ function renderStrategyModal(strategy) {
             
             <div id="strategyModalActionsEdit" style="display: none; width: 100%; justify-content: flex-end; gap: 10px;">
                 <button class="strategyModalBtnCancelar" onclick="toggleEditModeStrategy(false)">Cancelar</button>
-                <button class="strategyModalBtnSalvar" onclick="fecharModalStrategy()">Salvar Alterações</button>
+                <button class="strategyModalBtnSalvar" onclick="salvarEstrategia()">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -1686,14 +1834,14 @@ function renderCreateStrategyModal() {
             <div class="createStrategyModalForm">
                 <div class="createStrategyModalCampo">
                     <label>Nome da Estratégia:</label>
-                    <input type="text" id="createStrategyNome" placeholder="Ex: Rush B">
+                    <input type="text" id="createStrategyTitle" placeholder="Ex: Rush B">
                 </div>
-                <textarea class="createStrategyModalTexto" id="createStrategyTexto" placeholder="Descreva os detalhes da tática..."></textarea>
+                <textarea class="createStrategyModalTexto" id="createStrategyContent" placeholder="Descreva os detalhes da tática..."></textarea>
             </div>
             
             <div style="display: flex; width: 100%; justify-content: flex-end; gap: 10px;">
                 <button class="createStrategyModalBtnCancelar" onclick="fecharModalCreateStrategy()">Cancelar</button>
-                <button class="createStrategyModalBtnSalvar" onclick="fecharModalCreateStrategy()">Criar Estratégia</button>
+                <button class="createStrategyModalBtnSalvar" onclick="salvarNovaEstrategia()">Criar Estratégia</button>
             </div>
         </div>
     </div>

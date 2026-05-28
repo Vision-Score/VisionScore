@@ -94,18 +94,15 @@
                     <label>Telefone:</label>
                     <input type="text" id="editarTelefone">
                 </div>
-                <div class="editar-contas-modal-campo">
-                    <label>Senha:</label>
-                    <input type="password" id="editarSenha">
-                </div>
                 <div class="editar-contas-modal-status">
                     <div class="editar-contas-modal-toggle" id="toggleAtivo" onclick="toggleStatus()">
                         <div class="editar-contas-modal-toggle-thumb"></div>
                     </div>
-                    <span class="editar-contas-modal-toggle-label">Ativo</span>
+                    <span class="editar-contas-modal-toggle-label">Recebe notificações?</span>
                 </div>
+                <div id="editarError" style="color:#c92a2a; margin-top:8px; display:none; font-size:0.95rem;"></div>
             </div>
-            <button class="editar-contas-modal-btn-salvar">Salvar</button>
+            <button class="editar-contas-modal-btn-salvar" onclick="salvarEdicao()">Salvar</button>
         </div>
     </div>
 
@@ -156,7 +153,7 @@
             <p>Tem Certeza que deseja apagar este Usuario?</p>
             <div class="editar-contas-modal-excluir-btns">
                 <button class="editar-contas-modal-btn-cancelar" onclick="fecharModalExcluir()">Cancelar</button>
-                <button class="editar-contas-modal-btn-confirmar">Sim, Apagar!</button>
+                <button class="editar-contas-modal-btn-confirmar" onclick="confirmarDelecao()">Sim, Apagar!</button>
             </div>
         </div>
     </div>
