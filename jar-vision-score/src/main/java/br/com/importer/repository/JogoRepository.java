@@ -18,7 +18,7 @@ public class JogoRepository {
      */
     public int[] insertBatch(List<Object[]> batch) {
         return jdbc.batchUpdate(
-            "INSERT INTO jogo (idJogo, dtJogo, fkConfronto, fkSerie) VALUES (?, ?, ?, ?)",
+            "INSERT INTO jogo (idJogo, dtJogo, duracaoSegundos, fkConfronto, fkSerie) VALUES (?, ?, ?, ?, ?)",
             batch
         );
     }
