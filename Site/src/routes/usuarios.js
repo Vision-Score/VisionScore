@@ -24,4 +24,8 @@ router.delete("/deletar/:idUsuario", function (req, res) {
     usuarioController.deletar(req, res);
 });
 
+router.put("/atualizarPreferenciaNotificacao/:idUsuario", function (req, res) {
+    usuarioController.atualizarPreferenciaNotificacao(req, res);
+});
+
 module.exports = router;

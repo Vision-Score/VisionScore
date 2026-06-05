@@ -66,7 +66,8 @@ function autenticar(req, res) {
                         email: resultadoAutenticar[0].email,
                         nome: resultadoAutenticar[0].nome,
                         codEquipe: resultadoAutenticar[0].cod_equipe,
-                        cargo: resultadoAutenticar[0].cargo
+                        cargo: resultadoAutenticar[0].cargo,
+                        notificar: resultadoAutenticar[0].notificar
                     });
                 } else if (resultadoAutenticar.length == 0) {
                     res.status(403).send("Email e/ou senha inválido(s)");
@@ -183,10 +184,33 @@ function deletar(req, res) {
     }
 }
 
+function atualizarPreferenciaNotificacao(req, res) {
+    var idUsuario = req.params.idUsuario;
+    var preferenciaNotificacao = req.body.preferenciaNotificacaoServer;
+
+    if (idUsuario == undefined) {
+        res.status(400).send("Seu id está indefinido!");
+    } else if (preferenciaNotificacao == undefined) {
+        res.status(400).send("Sua preferência de notificação está indefinida!");
+    } else {
+        usuarioModel.atualizarPreferenciaNotificacao(idUsuario, preferenciaNotificacao)
+            .then(function (resultado) {
+                res.json(resultado);
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     autenticar,
     cadastrar,
     buscarUsuariosPorGerente,
     atualizar,
-    deletar
+    deletar,
+    atualizarPreferenciaNotificacao,
+    recuperarSenha,
+    atualizarSenha
 }
