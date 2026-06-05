@@ -16,6 +16,12 @@
     </properties>
 
     <dependencies>
+        <!-- ===== Jakarta Mail / Angus Mail - Envio de e-mails via SMTP ===== -->
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.5</version>
+        </dependency>
 
         <!-- ===== AWS S3 SDK ===== -->
         <dependency>
@@ -100,11 +106,13 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <!-- Define a classe principal do JAR -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>br.com.importer.Main</mainClass>
                                 </transformer>
                                 <!-- Garante que os service loaders do AWS SDK funcionem -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
                             <filters>
                                 <!-- Remove assinaturas para evitar SecurityException ao rodar o fat jar -->
