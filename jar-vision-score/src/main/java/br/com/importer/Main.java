@@ -10,8 +10,9 @@ import br.com.importer.service.S3Service;
 import br.com.importer.util.EnvLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import software.amazon.awssdk.services.s3.S3Client;
+import br.com.importer.repository.UsuarioNotificacaoRepository;
 import br.com.importer.service.EmailService;
-import br.com.importer.service.NotificacaoTreinadorService;
+import br.com.importer.service.NotificacaoUsuarioService;
 
 /**
  * Ponto de entrada da aplicação.
@@ -98,17 +99,18 @@ public class Main {
                     (fim - inicio) / 1000.0);
             jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
 
-            // Notificações por e-mail para treinadores
-            System.out.println("\n[Main] Enviando notificações por e-mail para treinadores...");
+            // Notificações por e-mail para todos os usuários com notificação ativa
+            System.out.println("\n[Main] Enviando notificações por e-mail para usuários com notificação ativa...");
 
             try {
-                TreinadorRepository treinadorRepository = new TreinadorRepository(jdbcTemplate);
+                UsuarioNotificacaoRepository usuarioNotificacaoRepository =
+                        new UsuarioNotificacaoRepository(jdbcTemplate);
                 EmailService emailService = new EmailService();
 
-                NotificacaoTreinadorService notificacaoTreinadorService =
-                        new NotificacaoTreinadorService(treinadorRepository, emailService);
+                NotificacaoUsuarioService notificacaoUsuarioService =
+                        new NotificacaoUsuarioService(usuarioNotificacaoRepository, emailService);
 
-                notificacaoTreinadorService.notificarDadosNovos();
+                notificacaoUsuarioService.notificarDadosNovos();
 
             } catch (Exception emailException) {
                 System.err.println("[Main] ⚠ Importação concluída, mas houve erro ao enviar " +

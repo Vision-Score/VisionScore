@@ -4,31 +4,31 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-public class TreinadorRepository {
+public class UsuarioNotificacaoRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public TreinadorRepository(JdbcTemplate jdbcTemplate) {
+    public UsuarioNotificacaoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Treinador> buscarTreinadoresComEmail() {
+    public List<Usuario> buscarUsuariosComNotificacaoAtiva() {
         String sql = """
                 SELECT id_usuario, nome, email
                 FROM cadastro
-                WHERE cargo = 2
+                WHERE notificar = 1
                   AND email IS NOT NULL
                   AND TRIM(email) <> ''
                 """;
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new Treinador(
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Usuario(
                 rs.getInt("id_usuario"),
                 rs.getString("nome"),
                 rs.getString("email")
         ));
     }
 
-    public record Treinador(
+    public record Usuario(
             Integer id,
             String nome,
             String email
