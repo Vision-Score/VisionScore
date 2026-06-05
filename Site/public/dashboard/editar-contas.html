@@ -17,6 +17,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboards.css">
     <link rel="stylesheet" href="../css/editar-contas.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=groups" />
     <script src="../js/renderComponents.js"></script>
 </head>
 
@@ -36,84 +37,31 @@
 
                     <div class="editar-contas-interactibles">
                         <div class="search-bar">
-                            <input type="text" id="searchInput" placeholder="Buscar por nome ou tag">
+                            <input type="text" id="searchInput" placeholder="Buscar por nome ou id">
                             <i class="material-icons">search</i>
                         </div>
                         <button class="add-user-btn" onclick="abrirModalCriarConta()"> + <i
                                 class="material-icons">person</i></button>
                     </div>
-                    
+
                 </div>
                 <div class="editar-contas-content">
                     <div class="editar-contas-menu-filtro">
                         <div id="id">Id</div>
                         <div id="foto">Foto</div>
                         <div id="nome">Nome</div>
-                        <div id="equipe">Equipe</div>
+                        <div id="equipe">Cargo</div>
                         <div id="status">Status</div>
                         <div id="acoes">Ações</div>
                     </div>
-                    <div class="editar-contas-user-list">
-                        <div class="editar-contas-user">
-                            <div class="id">id: 001</div>
-                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
-                            <div class="nome">Faker</div>
-                            <div class="equipe"><img src="../assets/icons/intzlogo.png" alt="INTZ"></div>
-                            <div class="status"><span class="editar-contas-status-badge ativo">Ativo</span></div>
-                            <div class="acoes">
-                                <button class="editar-contas-btn-editar" onclick="abrirModalEditar()">Editar</button>
-                                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir()">Deletar</button>
-                            </div>
-                        </div>
-                        <div class="editar-contas-user">
-                            <div class="id">id: 001</div>
-                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
-                            <div class="nome">Faker</div>
-                            <div class="equipe"><img src="../assets/icons/intzlogo.png" alt="INTZ"></div>
-                            <div class="status"><span class="editar-contas-status-badge ativo">Ativo</span></div>
-                            <div class="acoes">
-                                <button class="editar-contas-btn-editar" onclick="abrirModalEditar()">Editar</button>
-                                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir()">Deletar</button>
-                            </div>
-                        </div>
-                        <div class="editar-contas-user">
-                            <div class="id">id: 001</div>
-                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
-                            <div class="nome">Faker</div>
-                            <div class="equipe"><img src="../assets/icons/intzlogo.png" alt="INTZ"></div>
-                            <div class="status"><span class="editar-contas-status-badge inativo">Inativo</span></div>
-                            <div class="acoes">
-                                <button class="editar-contas-btn-editar" onclick="abrirModalEditar()">Editar</button>
-                                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir()">Deletar</button>
-                            </div>
-                        </div>
-                        <div class="editar-contas-user">
-                            <div class="id">id: 001</div>
-                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
-                            <div class="nome">Faker</div>
-                            <div class="equipe"><img src="../assets/icons/intzlogo.png" alt="INTZ"></div>
-                            <div class="status"><span class="editar-contas-status-badge ativo">Ativo</span></div>
-                            <div class="acoes">
-                                <button class="editar-contas-btn-editar" onclick="abrirModalEditar()">Editar</button>
-                                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir()">Deletar</button>
-                            </div>
-                        </div>
-                        <div class="editar-contas-user">
-                            <div class="id">id: 001</div>
-                            <div class="foto"><img src="../assets/playerIcons/faker.png" alt=""></div>
-                            <div class="nome">Faker</div>
-                            <div class="equipe"><img src="../assets/icons/intzlogo.png" alt="INTZ"></div>
-                            <div class="status"><span class="editar-contas-status-badge inativo">Inativo</span></div>
-                            <div class="acoes">
-                                <button class="editar-contas-btn-editar" onclick="abrirModalEditar()">Editar</button>
-                                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir()">Deletar</button>
-                            </div>
-                        </div>
+                    <div class="editar-contas-user-list" id="editarContasContainer">
+
+                        
+
                     </div>
-                    <div class="editar-contas-pagination">
-                        <div class="editar-contas-pagination-item active">1</div>
-                        <div class="editar-contas-pagination-item">2</div>
-                        <div class="editar-contas-pagination-item">3</div>
+                    <div class="editar-contas-pagination" id="editarContasPagination">
+
+
                     </div>
                 </div>
             </div>
@@ -129,33 +77,75 @@
             <div class="editar-contas-modal-form">
                 <div class="editar-contas-modal-campo">
                     <label>Nome:</label>
-                    <input type="text">
+                    <input type="text" id="editarNome">
                 </div>
                 <div class="editar-contas-modal-campo">
-                    <label>Equipe:</label>
-                    <select>
-                        <option selected disabled value="Selecione">Selecione</option>
-                        <option value="intz">INTZ</option>
+                    <label>Cargo:</label>
+                    <select id="editarCargo">
+                        <option selected value="2">Treinador</option>
+                        <option value="3">Jogador</option>
                     </select>
                 </div>
                 <div class="editar-contas-modal-campo">
                     <label>Email:</label>
-                    <input type="email">
+                    <input type="email" id="editarEmail">
                 </div>
                 <div class="editar-contas-modal-campo">
-                    <label>Senha:</label>
-                    <input type="password">
+                    <label>Telefone:</label>
+                    <input type="text" id="editarTelefone">
                 </div>
                 <div class="editar-contas-modal-status">
                     <div class="editar-contas-modal-toggle" id="toggleAtivo" onclick="toggleStatus()">
                         <div class="editar-contas-modal-toggle-thumb"></div>
                     </div>
-                    <span class="editar-contas-modal-toggle-label">Ativo</span>
+                    <span class="editar-contas-modal-toggle-label">Recebe notificações?</span>
                 </div>
+                <div id="editarError" style="color:#c92a2a; margin-top:8px; display:none; font-size:0.95rem;"></div>
             </div>
-            <button class="editar-contas-modal-btn-salvar">Salvar</button>
+            <button class="editar-contas-modal-btn-salvar" onclick="salvarEdicao()">Salvar</button>
         </div>
     </div>
+
+    <!-- Modal Criar Conta -->
+    <div class="editar-contas-modal-fundo" id="modalCriarFundo" onclick="fecharModalCriarConta()">
+        <div class="editar-contas-modal-editar" onclick="event.stopPropagation()">
+            <div class="editar-contas-modal-foto">
+                <img src="../assets/playerIcons/faker.png" alt="Foto do usuário">
+            </div>
+            <div class="editar-contas-modal-form">
+                <div class="editar-contas-modal-campo">
+                    <label>Nome:</label>
+                    <input type="text" id="criarNome">
+                </div>
+                <div class="editar-contas-modal-campo">
+                    <label>Cargo:</label>
+                    <select id="criarCargo">
+                        <option value="2">Treinador</option>
+                        <option value="3">Jogador</option>
+                    </select>
+                </div>
+                <div class="editar-contas-modal-campo">
+                    <label>Email:</label>
+                    <input type="email" id="criarEmail">
+                </div>
+                <div class="editar-contas-modal-campo">
+                    <label>Telefone:</label>
+                    <input type="text" id="criarTelefone">
+                </div>
+                <div class="editar-contas-modal-campo">
+                    <label>Senha:</label>
+                    <input type="password" id="criarSenha">
+                </div>
+                <div id="criarError" style="color:#c92a2a; margin-top:8px; display:none; font-size:0.95rem;"></div>
+            </div>
+            <div style="display:flex; width:100%; justify-content:flex-end; gap:10px;">
+                <button class="editar-contas-modal-btn-cancelar" onclick="fecharModalCriarConta()">Cancelar</button>
+                <button class="editar-contas-modal-btn-salvar" onclick="criarConta()">Criar Conta</button>
+            </div>
+        </div>
+    </div>
+
+    
 
     <!-- Modal Excluir Usuário -->
     <div class="editar-contas-modal-fundo" id="modalExcluirFundo" onclick="fecharModalExcluir()">
@@ -163,45 +153,14 @@
             <p>Tem Certeza que deseja apagar este Usuario?</p>
             <div class="editar-contas-modal-excluir-btns">
                 <button class="editar-contas-modal-btn-cancelar" onclick="fecharModalExcluir()">Cancelar</button>
-                <button class="editar-contas-modal-btn-confirmar">Sim, Apagar!</button>
+                <button class="editar-contas-modal-btn-confirmar" onclick="confirmarDelecao()">Sim, Apagar!</button>
             </div>
         </div>
     </div>
 
+    <div class="loader" id="loaderEditarContas"><span></span></div>
+    <script src="../js/editar-contas.js"></script>
+
 </body>
 
 </html>
-
-<script>
-    renderSidebar(document.getElementById("sidebarContainer"), "", {
-        name: "Mitohara",
-        role: "Coach",
-        imageUrl: "../assets/playerIcons/faker.png",
-        nameTeam: "T1",
-        logoUrl: "../assets/icons/t1logo.png"
-    });
-
-    function switchSidebar() {
-        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
-    }
-
-    function abrirModalEditar() {
-        document.getElementById("modalEditarFundo").classList.add("editar-contas-modal-visivel");
-    }
-
-    function fecharModalEditar() {
-        document.getElementById("modalEditarFundo").classList.remove("editar-contas-modal-visivel");
-    }
-
-    function abrirModalExcluir() {
-        document.getElementById("modalExcluirFundo").classList.add("editar-contas-modal-visivel");
-    }
-
-    function fecharModalExcluir() {
-        document.getElementById("modalExcluirFundo").classList.remove("editar-contas-modal-visivel");
-    }
-
-    function toggleStatus() {
-        document.getElementById("toggleAtivo").classList.toggle("ativo");
-    }
-</script>

@@ -64,7 +64,9 @@ function autenticar(req, res) {
                     res.json({
                         id: resultadoAutenticar[0].id,
                         email: resultadoAutenticar[0].email,
-                        nome: resultadoAutenticar[0].nome
+                        nome: resultadoAutenticar[0].nome,
+                        codEquipe: resultadoAutenticar[0].cod_equipe,
+                        cargo: resultadoAutenticar[0].cargo
                     });
                 } else if (resultadoAutenticar.length == 0) {
                     res.status(403).send("Email e/ou senha inválido(s)");
@@ -86,6 +88,8 @@ function cadastrar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
     var codEquipe = req.body.codEquipeServer;
+    var cargo = req.body.cargoServer;
+    var fk_gestor = req.body.fkGestorServer;
 
     // Faça as validações dos valores
     if (nome == undefined) {
@@ -96,10 +100,13 @@ function cadastrar(req, res) {
         res.status(400).send("Sua senha está undefined!");
     } else if (codEquipe == undefined) {
         res.status(400).send("Seu código de equipe está undefined!");
+    } else if (cargo == undefined) {
+        res.status(400).send("Seu cargo está undefined!");
     } else {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, telefone, email, senha, codEquipe)
+        // fk_gestor pode ser opcional no payload; será repassado ao model (pode ser null)
+        usuarioModel.cadastrar(nome, telefone, email, senha, cargo, codEquipe, fk_gestor)
             .then(
                 function (resultado) {
                     res.json(resultado);
@@ -117,9 +124,69 @@ function cadastrar(req, res) {
     }
 }
 
+function buscarUsuariosPorGerente(req, res) {
+    var idGerente = req.params.idGerente;
+
+    if (idGerente == undefined) {
+        res.status(400).send("Seu id está indefinido!");
+    } else {
+        usuarioModel.buscarUsuariosPorGerente(idGerente)
+            .then(function (resultado) {
+                if (resultado.length > 0) {
+                    res.status(200).json(resultado);
+                } else {
+                    res.status(204).send("Nenhum usuário encontrado!");
+                }
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
+function atualizar(req, res) {
+    var idUsuario = req.params.idUsuario;
+    var nome = req.body.nomeServer;
+    var telefone = req.body.telefoneServer;
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
+    var cargo = req.body.cargoServer;
+
+
+    usuarioModel.atualizar(idUsuario, nome, telefone, email, senha, cargo)
+        .then(function (resultado) {
+            res.json(resultado);
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+
+}
+
+function deletar(req, res) {
+    var idUsuario = req.params.idUsuario;
+
+    if (idUsuario == undefined) {
+        res.status(400).send("Seu id está indefinido!");
+    } else {
+
+        usuarioModel.deletar(idUsuario)
+            .then(function (resultado) {
+                res.json(resultado);
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     autenticar,
     cadastrar,
-    recuperarSenha,
-    atualizarSenha
+    buscarUsuariosPorGerente,
+    atualizar,
+    deletar
 }

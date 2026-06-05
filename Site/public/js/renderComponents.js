@@ -63,6 +63,160 @@ function renderTeamProfile(container, data) {
     `;
 };
 
+function renderPopupJogador(container, data) {
+    if (!container) return;
+
+    const config = {
+        name: data.name || "Jogador",
+        imageUrl: data.imageUrl || "../assets/playerIcons/faker.png",
+        position: data.position || "Mid",
+        teamLogoUrl: data.teamLogoUrl || "../assets/icons/t1logo.png",
+        stats: data.stats || [],
+        badges: data.badges || [],
+        quickStats: data.quickStats || [
+            { iconUrl: "../assets/icons/bow.svg", value: "~ 553 DpM" },
+            { iconUrl: "../assets/icons/coins.svg", value: "▼250g @ 15" },
+            { iconUrl: "../assets/icons/aim.svg", value: "~ 12.3 KDA" }
+        ]
+    };
+
+    const renderStats = (statsArray) => {
+        if (!statsArray || statsArray.length === 0) return '';
+        return statsArray.map(stat => {
+            const trendClass = stat.trend === 'down' ? 'down' : 'up';
+            return `
+                <div class="infoBox">
+                    <span class="infoLabel">${stat.label}</span>
+                    <div class="infoStats">
+                        <div class="infoTrend ${trendClass}">
+                            <i class="material-icons">arrow_${trendClass}ward</i>
+                            <span class="infoPlayerValue">${stat.playerValue}</span>
+                        </div>
+                        <span class="infoSeparator">|</span>
+                        <div class="infoTrend">
+                            <span class="infoMedianValue">${stat.medianValue}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+    const renderBadges = (badgesArray) => {
+        if (!badgesArray || badgesArray.length === 0) return '';
+        return badgesArray.map(badge => `
+            <div class="badge">
+                <img src="${badge.imageUrl}" alt="${badge.title}" class="badgeImage">
+                <span class="badgeTitle">${badge.title}</span>
+            </div>
+        `).join('');
+    };
+
+    const renderQuickStats = (quickStatsArray) => {
+        if (!quickStatsArray || quickStatsArray.length === 0) return '';
+        return quickStatsArray.map(stat => `
+            <div class="playerInfo">
+                <img src="${stat.iconUrl}" alt="Stat Icon">
+                <span>${stat.value}</span>
+            </div>
+        `).join('');
+    };
+
+    container.innerHTML = `
+        <div class="popupJogadorContent">
+            <div class="sideBar">
+                <div class="sideUpper" onclick="switchPopupJogador()">
+                    <i class="material-icons">arrow_back</i>
+                </div>
+                <div class="playerIcon">
+                    <img src="${config.imageUrl}" alt="${config.name}">
+                    <div class="playerPosition">${config.position}</div>
+                </div>
+                <div class="playerName">${config.name}</div>
+                ${renderQuickStats(config.quickStats)}
+                <div class="teamlogo">
+                    <img src="${config.teamLogoUrl}" alt="Team Logo">
+                </div>
+            </div>
+            <div class="mainContent">
+                <div class="mainUpper">
+                    <div class="compareButton" onclick="compareJogadores('${config.name}')">
+                        <i class="material-icons">compare_arrows</i>
+                        <span>Comparar</span>
+                    </div>
+                </div>
+                <div class="mainLower">
+                    <div class="mainLowerUpper">
+                        <div class="playerInformation">
+                            ${renderStats(config.stats)}
+                        </div>
+                        <div class="radarGraph">
+                            <div class="canvasContainer">
+                                <canvas id="playerRadarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mainLowerLower">
+                        ${renderBadges(config.badges)}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const ctx = document.getElementById('playerRadarChart');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['DPM', 'Kills', 'Deaths', 'Assists', 'KP%', 'GPM', 'CSPM', 'Wards/min'],
+            datasets: [
+                {
+                    label: data.name,
+                    data: data.radarData || [0, 0, 0, 0, 0, 0, 0, 0],
+                    borderColor: '#0F8B8B',
+                    backgroundColor: '#0F8B8B40'
+                },
+                {
+                    label: 'Média da Role',
+                    data: data.radarMediaRole || [0, 0, 0, 0, 0, 0, 0, 0],
+                    borderColor: '#ffffff40',
+                    backgroundColor: '#ffffff15'
+                }
+            ]
+        },
+        options: {
+            scales: {
+                responsive: true,
+                maintainAspectRatio: false,
+                r: {
+                    min: 0,
+                    max: 100,
+                    angleLines: {
+                        color: '#444'
+                    },
+                    grid: {
+                        color: '#44444460'
+                    },
+                    pointLabels: {
+                        color: '#fff',
+                        font: {
+                            size: 14,
+                            weight: 600,
+                            family: "Montserrat"
+                        }
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: false
+            }
+        }
+    });
+}
+
 function renderPlayerCard(container, data) {
     if (!container) return;
 
@@ -72,7 +226,7 @@ function renderPlayerCard(container, data) {
 
     const config = {
         name: data.name || "Jogador",
-        imageUrl: data.imageUrl || "../assets/playerIcons/faker.png",
+        imageUrl: data.imageUrl || data.urlFotoJogador || "../assets/playerIcons/faker.png",
         roleIconUrl: data.roleIconUrl || `../assets/icons/${data.position || 'Top'}_icon.png`,
         stats: data.stats || []
     };
@@ -112,17 +266,21 @@ function renderPlayerCard(container, data) {
             justify-content: center;
         `,
         playerImage: `
-            margin-top: 4%;
+            background-color: #00000090;
+            display: block;
+            margin: 4% auto 0;
             width: 40%;
             aspect-ratio: 1;
             outline: 2px solid #0F8B8B;
             border-radius: 100%;
             object-fit: cover;
+            object-position: center center;
         `,
         playerName: `
             width: auto;
             height: auto;
             margin: 2% 0;
+            padding: 2%;
             color: #e4e4e4;
             font-family: Open Sans, sans-serif;
             font-weight: 600;
@@ -203,7 +361,7 @@ function renderPlayerCard(container, data) {
 function renderSidebar(container, activePage, profileData) {
     if (!container) return;
 
-    console.log(profileData)
+    console.log('Populando sidebar com dados do usuário:', profileData);
     const user = profileData;
 
     const styles = {
@@ -555,38 +713,215 @@ function renderSidebar(container, activePage, profileData) {
             <div class="editar-contas-modal-form">
                 <div class="editar-contas-modal-campo">
                     <label>Nome:</label>
-                    <input type="text" value="${user.name || ''}">
+                    <input type="text" id="editarPerfilNome" value="${user.name || ''}">
                 </div>
                 <div class="editar-contas-modal-campo">
                     <label>Email:</label>
-                    <input type="email" value="${user.email || ''}">
+                    <input type="email" id="editarPerfilEmail" value="${user.email || (JSON.parse(sessionStorage.getItem('usuario')) || {}).email || ''}">
                 </div>
                 <div class="editar-contas-modal-campo">
                     <label>Senha:</label>
-                    <input type="password" placeholder="••••••••">
+                    <input type="password" id="editarPerfilSenha" placeholder="••••••••">
+                </div>
+                <div id="editarPerfilError" style="color:#c92a2a; margin-top:8px; display:none; font-size:0.95rem; text-align:center;"></div>
+            </div>
+            <div style="display:flex; width:100%; gap:12px; margin-top:8px; align-items:center;">
+                <div style="flex:0 0 40%; display:flex; align-items:center; justify-content:flex-start;">
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                        <div id="notifToggle" data-on="0" style="width:46px; height:26px; border-radius:13px; background:#003B3B80; border:2px solid #0F8B8B; display:flex; align-items:center; padding:2px; box-sizing:border-box; justify-content:flex-start;">
+                            <div id="notifThumb" style="width:18px; height:18px; border-radius:50%; background:#e4e4e4; transition:all .2s;"></div>
+                        </div>
+                        <span style="font-family: Montserrat; font-weight:600; color:#e4e4e4; font-size:14px;">Receber notificações</span>
+                    </label>
+                </div>
+                <div style="flex:1;">
+                    <button class="editar-contas-modal-btn-salvar" id="btnSalvarPerfil" onclick="salvarPerfil()">Salvar</button>
                 </div>
             </div>
-            <button class="editar-contas-modal-btn-salvar">Salvar</button>
         </div>
     </div>
 
     `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    if (!document.getElementById('modalPerfilFundo')) {
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
 
     window.abrirModalPerfil = function () {
+        const usuarioSession = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const nomeEl = document.getElementById('editarPerfilNome');
+        const emailEl = document.getElementById('editarPerfilEmail');
+        if (nomeEl) nomeEl.value = usuarioSession.nome || usuarioSession.name || '';
+        if (emailEl) emailEl.value = usuarioSession.email || '';
+
         document.getElementById('modalPerfilFundo').classList.add('editar-contas-modal-visivel');
     };
+    
     window.fecharModalPerfil = function () {
         document.getElementById('modalPerfilFundo').classList.remove('editar-contas-modal-visivel');
+        const errorEl = document.getElementById('editarPerfilError');
+        if (errorEl) {
+            errorEl.style.display = 'none';
+            errorEl.innerText = '';
+        }
+        const senhaEl = document.getElementById('editarPerfilSenha');
+        if (senhaEl) {
+            senhaEl.value = '';
+        }
     };
+
+    window.salvarPerfil = async function () {
+        const nome = document.getElementById('editarPerfilNome')?.value || '';
+        const email = document.getElementById('editarPerfilEmail')?.value || '';
+        const senha = document.getElementById('editarPerfilSenha')?.value || '';
+        const errorEl = document.getElementById('editarPerfilError');
+
+        let loader = document.querySelector('.loader') || document.getElementById('loaderEditarContas');
+        if (!loader) {
+            const dynamicLoaderHtml = `
+            <div class="loader" id="perfilLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.8); z-index: 1000000;">
+                <span style="width: 70px; height: 70px; border: 6px solid rgba(228, 228, 228, 0.25); border-top-color: #e4e4e4; border-radius: 50%; animation: spin 1s linear infinite;"></span>
+            </div>
+            <style>
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            </style>
+            `;
+            document.body.insertAdjacentHTML('beforeend', dynamicLoaderHtml);
+            loader = document.getElementById('perfilLoader');
+        }
+        if (loader) {
+            loader.style.position = 'fixed';
+            loader.style.zIndex = '1000000';
+            loader.style.top = '0';
+            loader.style.left = '0';
+            loader.style.width = '100%';
+            loader.style.height = '100%';
+            loader.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            loader.style.alignItems = 'center';
+            loader.style.justifyContent = 'center';
+            loader.style.display = 'flex';
+        }
+
+        if (!nome || !email) {
+            if (errorEl) {
+                errorEl.innerText = 'Preencha os campos de nome e email obrigatórios.';
+                errorEl.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
+            return;
+        }
+
+        const emailValido = (emailStr) => {
+            const posicaoArroba = emailStr.indexOf("@");
+            const posicaoPontoDepoisArroba = emailStr.indexOf(".", posicaoArroba);
+            return posicaoArroba > 0 && posicaoPontoDepoisArroba > posicaoArroba + 1;
+        };
+
+        if (!emailValido(email)) {
+            if (errorEl) {
+                errorEl.innerText = 'Formato de e-mail inválido. O e-mail precisa conter @ e ponto após o @.';
+                errorEl.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
+            return;
+        }
+
+        if (senha) {
+            const senhaValida = (senhaStr) => {
+                const temMinimoSeisCaracteres = senhaStr.length >= 6;
+                const temNumero = /[0-9]/.test(senhaStr);
+                const temMaiuscula = /[A-Z]/.test(senhaStr);
+                const temMinuscula = /[a-z]/.test(senhaStr);
+                return temMinimoSeisCaracteres && temNumero && temMaiuscula && temMinuscula;
+            };
+
+            if (!senhaValida(senha)) {
+                if (errorEl) {
+                    errorEl.innerText = 'A senha precisa ter no mínimo 6 caracteres, 1 número, 1 letra maiúscula e 1 letra minúscula.';
+                    errorEl.style.display = 'block';
+                }
+                if (loader) loader.style.display = 'none';
+                return;
+            }
+        }
+
+        const usuarioSession = JSON.parse(sessionStorage.getItem("usuario")) || {};
+        const idUsuario = usuarioSession.id || usuarioSession.id_usuario;
+
+        if (!idUsuario) {
+            if (errorEl) {
+                errorEl.innerText = 'Erro: Usuário não identificado na sessão.';
+                errorEl.style.display = 'block';
+            }
+            if (loader) loader.style.display = 'none';
+            return;
+        }
+
+        const payload = {
+            nomeServer: nome,
+            emailServer: email
+        };
+        if (senha) {
+            payload.senhaServer = senha;
+        }
+
+        try {
+            const response = await fetch(`/usuarios/atualizar/${idUsuario}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || response.statusText);
+            }
+
+            usuarioSession.nome = nome;
+            usuarioSession.email = email;
+            sessionStorage.setItem("usuario", JSON.stringify(usuarioSession));
+
+            fecharModalPerfil();
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            if (errorEl) {
+                errorEl.innerText = 'Erro ao atualizar perfil: ' + error.message;
+                errorEl.style.display = 'block';
+            }
+        } finally {
+            if (loader) loader.style.display = 'none';
+        }
+    };
+
+    // Toggle behavior for notifications in profile modal
+    setTimeout(() => {
+        const notifToggle = document.getElementById('notifToggle');
+        const notifThumb = document.getElementById('notifThumb');
+        if (!notifToggle || !notifThumb) return;
+        notifToggle.addEventListener('click', () => {
+            const isOn = notifToggle.getAttribute('data-on') === '1';
+            if (isOn) {
+                notifToggle.setAttribute('data-on', '0');
+                notifToggle.style.justifyContent = 'flex-start';
+            } else {
+                notifToggle.setAttribute('data-on', '1');
+                notifToggle.style.justifyContent = 'flex-end';
+            }
+        });
+    }, 0);
 
     container.innerHTML = htmlSidebar;
 
     const teamProfileContainer = document.getElementById('teamProfileSidebar');
     let teamProfileData = {
         name: user.nameTeam,
-        coach: 'Coach: ' + user.name,
+        coach: 'Coach: ' + (JSON.parse(sessionStorage.getItem('time')).nomeTreinador || "N/A"),
         logoUrl: user.logoUrl
     };
     renderTeamProfile(teamProfileContainer, teamProfileData);
@@ -827,6 +1162,30 @@ function renderTeamList(container, teams) {
     `;
 
     container.innerHTML = htmlTeamList;
+
+    const searchInput = container.querySelector('.tl-search input');
+    const contentContainer = container.querySelector('.tl-content');
+
+    const updateTeamCards = filteredTeams => {
+        contentContainer.innerHTML = filteredTeams.map(team => `
+            <div class="tl-team" style="${styles.tlTeam}" onclick="window.location.href='dashboard-time-adversario.html'">
+                <img style="${styles.tlTeamImg}" src="${team.logoUrl}" alt="Logo do ${team.name}">
+                <div class="tl-team-name" style="${styles.tlTeamName}">${team.name}</div>
+                <div class="tl-analyze-btn" style="${styles.tlAnalyzeButton}">
+                    <span style="font-family: Montserrat; font-size: 14px; color: #e4e4e460; transition: color .1s ease-in-out;">Analisar</span>
+                    <i class="material-icons tl-analyze-icon" style="${styles.tlAnalyzeIcon}">arrow_forward_ios</i>
+                </div>
+            </div>
+        `).join('');
+    };
+
+    if (searchInput) {
+        searchInput.addEventListener('input', event => {
+            const query = event.target.value.trim().toLowerCase();
+            const filtered = teams.filter(team => team.name.toLowerCase().includes(query));
+            updateTeamCards(filtered);
+        });
+    }
 };
 
 function renderStrategies(container, strategies) {
@@ -1249,7 +1608,7 @@ function renderStrategyModal(strategy) {
         }
     </style>
 
-    <div class="strategyModalFundo" id="modalStrategyFundo" onclick="fecharModalStrategy()">
+    <div class="strategyModalFundo" id="modalStrategyFundo" data-estrategia-id="${strategy.id}" onclick="fecharModalStrategy()">
         <div class="strategyModalEditar" onclick="event.stopPropagation()">
             <div class="strategyModalFoto">
                 <img src="${strategy.icone}" alt="Ícone da estratégia">
@@ -1272,7 +1631,7 @@ function renderStrategyModal(strategy) {
             
             <div id="strategyModalActionsEdit" style="display: none; width: 100%; justify-content: flex-end; gap: 10px;">
                 <button class="strategyModalBtnCancelar" onclick="toggleEditModeStrategy(false)">Cancelar</button>
-                <button class="strategyModalBtnSalvar" onclick="fecharModalStrategy()">Salvar Alterações</button>
+                <button class="strategyModalBtnSalvar" onclick="salvarEstrategia()">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -1289,22 +1648,22 @@ function renderStrategyModal(strategy) {
         if (editMode) {
             nomeInput.removeAttribute('readonly');
             textoInput.removeAttribute('readonly');
-            
+
             nomeInput.style.backgroundColor = '#003B3B40';
             textoInput.style.backgroundColor = '#003B3B80';
-            
+
             actionsView.style.display = 'none';
             actionsEdit.style.display = 'flex';
         } else {
             nomeInput.setAttribute('readonly', true);
             textoInput.setAttribute('readonly', true);
-            
+
             nomeInput.style.backgroundColor = 'transparent';
             textoInput.style.backgroundColor = '#003B3B40';
-            
+
             nomeInput.value = strategy.nome || '';
             textoInput.value = strategy.texto || '';
-            
+
             actionsView.style.display = 'flex';
             actionsEdit.style.display = 'none';
         }
@@ -1475,14 +1834,14 @@ function renderCreateStrategyModal() {
             <div class="createStrategyModalForm">
                 <div class="createStrategyModalCampo">
                     <label>Nome da Estratégia:</label>
-                    <input type="text" id="createStrategyNome" placeholder="Ex: Rush B">
+                    <input type="text" id="createStrategyTitle" placeholder="Ex: Rush B">
                 </div>
-                <textarea class="createStrategyModalTexto" id="createStrategyTexto" placeholder="Descreva os detalhes da tática..."></textarea>
+                <textarea class="createStrategyModalTexto" id="createStrategyContent" placeholder="Descreva os detalhes da tática..."></textarea>
             </div>
             
             <div style="display: flex; width: 100%; justify-content: flex-end; gap: 10px;">
                 <button class="createStrategyModalBtnCancelar" onclick="fecharModalCreateStrategy()">Cancelar</button>
-                <button class="createStrategyModalBtnSalvar" onclick="fecharModalCreateStrategy()">Criar Estratégia</button>
+                <button class="createStrategyModalBtnSalvar" onclick="salvarNovaEstrategia()">Criar Estratégia</button>
             </div>
         </div>
     </div>
@@ -1496,4 +1855,115 @@ function renderCreateStrategyModal() {
     window.fecharModalCreateStrategy = function () {
         document.getElementById('modalCreateStrategyFundo').classList.remove('createStrategyModalVisivel');
     };
+}
+
+function renderHighlightUltimoJogo(container, data) {
+    if (!container) return;
+
+    const config = {
+        playerName: data.nome || "Jogador",
+        playerImageUrl: data.urlFotoJogador || "../assets/playerIcons/faker.png",
+        playerPosition: data.funcao || "Mid",
+        adversarioTeam: data.adversario || "Adversário",
+        dano: data.dano || 0,
+        ouro: data.ouro || 0,
+        kda: data.kda || "0.00",
+        championUrl: data.championUrl || "../assets/cassiopeia_1.jpg"
+    };
+
+    container.innerHTML = `
+        <div class="mvpTitle">
+            <span class="mainTitle">Destaque do último confronto</span>
+            <span class="subTitle">vs ${config.adversarioTeam}</span>
+        </div>
+        <div class="mvpContent">
+            <div class="playerIcon">
+                <img src="${config.playerImageUrl}" alt="${config.playerName}" style="aspect-ratio: 1/1; object-fit: cover;">
+                <div class="playerPosition">${config.playerName}</div>
+            </div>
+            <div class="itemMvp">
+                <img src="../assets/icons/bow.svg" alt="Dano" class="itemIcon">
+                <div class="mvpStat" style="font-weight: 900; font-size: 1.4em;">${(config.dano / 1000).toFixed(1)}k de Dano</div>
+            </div>
+            <div class="itemMvp">
+                <img src="../assets/icons/coins.svg" alt="Ouro" class="itemIcon">
+                <div class="mvpStat" style="font-weight: 900; font-size: 1.4em;">${(config.ouro / 30).toFixed(1)} GpM</div>
+            </div>
+            <div class="itemMvp">
+                <img src="../assets/icons/aim.svg" alt="KDA" class="itemIcon">
+                <div class="mvpStat" style="font-weight: 900; font-size: 1.4em;"> ${config.kda} KDA</div>
+            </div>
+        </div>
+    `;
+    container.style.backgroundImage = `url(${config.championUrl})`;
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPositionY = 'top';
+    container.style.backgroundBlendMode = 'soft-light';
+    container.style.backgroundColor = '#00272760';
+    container.style.boxShadow = 'inset 10px 100px 60px 10px #00272760, inset 0 0 0 10000px rgba(18, 25, 29, 0.3)';
+
+}
+
+function renderUsuarioEditarContas(container, data, containerPagination = null, pagina = 1) {
+    if (!container) return;
+
+    const usuarios = Array.isArray(data) ? data : [];
+
+    if (usuarios.length === 0) {
+        container.innerHTML = `
+            <div class="usuarios-vazio">
+                Você ainda não tem usuários cadastrados. Cadastre sua equipe para começar!
+                <div class="usuario-vazio-emoji"><span class="material-symbols-outlined">groups</span></div>
+            </div>
+        `;
+        if (containerPagination) {
+            containerPagination.innerHTML = '';
+        }
+        return;
+    }
+
+    const paginaAtual = Number.isInteger(pagina) && pagina > 0 ? pagina : 1;
+    const itensPorPagina = 5;
+    const totalPaginas = Math.max(1, Math.ceil(usuarios.length / itensPorPagina));
+    const paginaCorrigida = Math.min(paginaAtual, totalPaginas);
+    const inicio = (paginaCorrigida - 1) * itensPorPagina;
+    const fim = inicio + itensPorPagina;
+    const usuariosPaginados = usuarios.slice(inicio, fim);
+
+    const formatCargo = (cargo) => {
+        switch (cargo) {
+            case 2:
+                return 'Treinador';
+            case 3:
+                return 'Jogador';
+            default:
+                return 'N/A';
+        }
+    };
+
+    const cardsHtml = usuariosPaginados.map(usuario => `
+        <div class="editar-contas-user">
+            <div class="id">id: ${usuario.id}</div>
+            <div class="foto"><img src="../assets/playerIcons/faker.png" alt="${usuario.nome}"></div>
+            <div class="nome">${usuario.nome}</div>
+            <div class="cargo"><span class="editar-contas-cargo-badge">${formatCargo(usuario.cargo)}</span></div>
+            <div class="status"><span class="editar-contas-status-badge ativo">Ativo</span></div>
+            <div class="acoes">
+                <button class="editar-contas-btn-editar" onclick="abrirModalEditar(${usuario.id})">Editar</button>
+                <button class="editar-contas-btn-excluir" onclick="abrirModalExcluir(${usuario.id})">Deletar</button>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = cardsHtml;
+
+    if (containerPagination) {
+        const paginationHtml = Array.from({ length: totalPaginas }, (_, index) => {
+            const page = index + 1;
+            const activeClass = page === paginaCorrigida ? ' active' : '';
+            return `<div class="editar-contas-pagination-item${activeClass}" onclick="mudarPagina(${page}, this)">${page}</div>`;
+        }).join('');
+
+        containerPagination.innerHTML = paginationHtml;
+    }
 }

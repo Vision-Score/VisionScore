@@ -87,12 +87,15 @@
             margin-bottom: 5%;
 
             img {
-                width: 50%;
+                background-color: #00000090;
+                display: block;
+                margin: 4% auto 0;
+                width: 40%;
                 aspect-ratio: 1;
-
-                outline: 4px solid #0F8B8B;
-
+                outline: 2px solid #0F8B8B;
                 border-radius: 100%;
+                object-fit: cover;
+                object-position: center center;
             }
 
             .playerPosition {
@@ -341,7 +344,7 @@
                     .infoPlayerValue {
                         font-weight: bold;
 
-                        width: 30px;
+                        min-width: 50px;
                         text-align: right;
                     }
 

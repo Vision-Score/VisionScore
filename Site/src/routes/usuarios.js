@@ -12,12 +12,16 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
-router.post('/recuperar-senha', function (req, res) {
-    usuarioController.recuperarSenha(req, res);
+router.get("/listarUsuariosPorGerente/:idGerente", function (req, res) {
+    usuarioController.buscarUsuariosPorGerente(req, res);
 });
 
-router.put('/atualizar-senha', function (req, res) {
-    usuarioController.atualizarSenha(req, res);
+router.put("/atualizar/:idUsuario", function (req, res) {
+    usuarioController.atualizar(req, res);
+});
+
+router.delete("/deletar/:idUsuario", function (req, res) {
+    usuarioController.deletar(req, res);
 });
 
 module.exports = router;

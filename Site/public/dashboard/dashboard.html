@@ -17,11 +17,17 @@
         rel="stylesheet">
     <script src="../js/renderComponents.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=progress_activity" />
 </head>
 
 <body>
     <div class="main">
-
+        <div class="loader" style="display: none;">
+        <span class="material-symbols-outlined">
+            progress_activity
+        </span>
+    </div>
         <div id="sidebarContainer">
         </div>
 
@@ -171,109 +177,7 @@
             </div>
         </div>
     </div>
+    <script src="../js/dashboard.js"></script>
 </body>
 
 </html>
-
-<script>
-
-    renderSidebar(document.getElementById("sidebarContainer"), "dashboard", {
-        name: "Mitohara",
-        role: "Coach",
-        email: "mitohara@t1.gg",
-        imageUrl: "../assets/playerIcons/faker.png",
-        nameTeam: "T1",
-        logoUrl: "../assets/icons/t1logo.png"
-    });
-
-    let strategies = [
-        { nome: "Rush B", data: "25/05/2024", icone: "../assets/icons/aim.svg", texto: "Esta é uma estratégia que consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },
-        { nome: "Split Push", data: "20/05/2024", icone: "../assets/icons/target.svg", texto: "Esta estratégia consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },
-        { nome: "Rush B", data: "25/05/2024", icone: "../assets/icons/aim.svg", texto: "Esta estratégia consiste em avançar todos os jogadores para o lado B do mapa no início da partida. É uma tática agressiva que pode surpreender o adversário e garantir um ponto rápido." },
-
-    ];
-    renderStrategies(document.getElementById("strategiesContainer"), strategies)
-
-    function removeStrategy(index) {
-        strategies.splice(index, 1);
-        renderStrategies(document.getElementById("strategiesContainer"), strategies);
-    }
-
-    renderTeamList(document.getElementById("teamListContainer"), [
-        {
-            name: "T1",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Gen.G",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "KT Rolster",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Hanwha Life Esports",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "DRX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Liiv SANDBOX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Dplus KIA",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Kwangdong Freecs",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Nongshim RedForce",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        }
-    ]);
-
-    function switchSidebar() {
-        document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
-    }
-
-    function switchTeamList() {
-        document.getElementById("tlBackdrop").classList.toggle("tl-hidden");
-    }
-
-
-
-    const ctx = document.getElementById('myChart');
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['TOP', 'JG', 'MID', 'ADC', 'SUP'],
-            datasets: [{
-                label: '# of Votes',
-                data: [23, 18, 31, 15, 27],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: 'white'
-                    }
-                }
-            },
-            scales: {}
-        }
-    });
-
-</script>

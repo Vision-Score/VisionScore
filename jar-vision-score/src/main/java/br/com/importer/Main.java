@@ -4,6 +4,7 @@ import br.com.importer.config.DatabaseConfig;
 import br.com.importer.config.S3Provider;
 import br.com.importer.repository.*;
 import br.com.importer.service.ExcelParserService;
+import br.com.importer.service.ImagemService;
 import br.com.importer.service.ImportService;
 import br.com.importer.service.S3Service;
 import br.com.importer.util.EnvLoader;
@@ -65,6 +66,19 @@ public class Main {
         long inicio = System.currentTimeMillis();
         try {
             importService.executar();
+
+            // Índices
+            System.out.println("\n[Main] Criando índices...");
+            try { jdbcTemplate.execute("CREATE INDEX idx_dj_equipe  ON desempenho_jogador(fkEquipe)"); } catch (Exception ignored) {}
+            try { jdbcTemplate.execute("CREATE INDEX idx_dj_jogador ON desempenho_jogador(fkJogador)"); } catch (Exception ignored) {}
+            try { jdbcTemplate.execute("CREATE INDEX idx_dj_jogo    ON desempenho_jogador(fkJogo)"); } catch (Exception ignored) {}
+            System.out.println("[Main] ✓ Índices criados.");
+
+            // Imagens
+            System.out.println("\n[Main] Sincronizando imagens...");
+            ImagemService imagemService = new ImagemService(jdbcTemplate);
+            imagemService.executar();
+
             long fim = System.currentTimeMillis();
             System.out.printf("%n[Main] ✓ Importação finalizada em %.1f segundos.%n",
                     (fim - inicio) / 1000.0);

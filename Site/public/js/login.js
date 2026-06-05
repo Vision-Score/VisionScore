@@ -49,7 +49,7 @@ const validacaoCampoEmail = () => {
     const spanErroEmail = document.getElementById('span-erro-email');
     const email = inputEmail.value;
 
-    if (email.trim() === "" || !email.includes('@') || !email.endsWith('.com')) {
+    if (email.trim() === "" || !email.includes('@') || !email.includes('.')) {
         inputEmail.classList.add('invalido-input');
         spanErroEmail.style.display = 'block';
         inputEmail.nextElementSibling.classList.add('invalido-label');
@@ -94,43 +94,76 @@ const validacaoBotaoLogin = () => {
     }
 }
 
-function entrar() {
-    if (!emailPreenchido || !senhaPreenchida) return false
-
+async function entrar() {
     loader.style.display = 'flex';
-    var emailVar = inputEmail.value;
-    var senhaVar = inputSenha.value;
+    const emailVar = inputEmail.value;
+    const senhaVar = inputSenha.value;
 
-    fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailServer: emailVar, senhaServer: senhaVar })
-    }).then(function (resposta) {
-        if (resposta.ok) {
-            resposta.json().then(json => {
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    sessionStorage.EMAIL_USUARIO = json.email;
-                    sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.ID_USUARIO = json.id;
-                    mostrarNotificacao("Login realizado com sucesso! Redirecionando...", () => {
-                        window.location = "./dashboard/dashboard.html";
-                    });
-                }, 1000);
-            });
-        } else {
-            resposta.text().then(texto => {
-                loader.style.display = 'none';
-                mostrarNotificacao(texto);
-            });
-        }
-    }).catch(function (erro) {
+    if (!emailVar || !senhaVar) {
         loader.style.display = 'none';
+        mostrarNotificacao("Preencha o e-mail e a senha.");
+        return false;
+    }
+
+    try {
+        const resposta = await fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ emailServer: emailVar, senhaServer: senhaVar })
+        });
+
+        if (!resposta.ok) {
+            mostrarNotificacao(await resposta.text());
+            return false;
+        }
+
+        let json = await resposta.json();
+
+        const [jsonTime, jsonElenco] = await Promise.all([
+            getTime(json.codEquipe).then(r => r.json()),
+            getElenco(json.codEquipe).then(r => r.json())
+        ]);
+
+        json.nameTeam = jsonTime.nome;
+
+        sessionStorage.setItem("usuario", JSON.stringify(json));
+        sessionStorage.setItem("time", JSON.stringify(jsonTime));
+        sessionStorage.setItem("elenco", JSON.stringify(jsonElenco));
+
+        window.location.href = json.cargo == 1 ? "/dashboard/editar-contas.html" : "/dashboard/dashboard.html";
+
+    } catch (erro) {
         console.log(erro);
         mostrarNotificacao("Erro ao tentar realizar login.");
-    });
+    } finally {
+        loader.style.display = 'none';
+    }
+}
 
-    return false;
+function getElenco(idEquipe) {
+    return fetch(`/jogadores/listarElenco/${idEquipe}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+    }).then(function (resposta) {
+        console.log(resposta);
+        return resposta;
+    }).catch(function (erro) {
+        console.log(erro);
+        throw erro;
+    });
+}
+
+function getTime(idEquipe) {
+    return fetch(`/times/buscar/${idEquipe}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+    }).then(function (resposta) {
+        console.log(resposta);
+        return resposta;
+    }).catch(function (erro) {
+        console.log(erro);
+        throw erro;
+    });
 }
 
 iconeMostrarSenha.addEventListener('click', mostrarSenha);
