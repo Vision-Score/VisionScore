@@ -274,25 +274,25 @@ let usuarioEditandoId = null;
 
 function abrirModalEditar(usuarioId) {
     const usuarioEncontrado = users.find(u => u.id === usuarioId);
-    
+
     if (!usuarioEncontrado) {
         console.error("Usuário não encontrado");
         return;
     }
 
     usuarioEditandoId = usuarioId;
-    
+
     document.getElementById('editarNome').value = usuarioEncontrado.nome || '';
     document.getElementById('editarEmail').value = usuarioEncontrado.email || '';
     document.getElementById('editarTelefone').value = usuarioEncontrado.telefone || '';
     document.getElementById('editarCargo').value = usuarioEncontrado.cargo || '2';
-    
+
     const errorEl = document.getElementById('editarError');
     if (errorEl) {
         errorEl.style.display = 'none';
         errorEl.innerText = '';
     }
-    
+
     document.getElementById("modalEditarFundo").classList.add("editar-contas-modal-visivel");
 }
 

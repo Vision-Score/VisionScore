@@ -19,7 +19,7 @@ function atualizarSenha(email, novaSenha) {
 function autenticar(email, senha) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
     var instrucaoSql = `
-        SELECT id_usuario AS id, nome, email, telefone, fk_equipe AS cod_equipe, cargo FROM cadastro WHERE email = '${email}' AND senha = '${senha}';
+        SELECT id_usuario AS id, nome, email, telefone, fk_equipe AS cod_equipe, cargo, notificar FROM cadastro WHERE email = '${email}' AND senha = '${senha}';
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -34,7 +34,7 @@ function cadastrar(nome, telefone, email, senha, cargo, codEquipe, fk_gestor) {
     var fkGestorVal = fk_gestor != undefined && fk_gestor !== null ? `${fk_gestor}` : 'NULL';
 
     var instrucaoSql = `
-        INSERT INTO cadastro (nome, telefone, email, senha, cargo, fk_equipe, fk_gestor) VALUES ('${nome}', '${telefone}', '${email}', '${senha}', ${cargo}, '${codEquipe}', ${fkGestorVal});
+        INSERT INTO cadastro (nome, telefone, email, senha, cargo, fk_equipe, fk_gestor, notificar) VALUES ('${nome}', '${telefone}', '${email}', '${senha}', ${cargo}, '${codEquipe}', ${fkGestorVal}, 1);
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -55,11 +55,11 @@ function atualizar(idUsuario, nome, telefone, email, senha, cargo) {
     console.log("ACESSEI O USUARIO MODEL \n function atualizar(): ", idUsuario, nome, telefone, email, senha, cargo);
 
     const campos = [];
-    if (nome)     campos.push(`nome = '${nome}'`);
+    if (nome) campos.push(`nome = '${nome}'`);
     if (telefone) campos.push(`telefone = '${telefone}'`);
-    if (email)    campos.push(`email = '${email}'`);
-    if (senha)    campos.push(`senha = '${senha}'`);
-    if (cargo)    campos.push(`cargo = ${cargo}`);
+    if (email) campos.push(`email = '${email}'`);
+    if (senha) campos.push(`senha = '${senha}'`);
+    if (cargo) campos.push(`cargo = ${cargo}`);
 
     if (campos.length === 0) return Promise.resolve();
 
@@ -76,11 +76,20 @@ function deletar(idUsuario) {
     return database.executar(instrucaoSql);
 }
 
+function atualizarPreferenciaNotificacao(idUsuario, preferenciaNotificacao) {
+    console.log("ACESSEI O USUARIO MODEL \n function atualizarPreferenciaNotificacao(): ", idUsuario, preferenciaNotificacao);
+    var instrucaoSql = `UPDATE cadastro SET notificar = ${preferenciaNotificacao} WHERE id_usuario = ${idUsuario};`;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     autenticar,
     cadastrar,
     buscarUsuariosPorGerente,
     atualizar,
     deletar,
-    atualizar
+    buscarPorEmail,
+    atualizarPreferenciaNotificacao,
+    atualizarSenha
 };

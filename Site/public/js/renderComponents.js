@@ -753,10 +753,17 @@ function renderSidebar(container, activePage, profileData) {
         const emailEl = document.getElementById('editarPerfilEmail');
         if (nomeEl) nomeEl.value = usuarioSession.nome || usuarioSession.name || '';
         if (emailEl) emailEl.value = usuarioSession.email || '';
+        if (usuarioSession.notificar == 1) {
+            document.getElementById('notifToggle').dataset.on = '1';
+            document.getElementById('notifToggle').style.justifyContent = 'flex-end';
+        } else {
+            document.getElementById('notifToggle').dataset.on = '0';
+            document.getElementById('notifToggle').style.justifyContent = 'flex-start';
+        }
 
         document.getElementById('modalPerfilFundo').classList.add('editar-contas-modal-visivel');
     };
-    
+
     window.fecharModalPerfil = function () {
         document.getElementById('modalPerfilFundo').classList.remove('editar-contas-modal-visivel');
         const errorEl = document.getElementById('editarPerfilError');
@@ -882,8 +889,35 @@ function renderSidebar(container, activePage, profileData) {
                 throw new Error(text || response.statusText);
             }
 
+            const onOffToggle = document.getElementById('notifToggle');
+            const preferencias = onOffToggle.getAttribute('data-on') === '1' ? 1 : 0;
+            try {
+                const responseNotificacao = await fetch(`/usuarios/atualizar/${idUsuario}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        notificar: preferencias
+                    })
+                });
+
+                if (!responseNotificacao.ok) {
+                    const text = await response.text();
+                    throw new Error(text || response.statusText);
+                }
+            } catch (error) {
+                console.error(error);
+                if (errorEl) {
+                    errorEl.innerText = 'Erro ao atualizar preferências: ' + error.message;
+                    errorEl.style.display = 'block';
+                }
+                throw new Error(error.message || 'Erro ao atualizar preferências');
+            }
+
             usuarioSession.nome = nome;
             usuarioSession.email = email;
+            usuarioSession.notificar = preferencias;
             sessionStorage.setItem("usuario", JSON.stringify(usuarioSession));
 
             fecharModalPerfil();
