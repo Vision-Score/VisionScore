@@ -41,7 +41,6 @@ public class LimpezaBancoDadosService {
             }
         }
 
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
         System.out.println("[LimpezaBancoDadosService] Limpeza concluída ✓");
     }
 }

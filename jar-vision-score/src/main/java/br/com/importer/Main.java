@@ -101,6 +101,10 @@ public class Main {
             // Views
             new ViewsBancoDadosService(jdbcTemplate).criarViews();
 
+            // Reativa checagem de FKs ao fim do ETL
+            jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
+            System.out.println("[Main] SET FOREIGN_KEY_CHECKS = 1 ✓");
+
             long fim = System.currentTimeMillis();
             System.out.printf("%n[Main] ✓ Importação finalizada em %.1f segundos.%n",
                     (fim - inicio) / 1000.0);
