@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import software.amazon.awssdk.services.s3.S3Client;
 import br.com.importer.repository.UsuarioNotificacaoRepository;
 import br.com.importer.service.EmailService;
+import br.com.importer.service.LimpezaBancoDadosService;
 import br.com.importer.service.NotificacaoUsuarioService;
+import br.com.importer.service.ViewsBancoDadosService;
 
 /**
  * Ponto de entrada da aplicação.
@@ -35,12 +37,14 @@ public class Main {
         // 2. Inicializa clientes
         System.out.println("\n[Main] Conectando ao banco de dados...");
         JdbcTemplate jdbcTemplate = new DatabaseConfig().getJdbcTemplate();
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
 
         System.out.println("[Main] Conectando ao Amazon S3...");
         S3Client s3Client = new S3Provider().getS3Client();
 
-        // 3. Instancia repositórios
+        // 3. Limpeza das tabelas antes do ETL
+        new LimpezaBancoDadosService(jdbcTemplate).limpar();
+
+        // 4. Instancia repositórios
         LigaRepository ligaRepo = new LigaRepository(jdbcTemplate);
         TorneioRepository torneioRepo = new TorneioRepository(jdbcTemplate);
         SeriesRepository seriesRepo = new SeriesRepository(jdbcTemplate);
@@ -55,7 +59,7 @@ public class Main {
         EventoRepository eventoRepo = new EventoRepository(jdbcTemplate);
         LogRepository logRepo = new LogRepository(jdbcTemplate);
 
-        // 4. Instancia serviços
+        // 5. Instancia serviços
         S3Service s3Service = new S3Service(s3Client);
         ExcelParserService parser = new ExcelParserService();
 
@@ -67,7 +71,7 @@ public class Main {
                 eventoRepo, logRepo
         );
 
-        // 5. Executa a importação
+        // 6. Executa a importação
         long inicio = System.currentTimeMillis();
         try {
             importService.executar();
@@ -94,10 +98,12 @@ public class Main {
             ImagemService imagemService = new ImagemService(jdbcTemplate);
             imagemService.executar();
 
+            // Views
+            new ViewsBancoDadosService(jdbcTemplate).criarViews();
+
             long fim = System.currentTimeMillis();
             System.out.printf("%n[Main] ✓ Importação finalizada em %.1f segundos.%n",
                     (fim - inicio) / 1000.0);
-            jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
 
             // Notificações por e-mail para todos os usuários com notificação ativa
             System.out.println("\n[Main] Enviando notificações por e-mail para usuários com notificação ativa...");

@@ -35,6 +35,12 @@ public class DatabaseConfig {
         dataSource.setMaxIdle(5);
         dataSource.setMinIdle(1);
 
+        // Permite que o driver reescreva batch INSERTs em multi-value (muito mais rápido)
+        dataSource.addConnectionProperty("rewriteBatchedStatements", "true");
+
+        // Desativa FK checks em todas as conexões do pool
+        dataSource.setConnectionInitSqls(java.util.List.of("SET foreign_key_checks = 0"));
+
         // Valida conexão antes de usar
         dataSource.setTestOnBorrow(true);
         dataSource.setValidationQuery("SELECT 1");

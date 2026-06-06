@@ -70,7 +70,7 @@ public class ImportService {
         this.desempenhoJogadorRepo = desempenhoJogadorRepo;
         this.eventoRepo            = eventoRepo;
         this.logRepo               = logRepo;
-        this.batchSize  = EnvLoader.getInt("BATCH_SIZE", 500);
+        this.batchSize  = EnvLoader.getInt("BATCH_SIZE", 2000);
         this.maxLinhas  = EnvLoader.getInt("MAX_LINHAS_TESTE", 0);
         if (this.maxLinhas > 0) {
             System.out.println("[ImportService] ⚠ MODO TESTE: processando apenas " + maxLinhas + " linhas por arquivo.");
@@ -215,12 +215,15 @@ public class ImportService {
     private void processarPlayersStats(String nomeArquivo, java.io.InputStream stream) {
         Set<Integer> equipesVistas    = new HashSet<>();
         Set<Integer> jogadoresVistos  = new HashSet<>();
-        Set<String>  desempEquipeVist = new HashSet<>(); // "gameId_teamId"
+        Set<Long>    desempEquipeVist = new HashSet<>(); // packed long: gameId<<32 | teamId
 
         List<Object[]> batchEquipe          = new ArrayList<>();
         List<Object[]> batchJogador         = new ArrayList<>();
         List<Object[]> batchDesempEquipe    = new ArrayList<>();
         List<Object[]> batchDesempJogador   = new ArrayList<>();
+
+        // Coleta duração e equipe vencedora por jogo (win=True → equipe vencedora)
+        Map<Integer, Object[]> jogoVencedorMap = new HashMap<>(); // gameId → [duracaoSegundos, fkEquipeVencedora]
 
         long[] contador = {0};
 
@@ -234,7 +237,9 @@ public class ImportService {
             String  teamNome    = row.get("team_name");
             String  teamSigla   = row.get("team_acronym");
             String  role        = row.get("role");
-            byte    win         = toBooleanTinyInt(row.get("win"));
+            String  winStr      = row.get("win");
+            byte    win         = toBooleanTinyInt(winStr);
+            Integer gameLength  = toInt(row.get("game_length"));
             String  campNome    = row.get("champion_name");
 
             // Stats de equipe (repetidos para cada jogador → deduplicar)
@@ -259,21 +264,33 @@ public class ImportService {
             int killSpree      = toIntOrZero(row.get("largest_killing_spree"));
             int multiKill      = toIntOrZero(row.get("largest_multi_kill"));
 
+            // Coleta vencedor e duração (win=True → esta equipe ganhou)
+            if (gameId != null && win == 1 && !jogoVencedorMap.containsKey(gameId)) {
+                jogoVencedorMap.put(gameId, new Object[]{gameLength, teamId, gameId});
+            }
+
             // Equipe
-            if (teamId != null && equipesVistas.add(teamId))
+            if (teamId != null && equipesVistas.add(teamId)) {
                 batchEquipe.add(new Object[]{teamId, teamNome, teamSigla});
+                flushSe(batchEquipe, batchSize, () -> equipeRepo.insertBatch(batchEquipe));
+            }
 
             // Jogador
-            if (playerId != null && jogadoresVistos.add(playerId))
+            if (playerId != null && jogadoresVistos.add(playerId)) {
                 batchJogador.add(new Object[]{playerId, playerNome, role});
+                flushSe(batchJogador, batchSize, () -> jogadorRepo.insertBatch(batchJogador));
+            }
 
             // Desempenho da equipe (uma vez por jogo+equipe)
-            String chaveEquipeJogo = gameId + "_" + teamId;
-            if (gameId != null && teamId != null && desempEquipeVist.add(chaveEquipeJogo)) {
-                batchDesempEquipe.add(new Object[]{
-                    teamKills, towerKills, inhibKills, dragonKills, heraldKills, baronKills,
-                    teamId, gameId
-                });
+            if (gameId != null && teamId != null) {
+                long chaveEquipeJogo = ((long) gameId << 32) | (teamId & 0xFFFFFFFFL);
+                if (desempEquipeVist.add(chaveEquipeJogo)) {
+                    batchDesempEquipe.add(new Object[]{
+                        teamKills, towerKills, inhibKills, dragonKills, heraldKills, baronKills,
+                        teamId, gameId
+                    });
+                    flushSe(batchDesempEquipe, batchSize, () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
+                }
             }
 
             // Desempenho do jogador (sempre insere, um por jogador por jogo)
@@ -284,12 +301,8 @@ public class ImportService {
                     wards, killSpree, multiKill,
                     gameId, playerId, teamId
                 });
+                flushSe(batchDesempJogador, batchSize, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
             }
-
-            flushSe(batchEquipe,        batchSize, () -> equipeRepo.insertBatch(batchEquipe));
-            flushSe(batchJogador,       batchSize, () -> jogadorRepo.insertBatch(batchJogador));
-            flushSe(batchDesempEquipe,  batchSize, () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
-            flushSe(batchDesempJogador, batchSize, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
 
             if (contador[0] % 50000 == 0)
                 System.out.printf("[ImportService] players_stats → %,d linhas processadas%n", contador[0]);
@@ -299,6 +312,13 @@ public class ImportService {
         flush(batchJogador,       () -> jogadorRepo.insertBatch(batchJogador));
         flush(batchDesempEquipe,  () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
         flush(batchDesempJogador, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
+
+        // Atualiza duracaoSegundos e fkEquipeVencedora via tabela temporária + UPDATE JOIN
+        if (!jogoVencedorMap.isEmpty()) {
+            jogoRepo.updateDuracaoEVencedorBulk(new ArrayList<>(jogoVencedorMap.values()));
+            System.out.printf("[ImportService] jogo atualizado: duração e vencedor para %,d jogos%n",
+                    jogoVencedorMap.size());
+        }
 
         System.out.printf("[ImportService] players_stats ✓ → %,d linhas lidas | equipes=%d, jogadores=%d%n",
                 linhasLidas, equipesVistas.size(), jogadoresVistos.size());
