@@ -222,6 +222,9 @@ public class ImportService {
         List<Object[]> batchDesempEquipe    = new ArrayList<>();
         List<Object[]> batchDesempJogador   = new ArrayList<>();
 
+        // Coleta duração e equipe vencedora por jogo (win=True → equipe vencedora)
+        Map<Integer, Object[]> jogoVencedorMap = new HashMap<>(); // gameId → [duracaoSegundos, fkEquipeVencedora]
+
         long[] contador = {0};
 
         long linhasLidas = parser.processar(stream, row -> {
@@ -234,7 +237,9 @@ public class ImportService {
             String  teamNome    = row.get("team_name");
             String  teamSigla   = row.get("team_acronym");
             String  role        = row.get("role");
-            byte    win         = toBooleanTinyInt(row.get("win"));
+            String  winStr      = row.get("win");
+            byte    win         = toBooleanTinyInt(winStr);
+            Integer gameLength  = toInt(row.get("game_length"));
             String  campNome    = row.get("champion_name");
 
             // Stats de equipe (repetidos para cada jogador → deduplicar)
@@ -258,6 +263,11 @@ public class ImportService {
             int wards          = toIntOrZero(row.get("wards_placed"));
             int killSpree      = toIntOrZero(row.get("largest_killing_spree"));
             int multiKill      = toIntOrZero(row.get("largest_multi_kill"));
+
+            // Coleta vencedor e duração (win=True → esta equipe ganhou)
+            if (gameId != null && win == 1 && !jogoVencedorMap.containsKey(gameId)) {
+                jogoVencedorMap.put(gameId, new Object[]{gameLength, teamId, gameId});
+            }
 
             // Equipe
             if (teamId != null && equipesVistas.add(teamId))
@@ -299,6 +309,14 @@ public class ImportService {
         flush(batchJogador,       () -> jogadorRepo.insertBatch(batchJogador));
         flush(batchDesempEquipe,  () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
         flush(batchDesempJogador, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
+
+        // Atualiza duracaoSegundos e fkEquipeVencedora na tabela jogo
+        if (!jogoVencedorMap.isEmpty()) {
+            List<Object[]> batchJogoUpdate = new ArrayList<>(jogoVencedorMap.values());
+            jogoRepo.updateDuracaoEVencedor(batchJogoUpdate);
+            System.out.printf("[ImportService] jogo atualizado: duração e vencedor para %,d jogos%n",
+                    jogoVencedorMap.size());
+        }
 
         System.out.printf("[ImportService] players_stats ✓ → %,d linhas lidas | equipes=%d, jogadores=%d%n",
                 linhasLidas, equipesVistas.size(), jogadoresVistos.size());

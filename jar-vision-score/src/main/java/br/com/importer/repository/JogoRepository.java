@@ -22,4 +22,15 @@ public class JogoRepository {
             batch
         );
     }
+
+    /**
+     * Atualiza duracaoSegundos e fkEquipeVencedora após processar game_players_stats.
+     * Cada array: [duracaoSegundos, fkEquipeVencedora, idJogo]
+     */
+    public int[] updateDuracaoEVencedor(List<Object[]> batch) {
+        return jdbc.batchUpdate(
+            "UPDATE jogo SET duracaoSegundos = ?, fkEquipeVencedora = ? WHERE idJogo = ?",
+            batch
+        );
+    }
 }
