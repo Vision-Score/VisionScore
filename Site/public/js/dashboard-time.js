@@ -1,4 +1,4 @@
- 
+
 const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 const equipe = JSON.parse(sessionStorage.getItem("time"));
 const elenco = JSON.parse(sessionStorage.getItem("elenco"));
@@ -9,7 +9,6 @@ const mediasGerais = JSON.parse(sessionStorage.getItem("mediasGerais"));
 onInit();
 function onInit() {
     getTimes();
-    getHighlightUltimoJogo(equipe.id);
     if (sessionStorage.getItem("mediasGerais")) {
         return;
     }
@@ -19,7 +18,7 @@ function onInit() {
         document.querySelector(".loader").style.display = "none";
     }).catch(error => {
         console.error("Erro ao obter médias gerais:", error);
-    });   
+    });
 }
 
 function getTimes() {

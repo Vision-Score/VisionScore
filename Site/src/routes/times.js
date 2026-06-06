@@ -17,4 +17,24 @@ router.get("/getHighlightUltimoJogo/:id", function (req, res) {
     timesController.getHighlightUltimoJogo(req, res);
 });
 
+router.get("/getWinrateCampeonatos/:id", function (req, res) {
+    timesController.getWinrateCampeonatos(req, res);
+});
+
+router.get("/getUltimosCincoJogos/:id", function (req, res) {
+    timesController.getUltimosCincoJogos(req, res);
+});
+
+router.get("/getMediasGerais", function (req, res) {
+    timesController.getMediasGerais(req, res);
+});
+
+router.get("/getMediaFirstBlood", function (req, res) {
+    timesController.getMediaFirstBlood(req, res);
+});
+
+router.get("/getMediasPorTime/:id", function (req, res) {
+    timesController.getMediasPorTime(req, res);
+});
+
 module.exports = router;

@@ -1226,9 +1226,9 @@ function renderStrategies(container, strategies) {
 
     const styles = {
         strategiesContainer: `
-            flex: 1;
-            height: 30vh;
-            max-height: 30vh;
+            width: 52%;
+            height: 35vh;
+            max-height: 40vh;
             overflow: hidden;
             display: flex;
             flex-direction: row;
