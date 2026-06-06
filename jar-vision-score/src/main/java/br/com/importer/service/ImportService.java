@@ -70,7 +70,7 @@ public class ImportService {
         this.desempenhoJogadorRepo = desempenhoJogadorRepo;
         this.eventoRepo            = eventoRepo;
         this.logRepo               = logRepo;
-        this.batchSize  = EnvLoader.getInt("BATCH_SIZE", 500);
+        this.batchSize  = EnvLoader.getInt("BATCH_SIZE", 2000);
         this.maxLinhas  = EnvLoader.getInt("MAX_LINHAS_TESTE", 0);
         if (this.maxLinhas > 0) {
             System.out.println("[ImportService] ⚠ MODO TESTE: processando apenas " + maxLinhas + " linhas por arquivo.");
@@ -215,7 +215,7 @@ public class ImportService {
     private void processarPlayersStats(String nomeArquivo, java.io.InputStream stream) {
         Set<Integer> equipesVistas    = new HashSet<>();
         Set<Integer> jogadoresVistos  = new HashSet<>();
-        Set<String>  desempEquipeVist = new HashSet<>(); // "gameId_teamId"
+        Set<Long>    desempEquipeVist = new HashSet<>(); // packed long: gameId<<32 | teamId
 
         List<Object[]> batchEquipe          = new ArrayList<>();
         List<Object[]> batchJogador         = new ArrayList<>();
@@ -270,20 +270,27 @@ public class ImportService {
             }
 
             // Equipe
-            if (teamId != null && equipesVistas.add(teamId))
+            if (teamId != null && equipesVistas.add(teamId)) {
                 batchEquipe.add(new Object[]{teamId, teamNome, teamSigla});
+                flushSe(batchEquipe, batchSize, () -> equipeRepo.insertBatch(batchEquipe));
+            }
 
             // Jogador
-            if (playerId != null && jogadoresVistos.add(playerId))
+            if (playerId != null && jogadoresVistos.add(playerId)) {
                 batchJogador.add(new Object[]{playerId, playerNome, role});
+                flushSe(batchJogador, batchSize, () -> jogadorRepo.insertBatch(batchJogador));
+            }
 
             // Desempenho da equipe (uma vez por jogo+equipe)
-            String chaveEquipeJogo = gameId + "_" + teamId;
-            if (gameId != null && teamId != null && desempEquipeVist.add(chaveEquipeJogo)) {
-                batchDesempEquipe.add(new Object[]{
-                    teamKills, towerKills, inhibKills, dragonKills, heraldKills, baronKills,
-                    teamId, gameId
-                });
+            if (gameId != null && teamId != null) {
+                long chaveEquipeJogo = ((long) gameId << 32) | (teamId & 0xFFFFFFFFL);
+                if (desempEquipeVist.add(chaveEquipeJogo)) {
+                    batchDesempEquipe.add(new Object[]{
+                        teamKills, towerKills, inhibKills, dragonKills, heraldKills, baronKills,
+                        teamId, gameId
+                    });
+                    flushSe(batchDesempEquipe, batchSize, () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
+                }
             }
 
             // Desempenho do jogador (sempre insere, um por jogador por jogo)
@@ -294,12 +301,8 @@ public class ImportService {
                     wards, killSpree, multiKill,
                     gameId, playerId, teamId
                 });
+                flushSe(batchDesempJogador, batchSize, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
             }
-
-            flushSe(batchEquipe,        batchSize, () -> equipeRepo.insertBatch(batchEquipe));
-            flushSe(batchJogador,       batchSize, () -> jogadorRepo.insertBatch(batchJogador));
-            flushSe(batchDesempEquipe,  batchSize, () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
-            flushSe(batchDesempJogador, batchSize, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
 
             if (contador[0] % 50000 == 0)
                 System.out.printf("[ImportService] players_stats → %,d linhas processadas%n", contador[0]);
