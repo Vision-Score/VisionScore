@@ -313,10 +313,13 @@ public class ImportService {
         flush(batchDesempEquipe,  () -> desempenhoEquipeRepo.insertBatch(batchDesempEquipe));
         flush(batchDesempJogador, () -> desempenhoJogadorRepo.insertBatch(batchDesempJogador));
 
-        // Atualiza duracaoSegundos e fkEquipeVencedora na tabela jogo
+        // Atualiza duracaoSegundos e fkEquipeVencedora na tabela jogo em chunks de batchSize
         if (!jogoVencedorMap.isEmpty()) {
-            List<Object[]> batchJogoUpdate = new ArrayList<>(jogoVencedorMap.values());
-            jogoRepo.updateDuracaoEVencedor(batchJogoUpdate);
+            List<Object[]> todosUpdates = new ArrayList<>(jogoVencedorMap.values());
+            for (int i = 0; i < todosUpdates.size(); i += batchSize) {
+                List<Object[]> chunk = todosUpdates.subList(i, Math.min(i + batchSize, todosUpdates.size()));
+                jogoRepo.updateDuracaoEVencedor(chunk);
+            }
             System.out.printf("[ImportService] jogo atualizado: duração e vencedor para %,d jogos%n",
                     jogoVencedorMap.size());
         }
