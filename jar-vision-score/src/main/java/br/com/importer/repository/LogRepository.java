@@ -19,12 +19,18 @@ public class LogRepository {
      * @param linhasLidas     total de linhas lidas do arquivo
      * @param linhasInseridas total de linhas efetivamente inseridas
      */
+    private static final int MAX_MENSAGEM = 200;
+
     public void inserir(String arquivo, String status, String mensagem,
                         int linhasLidas, int linhasInseridas) {
+        String mensagemTruncada = mensagem != null && mensagem.length() > MAX_MENSAGEM
+                ? mensagem.substring(0, MAX_MENSAGEM)
+                : mensagem;
+
         jdbc.update(
             "INSERT INTO log (arquivo, status, mensagem, linhasLidas, linhasInseridas) " +
             "VALUES (?, ?, ?, ?, ?)",
-            arquivo, status, mensagem, linhasLidas, linhasInseridas
+            arquivo, status, mensagemTruncada, linhasLidas, linhasInseridas
         );
     }
 }

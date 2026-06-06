@@ -35,6 +35,9 @@ public class DatabaseConfig {
         dataSource.setMaxIdle(5);
         dataSource.setMinIdle(1);
 
+        // Desativa FK checks em todas as conexões do pool
+        dataSource.setConnectionInitSqls(java.util.List.of("SET foreign_key_checks = 0"));
+
         // Valida conexão antes de usar
         dataSource.setTestOnBorrow(true);
         dataSource.setValidationQuery("SELECT 1");

@@ -29,8 +29,6 @@ public class LimpezaBancoDadosService {
     public void limpar() {
         System.out.println("\n[LimpezaBancoDadosService] Limpando tabelas antes do ETL...");
 
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
-
         for (String tabela : TABELAS_TRUNCATE) {
             try {
                 jdbcTemplate.execute("TRUNCATE TABLE " + tabela);
