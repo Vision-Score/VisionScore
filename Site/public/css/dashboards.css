@@ -466,6 +466,11 @@ body {
       text-decoration-color: #DF0004;
     }
 
+    &.naMedia {
+      text-decoration: underline;
+      text-decoration-color: #ffffff;
+    }
+
   }
 
   .subtituloKpi {

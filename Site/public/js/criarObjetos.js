@@ -86,6 +86,7 @@ function montarDadosCard(jogador) {
         position: jogador.funcao,
         roleIconUrl: `../assets/icons/${jogador.funcao}_icon.png`,
         imageUrl: jogador.urlFotoJogador || "../assets/playerIcons/Doran.png",
-        stats: montarQuickStats(jogador)
+        stats: montarQuickStats(jogador),
+        powerPick: jogador.powerPick
     };
 }

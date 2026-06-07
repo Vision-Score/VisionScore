@@ -28,7 +28,7 @@ function getTimes() {
             if (resposta.ok) {
                 resposta.json().then(function (times) {
                     const normalizedTimes = times.map(time => ({
-                        id: time.id,
+                        id: time.id_equipe || time.id,
                         name: time.name || time.nome,
                         logoUrl: time.urlImagem || time.logoUrl || "../assets/icons/t1logo.png"
                     }));
@@ -51,7 +51,7 @@ function getStoredTeams() {
     const storedTimes = sessionStorage.getItem("times");
     if (!storedTimes) return [];
     return JSON.parse(storedTimes).map(time => ({
-        id: time.id,
+        id: time.id_equipe || time.id,
         name: time.name || time.nome,
         logoUrl: time.urlImagem || time.logoUrl || "../assets/icons/t1logo.png"
     }));

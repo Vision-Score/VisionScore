@@ -157,7 +157,7 @@ async function renderPopupJogador(container, data) {
 
     container.innerHTML = `
         <div class="popupJogadorContent">
-            <div class="sideBar" style="background-image: url('${config.powerPick}'); background-size: cover; background-position: 70% 0%; box-shadow: inset 0px 0px 40px 4000px #00000090, inset 0px 0px 40px 40px #0F8B8B30">
+            <div class="sideBar" style="background-image: linear-gradient(to top, #000000ee 40%, transparent 80%), url('${config.powerPick}'); background-size: cover; background-position: 70% 0%; box-shadow: inset 0px 0px 40px 4000px #00000050, inset 0px 0px 40px 40px #0F8B8B30">
                 <div class="sideUpper" onclick="switchPopupJogador()">
                     <i class="material-icons">arrow_back</i>
                 </div>
@@ -268,8 +268,14 @@ function renderPlayerCard(container, data) {
         name: data.name || "Jogador",
         imageUrl: data.imageUrl || data.urlFotoJogador || "../assets/playerIcons/faker.png",
         roleIconUrl: data.roleIconUrl || `../assets/icons/${data.position || 'Top'}_icon.png`,
-        stats: data.stats || []
+        stats: data.stats || [],
+        powerPick: data.powerPick
     };
+
+    const splashUrl = config.powerPick && splashImages[config.powerPick];
+    const cardBackground = splashUrl
+        ? `background-image: linear-gradient(to top, #000000ee 20%, transparent 80%), url(${splashUrl}); background-size: cover; background-position: 50% 25%;`
+        : `background-color: #1F1F1F;`;
 
     const styles = {
         playerCard: `
@@ -281,7 +287,7 @@ function renderPlayerCard(container, data) {
             align-items: center;
             justify-content: space-evenly;
             padding: 1%;
-            background-color: #1F1F1F;
+            ${cardBackground}
             border-radius: 2vh;
             border: 2px solid #0F8B8B;
             box-shadow: 0px 0px 10px 5px #00000060;
@@ -1002,6 +1008,8 @@ function renderSidebar(container, activePage, profileData) {
 };
 
 function renderTeamList(container, teams) {
+
+    console.log('Renderizando lista de times adversários:', teams);
 
     const styles = {
         tlBackdrop: `
