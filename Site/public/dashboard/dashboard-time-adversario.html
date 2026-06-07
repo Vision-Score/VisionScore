@@ -176,47 +176,22 @@
         logoUrl: _time?.urlImagem || "../assets/icons/t1logo.png"
     });
 
-    // renderiza a lista de times. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
-    renderTeamList(document.getElementById("teamListContainer"), [
-        {
-            name: "T1",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Gen.G",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "KT Rolster",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Hanwha Life",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "DRX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Liiv SANDBOX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Kwangdong Freecs",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Nongshim RedForce",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "OK Savings Bank BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        }
-    ]);
+    // renderiza a lista de times a partir do sessionStorage ou da API
+    const _storedTimes = sessionStorage.getItem("times");
+    if (_storedTimes) {
+        renderTeamList(document.getElementById("teamListContainer"), JSON.parse(_storedTimes));
+    } else {
+        fetch("/times/listar")
+            .then(r => r.json())
+            .then(times => {
+                const normalizedTimes = times.map(t => ({
+                    id: t.id,
+                    name: t.name || t.nome,
+                    logoUrl: t.urlImagem || t.logoUrl || "../assets/icons/t1logo.png"
+                }));
+                sessionStorage.setItem("times", JSON.stringify(normalizedTimes));
+                renderTeamList(document.getElementById("teamListContainer"), normalizedTimes);
+            })
+            .catch(err => console.error("Erro ao carregar times:", err));
+    }
 </script>

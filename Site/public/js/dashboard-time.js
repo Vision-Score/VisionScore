@@ -30,7 +30,7 @@ function getTimes() {
                     const normalizedTimes = times.map(time => ({
                         id: time.id,
                         name: time.name || time.nome,
-                        logoUrl: time.logoUrl || "../assets/icons/t1logo.png"
+                        logoUrl: time.urlImagem || time.logoUrl || "../assets/icons/t1logo.png"
                     }));
                     sessionStorage.setItem("times", JSON.stringify(normalizedTimes));
                     renderTeamList(document.getElementById("teamListContainer"), normalizedTimes);
@@ -53,7 +53,7 @@ function getStoredTeams() {
     return JSON.parse(storedTimes).map(time => ({
         id: time.id,
         name: time.name || time.nome,
-        logoUrl: time.logoUrl || "../assets/icons/t1logo.png"
+        logoUrl: time.urlImagem || time.logoUrl || "../assets/icons/t1logo.png"
     }));
 }
 
