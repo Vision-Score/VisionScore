@@ -150,11 +150,24 @@
 </html>
 
 <script>
-    renderTeamProfile(document.getElementById('teamProfile'), {
-        name: "INTZ",
-        coach: "Coach: Mitohara",
-        logoUrl: "../assets/icons/intzlogo.png"
-    });
+    const _timeAdversario = JSON.parse(sessionStorage.getItem("timeAdversario"));
+
+    function renderAdversarioProfile(nomeTreinador) {
+        renderTeamProfile(document.getElementById('teamProfile'), {
+            name: _timeAdversario?.nome || "Adversário",
+            coach: nomeTreinador ? `Coach: ${nomeTreinador}` : "",
+            logoUrl: _timeAdversario?.urlImagem || "../assets/icons/t1logo.png"
+        });
+    }
+
+    if (_timeAdversario?.id) {
+        fetch(`/times/buscar/${_timeAdversario.id}`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => renderAdversarioProfile(data?.nomeTreinador))
+            .catch(() => renderAdversarioProfile(null));
+    } else {
+        renderAdversarioProfile(null);
+    }
 
     function switchSidebar() {
         document.getElementById("sbBackdrop").classList.toggle("sb-hidden");

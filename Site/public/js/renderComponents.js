@@ -1120,7 +1120,7 @@ function renderTeamList(container, teams) {
     };
 
     const htmlContent = teams.map(team => `
-    <div class="tl-team" style="${styles.tlTeam}" onclick="window.location.href='dashboard-time-adversario.html'">
+    <div class="tl-team" style="${styles.tlTeam}" onclick="sessionStorage.setItem('timeAdversario', JSON.stringify({id: ${team.id}, nome: '${team.name}', urlImagem: '${team.logoUrl}'})); window.location.href='dashboard-time-adversario.html'">
         <img style="${styles.tlTeamImg}" src="${team.logoUrl}" alt="Logo do ${team.name}">
         <div class="tl-team-name" style="${styles.tlTeamName}">${team.name}</div>
         <div class="tl-analyze-btn" style="${styles.tlAnalyzeButton}">
@@ -1202,7 +1202,7 @@ function renderTeamList(container, teams) {
 
     const updateTeamCards = filteredTeams => {
         contentContainer.innerHTML = filteredTeams.map(team => `
-            <div class="tl-team" style="${styles.tlTeam}" onclick="window.location.href='dashboard-time-adversario.html'">
+            <div class="tl-team" style="${styles.tlTeam}" onclick="sessionStorage.setItem('timeAdversario', JSON.stringify({id: ${team.id}, nome: '${team.name}', urlImagem: '${team.logoUrl}'})); window.location.href='dashboard-time-adversario.html'">
                 <img style="${styles.tlTeamImg}" src="${team.logoUrl}" alt="Logo do ${team.name}">
                 <div class="tl-team-name" style="${styles.tlTeamName}">${team.name}</div>
                 <div class="tl-analyze-btn" style="${styles.tlAnalyzeButton}">
