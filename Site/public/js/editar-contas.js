@@ -63,7 +63,7 @@ renderSidebar(document.getElementById("sidebarContainer"), "", {
     role: 'Gerente',
     imageUrl: "../assets/playerIcons/faker.png",
     nameTeam: gerente.nameTeam,
-    logoUrl: "../assets/icons/t1logo.png"
+    logoUrl: JSON.parse(sessionStorage.getItem("time"))?.urlImagem || "../assets/icons/t1logo.png"
 });
 
 const paginationContainer = document.getElementById('editarContasPagination');

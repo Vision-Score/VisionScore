@@ -150,11 +150,24 @@
 </html>
 
 <script>
-    renderTeamProfile(document.getElementById('teamProfile'), {
-        name: "INTZ",
-        coach: "Coach: Mitohara",
-        logoUrl: "../assets/icons/intzlogo.png"
-    });
+    const _timeAdversario = JSON.parse(sessionStorage.getItem("timeAdversario"));
+
+    function renderAdversarioProfile(nomeTreinador) {
+        renderTeamProfile(document.getElementById('teamProfile'), {
+            name: _timeAdversario?.nome || "Adversário",
+            coach: nomeTreinador ? `Coach: ${nomeTreinador}` : "",
+            logoUrl: _timeAdversario?.urlImagem || "../assets/icons/t1logo.png"
+        });
+    }
+
+    if (_timeAdversario?.id) {
+        fetch(`/times/buscar/${_timeAdversario.id}`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => renderAdversarioProfile(data?.nomeTreinador))
+            .catch(() => renderAdversarioProfile(null));
+    } else {
+        renderAdversarioProfile(null);
+    }
 
     function switchSidebar() {
         document.getElementById("sbBackdrop").classList.toggle("sb-hidden");
@@ -165,55 +178,33 @@
     }
 
     // renderiza a sidebar. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
+    const _usuario = JSON.parse(sessionStorage.getItem("usuario"));
+    const _time = JSON.parse(sessionStorage.getItem("time"));
     renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time-adversario", {
-        name: "Mitohara",
-        role: "Coach",
+        name: _usuario?.nome || "Mitohara",
+        role: _usuario?.cargo == 2 ? "Coach" : "Jogador",
+        email: _usuario?.email || "",
         imageUrl: "../assets/playerIcons/faker.png",
-        nameTeam: "T1",
-        logoUrl: "../assets/icons/t1logo.png"
+        nameTeam: _time?.nome || "T1",
+        logoUrl: _time?.urlImagem || "../assets/icons/t1logo.png"
     });
 
-    // renderiza a lista de times. Mover informações pro cache sessionStorage eventualmente pra evitar requisições.
-    renderTeamList(document.getElementById("teamListContainer"), [
-        {
-            name: "T1",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Gen.G",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "KT Rolster",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Hanwha Life",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "DRX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Liiv SANDBOX",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Kwangdong Freecs",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "Nongshim RedForce",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        },
-        {
-            name: "OK Savings Bank BRION",
-            logoUrl: "../assets/icons/t1logo.png"
-        }
-    ]);
+    // renderiza a lista de times a partir do sessionStorage ou da API
+    const _storedTimes = sessionStorage.getItem("times");
+    if (_storedTimes) {
+        renderTeamList(document.getElementById("teamListContainer"), JSON.parse(_storedTimes));
+    } else {
+        fetch("/times/listar")
+            .then(r => r.json())
+            .then(times => {
+                const normalizedTimes = times.map(t => ({
+                    id: t.id,
+                    name: t.name || t.nome,
+                    logoUrl: t.urlImagem || t.logoUrl || "../assets/icons/t1logo.png"
+                }));
+                sessionStorage.setItem("times", JSON.stringify(normalizedTimes));
+                renderTeamList(document.getElementById("teamListContainer"), normalizedTimes);
+            })
+            .catch(err => console.error("Erro ao carregar times:", err));
+    }
 </script>
