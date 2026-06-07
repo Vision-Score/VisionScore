@@ -139,6 +139,80 @@ public class ViewsBancoDadosService {
                 ORDER BY kda DESC
                 """);
 
+        views.put("vw_medias_gerais", """
+                CREATE OR REPLACE VIEW vw_medias_gerais AS
+                SELECT
+                    ROUND(AVG(stats.total_dano / NULLIF(stats.total_ouro, 0)), 4) AS media_dano_por_gold,
+                    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS media_winrate,
+                    ROUND(AVG(de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos), 2) AS media_objetivos,
+                    ROUND(AVG(stats.total_wards / NULLIF(j.duracaoSegundos / 60.0, 0)), 4) AS media_visao_por_minuto,
+                    ROUND(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                                AND j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END)
+                        / NULLIF(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                                            THEN 1 ELSE 0 END), 0) * 100, 1) AS media_conversao_objetivos
+                FROM (
+                    SELECT fkJogo, fkEquipe,
+                        SUM(totalDanoCausadoCampeaoInimigo) AS total_dano,
+                        SUM(qtdOuroObtido) AS total_ouro,
+                        SUM(qtdSentinelasPosicionadas) AS total_wards
+                    FROM desempenho_jogador
+                    GROUP BY fkJogo, fkEquipe
+                ) AS stats
+                JOIN desempenho_equipe de ON de.fkJogo = stats.fkJogo AND de.fkEquipe = stats.fkEquipe
+                JOIN jogo j ON j.idJogo = stats.fkJogo
+                """);
+
+        views.put("vw_media_first_blood", """
+                CREATE OR REPLACE VIEW vw_media_first_blood AS
+                SELECT
+                    ROUND(COUNT(DISTINCT fb.fkJogo) / COUNT(DISTINCT j.idJogo) * 100, 1) AS media_first_blood_rate
+                FROM jogo j
+                LEFT JOIN (
+                    SELECT fkJogo, MIN(tempoEventoSegundos) AS primeiro_kill
+                    FROM evento
+                    WHERE tipoEvento = 'player_kill'
+                    GROUP BY fkJogo
+                ) fb ON fb.fkJogo = j.idJogo;
+                """);
+
+        views.put("vw_kpis_por_equipe", """CREATE OR REPLACE VIEW vw_kpis_por_equipe AS
+                SELECT
+                    stats.fkEquipe,
+                    ROUND(AVG(stats.total_dano / NULLIF(stats.total_ouro, 0)), 4) AS dano_por_gold,
+                    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS winrate,
+                    ROUND(AVG(de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos), 2) AS objetivos,
+                    ROUND(AVG(stats.total_wards / NULLIF(j.duracaoSegundos / 60.0, 0)), 4) AS visao_por_minuto,
+                    ROUND(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                                AND j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END)
+                        / NULLIF(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                                            THEN 1 ELSE 0 END), 0) * 100, 1) AS conversao_objetivos,
+                    ROUND(SUM(CASE WHEN fb.fkEquipe = stats.fkEquipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS first_blood_rate
+                FROM (
+                    SELECT fkJogo, fkEquipe,
+                        SUM(totalDanoCausadoCampeaoInimigo) AS total_dano,
+                        SUM(qtdOuroObtido) AS total_ouro,
+                        SUM(qtdSentinelasPosicionadas) AS total_wards
+                    FROM desempenho_jogador
+                    GROUP BY fkJogo, fkEquipe
+                ) AS stats
+                JOIN desempenho_equipe de ON de.fkJogo = stats.fkJogo AND de.fkEquipe = stats.fkEquipe
+                JOIN jogo j ON j.idJogo = stats.fkJogo
+                LEFT JOIN (
+                    SELECT e.fkJogo, dj.fkEquipe
+                    FROM evento e
+                    JOIN (
+                        SELECT fkJogo, MIN(tempoEventoSegundos) AS primeiro_kill
+                        FROM evento
+                        WHERE tipoEvento = 'player_kill'
+                        GROUP BY fkJogo
+                    ) primeiro ON primeiro.fkJogo = e.fkJogo AND primeiro.primeiro_kill = e.tempoEventoSegundos
+                    JOIN desempenho_jogador dj ON dj.fkJogador = e.fkMatador AND dj.fkJogo = e.fkJogo
+                    WHERE e.tipoEvento = 'player_kill'
+                ) fb ON fb.fkJogo = stats.fkJogo
+                GROUP BY stats.fkEquipe;
+            """);
+        
+
         for (Map.Entry<String, String> entry : views.entrySet()) {
             String nomeView = entry.getKey();
             String sql = entry.getValue();

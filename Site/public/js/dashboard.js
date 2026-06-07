@@ -4,21 +4,262 @@ let strategies = [];
 
 onInit();
 
-function onInit() {
+async function onInit() {
+    document.querySelector(".loader").style.backgroundColor = "rgba(0, 0, 0, 1)" // solução temporaria
     document.querySelector(".loader").style.display = "flex";
-    getTimes();
-    
-    sessionStorage.getItem("estrategias") ? renderStrategies(document.getElementById("strategiesContainer"), JSON.parse(sessionStorage.getItem("estrategias"))) : getEstrategias();
+
+    if (sessionStorage.getItem("ultimoscincojogos")) {
+        renderUltimosCincoJogos(document.getElementById("lastGamesGraph"), JSON.parse(sessionStorage.getItem("ultimoscincojogos")));
+    } else {
+        await getUltimosCincoJogos(equipe.id);
+    }
+
+    if (sessionStorage.getItem("mediasGerais")) {
+        renderMediasGerais(JSON.parse(sessionStorage.getItem("mediasGerais")));
+    } else {
+        await getMediasGerais();
+    }
+
+    if (sessionStorage.getItem("mediaFirstBlood")) {
+        renderMediaFirstBlood(JSON.parse(sessionStorage.getItem("mediaFirstBlood")));
+    } else {
+        await getMediaFirstBlood();
+    }
+
+    if (sessionStorage.getItem("mediasPorTime")) {
+        renderMediasPorTime(JSON.parse(sessionStorage.getItem("mediasPorTime")), JSON.parse(sessionStorage.getItem("mediasGerais")));
+    } else {
+        await getMediasPorTime(equipe.id, JSON.parse(sessionStorage.getItem("mediasGerais")));
+    }
+
+    if (sessionStorage.getItem("times")) {
+        renderTeamList(document.getElementById("teamListContainer"), JSON.parse(sessionStorage.getItem("times")));
+    } else {
+        await getTimes();
+    }
+
+    if (sessionStorage.getItem("highlightUltimoJogo")) {
+        renderHighlightUltimoJogo(document.getElementById("highlight"), JSON.parse(sessionStorage.getItem("highlightUltimoJogo"))[0]);
+    } else {
+        await getHighlightUltimoJogo(equipe.id);
+    }
+
+    if (sessionStorage.getItem("estrategias")) {
+        renderStrategies(document.getElementById("strategiesContainer"), JSON.parse(sessionStorage.getItem("estrategias")));
+    } else {
+        await getEstrategias();
+    }
+
+    if (sessionStorage.getItem("winrateCampeonatos")) {
+        renderWinrateChampionships(document.getElementById("winrateChart"), JSON.parse(sessionStorage.getItem("winrateCampeonatos")));
+    } else {
+        await getWinrateCampeonatos(equipe.id);
+    }
 
     console.log(document.getElementById("sidebarContainer"));
     renderSidebar(document.getElementById("sidebarContainer"), "dashboard", {
-    name: usuario.nome || usuario.name || "Mitohara",
-    role: usuario.cargo == 2 ? "Coach" : "Jogador",
-    email: usuario.email || "",
-    imageUrl: usuario.imageUrl || "../assets/playerIcons/faker.png",
-    nameTeam: equipe.nome || equipe.name || "T1",
-    logoUrl: equipe.urlImagem || equipe.logoUrl || "../assets/icons/t1logo.png"
-});
+        name: usuario.nome || usuario.name || "Mitohara",
+        role: usuario.cargo == 2 ? "Coach" : "Jogador",
+        email: usuario.email || "",
+        imageUrl: usuario.imageUrl || "../assets/playerIcons/faker.png",
+        nameTeam: equipe.nome || equipe.name || "T1",
+        logoUrl: equipe.urlImagem || equipe.logoUrl || "../assets/icons/t1logo.png"
+    });
+
+    document.querySelector(".loader").style.display = "none";
+}
+
+function renderMediasGerais(mediasGerais) {
+    const g = Array.isArray(mediasGerais) ? mediasGerais[0] : mediasGerais;
+    document.getElementById('mediaDPG').innerText = "Média global: " + Number(g.media_dano_por_gold).toFixed(2) + " DpG";
+    document.getElementById('mediaVT').innerText = "Média global: " + Number(g.media_winrate).toFixed(2) + "%";
+    document.getElementById('mediaObj').innerText = "Média global: " + Number(g.media_objetivos).toFixed(2);
+    document.getElementById('mediaVPV').innerText = "Média global: " + Number(g.media_visao_por_minuto).toFixed(2) + " VpM";
+    document.getElementById('mediaCOV').innerText = "Média global: " + Number(g.media_conversao_objetivos).toFixed(2) + "%";
+}
+
+function renderMediaFirstBlood(mediaFirstBlood) {
+    const fb = Array.isArray(mediaFirstBlood) ? mediaFirstBlood[0] : mediaFirstBlood;
+    document.getElementById('mediaFB').innerText = "Média global: " + fb.media_first_blood_rate + "%";
+}
+
+function renderMediasPorTime(mediasPorTime, mediasGerais) {
+    const t = Array.isArray(mediasPorTime) ? mediasPorTime[0] : mediasPorTime;
+    const g = Array.isArray(mediasGerais) ? mediasGerais[0] : mediasGerais;
+    document.getElementById('dadoKpiDPG').innerText = Number(t.dano_por_gold).toFixed(2) + " DpG";
+    document.getElementById('dadoKpiDPG').style.textDecorationColor = Number(t.dano_por_gold) > Number(g.media_dano_por_gold) ? "#14AE5C" : "#DF0004";
+    document.getElementById('dadoKpiVT').innerText = Number(t.winrate).toFixed(0) + "%";
+    document.getElementById('dadoKpiVT').style.textDecorationColor = Number(t.winrate) > Number(g.media_winrate) ? "#14AE5C" : "#DF0004";
+    document.getElementById('dadoKpiObj').innerText = Number(t.objetivos).toFixed(2);
+    document.getElementById('dadoKpiObj').style.textDecorationColor = Number(t.objetivos) > Number(g.media_objetivos) ? "#14AE5C" : "#DF0004";
+    document.getElementById('dadoKpiVPV').innerText = Number(t.visao_por_minuto).toFixed(2) + " VpM";
+    document.getElementById('dadoKpiVPV').style.textDecorationColor = Number(t.visao_por_minuto) > Number(g.media_visao_por_minuto) ? "#14AE5C" : "#DF0004";
+    document.getElementById('dadoKpiFB').innerText = Number(t.first_blood_rate).toFixed(0) + "%";
+    document.getElementById('dadoKpiFB').style.textDecorationColor = Number(t.first_blood_rate) > Number(g.media_first_blood_rate) ? "#14AE5C" : "#DF0004";
+    document.getElementById('dadoKpiCOV').innerText = Number(t.conversao_objetivos).toFixed(0) + "%";
+    document.getElementById('dadoKpiCOV').style.textDecorationColor = Number(t.conversao_objetivos) > Number(g.media_conversao_objetivos) ? "#14AE5C" : "#DF0004";
+}
+
+function getMediasGerais() {
+    return fetch(`/times/getMediasGerais`)
+        .then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then(function (mediasGerais) {
+                    sessionStorage.setItem("mediasGerais", JSON.stringify(mediasGerais));
+                    renderMediasGerais(mediasGerais);
+                    console.log("Medias gerais recebidas:", mediasGerais);
+                })
+            }
+        })
+        .catch(function (erro) {
+            console.error(`Erro na requisição de medias gerais: ${erro.message}`);
+        })
+}
+
+function getMediaFirstBlood() {
+    return fetch(`/times/getMediaFirstBlood`)
+        .then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then(function (mediaFirstBlood) {
+                    sessionStorage.setItem("mediaFirstBlood", JSON.stringify(mediaFirstBlood));
+                    renderMediaFirstBlood(mediaFirstBlood);
+                    console.log("Media first blood recebida:", mediaFirstBlood);
+                })
+            }
+        })
+        .catch(function (erro) {
+            console.error(`Erro na requisição de media first blood: ${erro.message}`);
+        })
+}
+
+function getMediasPorTime(idEquipe, mediasGerais) {
+    return fetch(`/times/getMediasPorTime/${idEquipe}`)
+        .then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then(function (mediasPorTime) {
+                    sessionStorage.setItem("mediasPorTime", JSON.stringify(mediasPorTime));
+                    renderMediasPorTime(mediasPorTime, mediasGerais);
+                    console.log("Medias por time recebidas:", mediasPorTime);
+                })
+            }
+        })
+        .catch(function (erro) {
+            console.error(`Erro na requisição de medias por time: ${erro.message}`);
+        })
+}
+
+function getUltimosCincoJogos(idEquipe) {
+    return fetch(`/times/getUltimosCincoJogos/${idEquipe}`)
+        .then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then(function (ultimosJogos) {
+                    sessionStorage.setItem("ultimoscincojogos", JSON.stringify(ultimosJogos));
+                    renderUltimosCincoJogos(document.getElementById('lastGamesGraph'), ultimosJogos);
+                    console.log("Últimos jogos recebidos:", ultimosJogos);
+                })
+            }
+        })
+        .catch(function (erro) {
+            console.error(`Erro na requisição de últimos jogos: ${erro.message}`);
+        })
+}
+
+function renderUltimosCincoJogos(container, ultimosJogos) {
+    container.innerHTML = "";
+    ultimosJogos.forEach(function (jogo) {
+        const jogoElement = document.createElement("div");
+        jogoElement.classList.add(jogo.resultado === 'V' ? 'lastGameWin' : 'lastGameLoss');
+        jogoElement.innerHTML = jogo.resultado;
+        container.appendChild(jogoElement);
+    });
+}
+
+
+function getWinrateCampeonatos(idEquipe) {
+    return fetch(`/times/getWinrateCampeonatos/${idEquipe}`)
+        .then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then(function (winrateCampeonatos) {
+                    sessionStorage.setItem("winrateCampeonatos", JSON.stringify(winrateCampeonatos));
+                    renderWinrateChampionships(document.getElementById('winrateChart'), winrateCampeonatos);
+                    console.log("Winrate campeonatos recebidos:", winrateCampeonatos);
+                });
+            } else {
+                console.error("Nenhum winrate campeonatos encontrado ou erro na API");
+            }
+        })
+        .catch(function (erro) {
+            console.error(`Erro na requisição de winrate campeonatos: ${erro.message}`);
+        });
+}
+
+function renderWinrateChampionships(ctx, winrate) {
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: winrate.map(d => [
+                d.torneio.length > 20 ? d.torneio.substring(0, 20) + '...' : d.torneio,
+                d.serie
+            ]).reverse(),
+            datasets: [{
+                label: 'Winrate %',
+                data: winrate.map(d => d.winrate).reverse(),
+                backgroundColor: winrate.map(d => d.winrate >= 50 ? '#0F8B8B80' : '#8B0F0F80').reverse(),
+                borderColor: winrate.map(d => d.winrate >= 50 ? '#0F8B8B' : '#8B0F0F').reverse(),
+                borderWidth: 1,
+                borderRadius: 4,
+
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    grid: { color: '#44444460' },
+                    ticks: {
+                        color: '#fff',
+                        callback: value => value + '%'
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        color: '#fff',
+                        font: {
+                            family: 'Montserrat',
+                            size: 12
+                        },
+                        maxRotation: 0,
+                        minRotation: 0,
+                        maxTicksLimit: 5
+                    }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                annotation: {
+                    annotations: {
+                        linha50: {
+                            type: 'line',
+                            yMin: 50,
+                            yMax: 50,
+                            borderColor: '#ffffff60',
+                            borderWidth: 2,
+                            borderDash: [6, 4]
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `${ctx.raw}% (${winrate[ctx.dataIndex].jogos} jogos)`
+                    }
+                }
+            }
+        }
+    });
 }
 
 function getTimes() {
@@ -38,15 +279,17 @@ function getTimes() {
             } else {
                 console.error("Nenhuma equipe encontrada ou erro na API");
             }
+
         })
         .catch(function (erro) {
             console.error(`Erro na requisição de equipes: ${erro.message}`);
         });
+
 }
 
 function getEstrategias() {
     const idTreinador = usuario.id;
-    
+
     if (!idTreinador) {
         console.error("ID do treinador não identificado");
         return;
@@ -75,13 +318,11 @@ function getEstrategias() {
                 strategies = [];
                 renderStrategies(document.getElementById("strategiesContainer"), strategies);
             }
-            document.querySelector(".loader").style.display = "none";
         })
         .catch(function (erro) {
             console.error(`Erro na requisição de estratégias: ${erro.message}`);
             strategies = [];
             renderStrategies(document.getElementById("strategiesContainer"), strategies);
-            document.querySelector(".loader").style.display = "none";
         });
 }
 
@@ -93,6 +334,16 @@ function formatarData(data) {
     return `${dia}/${mes}/${ano}`;
 }
 
+function getHighlightUltimoJogo(idEquipe) {
+    return fetch(`/times/getHighlightUltimoJogo/${idEquipe}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Destaque do último jogo:", data);
+            sessionStorage.setItem("highlightUltimoJogo", JSON.stringify(data));
+        })
+        .catch(error => { console.error("Erro ao obter destaque do último jogo:", error); throw error; });
+}
+
 function criarEstrategia(titulo, conteudo) {
     const idTreinador = usuario.id;
 
@@ -100,6 +351,8 @@ function criarEstrategia(titulo, conteudo) {
         console.error("Título e conteúdo são obrigatórios");
         return Promise.reject("Campos obrigatórios");
     }
+
+    document.querySelector(".loader").style.display = "flex";
 
     return fetch("/treinador/criarEstrategia", {
         method: "POST",
@@ -112,23 +365,25 @@ function criarEstrategia(titulo, conteudo) {
             fkTreinadorServer: idTreinador
         })
     })
-    .then(function (resposta) {
-        if (resposta.ok) {
-            return resposta.json().then(function () {
-                getEstrategias();
-                return true;
-            });
-        } else {
-            return resposta.text().then(text => {
-                console.error("Erro ao criar estratégia:", text);
-                throw new Error(text || resposta.statusText);
-            });
-        }
-    })
-    .catch(function (erro) {
-        console.error(`Erro na criação de estratégia: ${erro.message}`);
-        throw erro;
-    });
+        .then(function (resposta) {
+            if (resposta.ok) {
+                return resposta.json().then(function () {
+                    getEstrategias();
+                    return true;
+                });
+            } else {
+                document.querySelector(".loader").style.display = "none";
+                return resposta.text().then(text => {
+                    console.error("Erro ao criar estratégia:", text);
+                    throw new Error(text || resposta.statusText);
+                });
+            }
+        })
+        .catch(function (erro) {
+            document.querySelector(".loader").style.display = "none";
+            console.error(`Erro na criação de estratégia: ${erro.message}`);
+            throw erro;
+        });
 }
 
 function atualizarEstrategia(id, titulo, conteudo) {
@@ -136,6 +391,8 @@ function atualizarEstrategia(id, titulo, conteudo) {
         console.error("Título e conteúdo são obrigatórios");
         return Promise.reject("Campos obrigatórios");
     }
+
+    document.querySelector(".loader").style.display = "flex";
 
     return fetch(`/treinador/atualizarEstrategia/${id}`, {
         method: "PUT",
@@ -147,49 +404,54 @@ function atualizarEstrategia(id, titulo, conteudo) {
             textoServer: conteudo
         })
     })
-    .then(function (resposta) {
-        if (resposta.ok) {
-            return resposta.json().then(function () {
-                getEstrategias();
-                return true;
-            });
-        } else {
-            return resposta.text().then(text => {
-                console.error("Erro ao atualizar estratégia:", text);
-                throw new Error(text || resposta.statusText);
-            });
-        }
-    })
-    .catch(function (erro) {
-        console.error(`Erro na atualização de estratégia: ${erro.message}`);
-        throw erro;
-    });
+        .then(function (resposta) {
+            if (resposta.ok) {
+                return resposta.json().then(function () {
+                    getEstrategias();
+                    return true;
+                });
+            } else {
+                document.querySelector(".loader").style.display = "none";
+                return resposta.text().then(text => {
+                    console.error("Erro ao atualizar estratégia:", text);
+                    throw new Error(text || resposta.statusText);
+                });
+            }
+        })
+        .catch(function (erro) {
+            document.querySelector(".loader").style.display = "none";
+            console.error(`Erro na atualização de estratégia: ${erro.message}`);
+            throw erro;
+        });
 }
 
 function deletarEstrategia(id) {
+    document.querySelector(".loader").style.display = "flex";
     return fetch(`/treinador/deletarEstrategia/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
         }
     })
-    .then(function (resposta) {
-        if (resposta.ok) {
-            return resposta.json().then(function () {
-                getEstrategias();
-                return true;
-            });
-        } else {
-            return resposta.text().then(text => {
-                console.error("Erro ao deletar estratégia:", text);
-                throw new Error(text || resposta.statusText);
-            });
-        }
-    })
-    .catch(function (erro) {
-        console.error(`Erro na deleção de estratégia: ${erro.message}`);
-        throw erro;
-    });
+        .then(function (resposta) {
+            if (resposta.ok) {
+                return resposta.json().then(function () {
+                    getEstrategias();
+                    return true;
+                });
+            } else {
+                document.querySelector(".loader").style.display = "none";
+                return resposta.text().then(text => {
+                    console.error("Erro ao deletar estratégia:", text);
+                    throw new Error(text || resposta.statusText);
+                });
+            }
+        })
+        .catch(function (erro) {
+            document.querySelector(".loader").style.display = "none";
+            console.error(`Erro na deleção de estratégia: ${erro.message}`);
+            throw erro;
+        });
 }
 
 function removeStrategy(index) {
@@ -229,7 +491,7 @@ function switchTeamList() {
 window.salvarEstrategia = function () {
     const tituloEl = document.getElementById('strategyModalNome');
     const textoEl = document.getElementById('strategyModalTexto');
-    
+
     if (!tituloEl || !textoEl) return;
 
     const titulo = tituloEl.value;
