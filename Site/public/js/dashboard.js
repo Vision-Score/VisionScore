@@ -5,6 +5,7 @@ let strategies = [];
 onInit();
 
 async function onInit() {
+    styleAntigo = document.querySelector(".loader").style.backgroundColor;
     document.querySelector(".loader").style.backgroundColor = "rgba(0, 0, 0, 1)" // solução temporaria
     document.querySelector(".loader").style.display = "flex";
 
@@ -14,8 +15,8 @@ async function onInit() {
         await getUltimosCincoJogos(equipe.id);
     }
 
-    if (sessionStorage.getItem("mediasGerais")) {
-        renderMediasGerais(JSON.parse(sessionStorage.getItem("mediasGerais")));
+    if (sessionStorage.getItem("mediasGeraisEquipe")) {
+        renderMediasGerais(JSON.parse(sessionStorage.getItem("mediasGeraisEquipe")));
     } else {
         await getMediasGerais();
     }
@@ -27,9 +28,9 @@ async function onInit() {
     }
 
     if (sessionStorage.getItem("mediasPorTime")) {
-        renderMediasPorTime(JSON.parse(sessionStorage.getItem("mediasPorTime")), JSON.parse(sessionStorage.getItem("mediasGerais")));
+        renderMediasPorTime(JSON.parse(sessionStorage.getItem("mediasPorTime")), JSON.parse(sessionStorage.getItem("mediasGeraisEquipe")));
     } else {
-        await getMediasPorTime(equipe.id, JSON.parse(sessionStorage.getItem("mediasGerais")));
+        await getMediasPorTime(equipe.id, JSON.parse(sessionStorage.getItem("mediasGeraisEquipe")));
     }
 
     if (sessionStorage.getItem("times")) {
@@ -67,6 +68,7 @@ async function onInit() {
     });
 
     document.querySelector(".loader").style.display = "none";
+    document.querySelector(".loader").style.backgroundColor = styleAntigo;
 }
 
 function renderMediasGerais(mediasGerais) {
@@ -105,7 +107,7 @@ function getMediasGerais() {
         .then(function (resposta) {
             if (resposta.ok) {
                 resposta.json().then(function (mediasGerais) {
-                    sessionStorage.setItem("mediasGerais", JSON.stringify(mediasGerais));
+                    sessionStorage.setItem("mediasGeraisEquipe", JSON.stringify(mediasGerais));
                     renderMediasGerais(mediasGerais);
                     console.log("Medias gerais recebidas:", mediasGerais);
                 })

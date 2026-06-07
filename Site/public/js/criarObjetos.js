@@ -45,9 +45,24 @@ function montarRadarMediaRole(mediaRole) {
     ];
 }
 
+function montarRadarTime(elenco, mediasGerais) {
+    const scores = elenco.map(jogador => {
+        const mediaRole = mediasGerais.find(m => m.funcao === jogador.funcao);
+        const jogadorRadar = montarRadar(jogador);
+        const roleRadar = montarRadarMediaRole(mediaRole);
+        return jogadorRadar.map((val, i) => val / roleRadar[i]);
+    });
+
+    return scores[0].map((_, i) =>
+        Math.min((scores.reduce((acc, s) => acc + s[i], 0) / scores.length) * 50, 100)
+    );
+}
+
 function montarDadosPopup(jogador, mediasGerais) {
+    console.log(mediasGerais);
     const mediaRole = mediasGerais.find(m => m.funcao === jogador.funcao);
     return {
+        id: jogador.idJogador,
         name: jogador.nome,
         position: jogador.funcao,
         imageUrl: jogador.urlFotoJogador || "../assets/playerIcons/Doran.png",
@@ -56,6 +71,7 @@ function montarDadosPopup(jogador, mediasGerais) {
         stats: montarStats(jogador, mediaRole),
         radarData: montarRadar(jogador),
         radarMediaRole: montarRadarMediaRole(mediaRole),
+        powerPick: jogador.powerPick,
         badges: [
             { imageUrl: "../assets/Damage_rating.png", title: "Top Damage" },
             { imageUrl: "../assets/icons/Availability.png", title: "Acumula Gold" },

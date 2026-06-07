@@ -51,36 +51,10 @@
         <div class="content">
             <div class="mainContainer">
                 <div class="mainContainerUpper">
-                    <div class="highlights">
-                        <div class="moveArrow back">
-                            <i class="material-icons">arrow_back_ios</i>
-                        </div>
-                        <div class="highlightBox left">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/Doran.png" alt="">
-                                <div class="playerPosition">Top</div>
-                            </div>
-                            <div class="playerName">Doran</div>
-                            <div class="playerStat">Top 20% Topos</div>
-                        </div>
-                        <div class="highlightBox center">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/faker.png" alt="">
-                                <div class="playerPosition">Mid</div>
-                            </div>
-                            <div class="playerName">Faker</div>
-                            <div class="playerStat">Top 1% Meios</div>
-                        </div>
-                        <div class="highlightBox right">
-                            <div class="playerIcon">
-                                <img src="../assets/playerIcons/Oner.png" alt="">
-                                <div class="playerPosition">Jungle</div>
-                            </div>
-                            <div class="playerName">Oner</div>
-                            <div class="playerStat">Top 5% Caçadores</div>
-                        </div>
-                        <div class="moveArrow next">
-                            <i class="material-icons">arrow_forward_ios</i>
+                    <div class="teamRadarContainer">
+                        <div class="teamRadarTitle">Perfil do Time</div>
+                        <div class="teamChartWrapper">
+                            <canvas id="teamRadarChart"></canvas>
                         </div>
                     </div>
                     <div class="mvp" id="highlight">
@@ -104,6 +78,7 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
         <script src="../js/criarObjetos.js"></script>
         <script src="../js/renderComponents.js"></script>
         <script src="../js/dashboard-time.js"></script>

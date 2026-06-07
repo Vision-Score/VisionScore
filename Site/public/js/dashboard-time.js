@@ -105,3 +105,49 @@ renderSidebar(document.getElementById("sidebarContainer"), "dashboard-time", { n
 renderTeamProfile(document.getElementById('teamProfile'), { name: equipe.nome, coach: `Coach: ${JSON.parse(sessionStorage.getItem("time")).nomeTreinador || "N/A"}`, logoUrl: equipe.urlImagem || "../assets/icons/t1logo.png" });
 renderizarJogadores(elencoOrdenado);
 renderHighlightUltimoJogo(document.getElementById("highlight"), JSON.parse(sessionStorage.getItem("highlightUltimoJogo"))[0]);
+
+new Chart(document.getElementById("teamRadarChart"), {
+    type: 'bar',
+    data: {
+        labels: ['DPM', 'Kills', 'Deaths', 'Assists', 'KP%', 'GPM', 'CSPM', 'Wards/min'],
+        datasets: [{
+            label: equipe.nome,
+            data: mediasGerais ? montarRadarTime(elencoOrdenado, mediasGerais) : [0, 0, 0, 0, 0, 0, 0, 0],
+            backgroundColor: '#0F8B8B80',
+            borderColor: '#0F8B8B',
+            borderWidth: 1,
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                min: 0,
+                max: 100,
+                grid: { color: '#44444460' },
+                ticks: { color: '#fff', font: { family: 'Montserrat', size: 11 } }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { color: '#fff', font: { family: 'Montserrat', size: 11 } }
+            }
+        },
+        plugins: {
+            legend: { display: false },
+            annotation: {
+                annotations: {
+                    linha50: {
+                        type: 'line',
+                        yMin: 50,
+                        yMax: 50,
+                        borderColor: '#ffffff60',
+                        borderWidth: 2,
+                        borderDash: [6, 4]
+                    }
+                }
+            }
+        }
+    }
+});

@@ -1,3 +1,4 @@
+drop database if exists visionscore;
 CREATE DATABASE IF NOT EXISTS visionscore;
 USE visionscore;
 
@@ -102,6 +103,25 @@ CONSTRAINT fk_jogo_confronto1
 	FOREIGN KEY (fkConfronto) 
 		REFERENCES confronto (idConfronto)
 );
+
+select * from jogo;
+
+-- Top 10 equipes com maior taxa de vitória e tempo médio de jogo
+SELECT 
+    e.nome as equipe,
+    COUNT(*) as jogos,
+    SUM(CASE WHEN j.fkEquipeVencedora = e.id_equipe THEN 1 ELSE 0 END) as vitorias,
+    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = e.id_equipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) as taxa_vitoria,
+    ROUND(AVG(j.duracaoSegundos) / 60, 1) as tempo_medio_minutos,
+    ROUND(MIN(j.duracaoSegundos) / 60, 1) as jogo_mais_rapido,
+    ROUND(MAX(j.duracaoSegundos) / 60, 1) as jogo_mais_longo
+FROM equipe e
+JOIN desempenho_equipe de ON e.id_equipe = de.fkEquipe
+JOIN jogo j ON de.fkJogo = j.idJogo
+GROUP BY e.id_equipe, e.nome
+HAVING COUNT(*) > 10
+ORDER BY taxa_vitoria DESC
+LIMIT 10;
 
 CREATE TABLE desempenho_equipe (
 idDesempenhoEquipe int NOT NULL AUTO_INCREMENT,
@@ -321,3 +341,16 @@ TRUNCATE TABLE liga;
 TRUNCATE TABLE jogador;
 TRUNCATE TABLE equipe;
 SET FOREIGN_KEY_CHECKS = 1;
+
+SELECT 
+    t.nome as torneio,
+    YEAR(j.dtJogo) as ano,
+    COUNT(*) as jogos,
+    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = 87 THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) as winrate
+FROM jogo j
+JOIN series s ON j.fkSerie = s.idSeries
+JOIN torneio t ON s.fkTorneio = t.idTorneio
+JOIN desempenho_equipe de ON de.fkJogo = j.idJogo AND de.fkEquipe = 87
+GROUP BY t.idTorneio, t.nome, YEAR(j.dtJogo)
+HAVING COUNT(*) > 2
+ORDER BY ano DESC, winrate DESC;
