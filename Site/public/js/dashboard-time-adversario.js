@@ -256,7 +256,7 @@ function renderElencoAdversario(elenco) {
                 idAdversario: jogador.idJogador,
                 idAliado: jogadorAliado?.idJogador || ''
             });
-            window.location.href = `http://32.196.238.3:4200?${params.toString()}`;
+            window.location.href = `http://32.196.238.3/comparador?${params.toString()}`;
         };
     });
 }
