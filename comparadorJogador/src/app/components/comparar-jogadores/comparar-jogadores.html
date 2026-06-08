@@ -1,6 +1,12 @@
 <div class="main-content">
+    <div class="bg-aliado"
+         [style.background-image]="splashAliado ? 'linear-gradient(to left, rgba(0,0,0,0) 80%, #000000 100%), linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(' + splashAliado + ')' : 'none'">
+    </div>
+    <div class="bg-adversario"
+         [style.background-image]="splashAdversario ? 'linear-gradient(to left, rgba(0,0,0,0) 80%, #000000 100%), linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(' + splashAdversario + ')' : 'none'">
+    </div>
     <div class="header">
-        <div class="goBack" onclick="window.location.href='http://32.196.238.3:8080/dashboard/dashboard-time.html'">
+        <div class="goBack" (click)="goBack()">
             <i class="material-icons">arrow_back</i>
         </div>
     </div>
@@ -9,9 +15,29 @@
             Comparar Jogadores
         </div>
         <div class="compare-content">
-            <app-playercard [player]="player"></app-playercard>
+            <div class="card-wrapper">
+                <app-playercard [player]="playerAliado" (onSwap)="buscarAtivoAliado = true"></app-playercard>
+                @if (!playerAliado) {
+                    <div class="card-loader">
+                        <span class="material-symbols-outlined">progress_activity</span>
+                    </div>
+                }
+                @if (buscarAtivoAliado) {
+                    <app-buscar-jogador [jogadores]="elencoAliado" (fechar)="buscarAtivoAliado = false" (jogadorSelecionado)="trocarAliado($event)"></app-buscar-jogador>
+                }
+            </div>
             <div class="versus">VS</div>
-            <app-playercard [player]=""></app-playercard>
+            <div class="card-wrapper">
+                <app-playercard [player]="playerAdversario" (onSwap)="buscarAtivoAdversario = true"></app-playercard>
+                @if (loadingAdversario) {
+                    <div class="card-loader">
+                        <span class="material-symbols-outlined">progress_activity</span>
+                    </div>
+                }
+                @if (buscarAtivoAdversario) {
+                    <app-buscar-jogador [jogadores]="jogadoresParaComparar" (fechar)="buscarAtivoAdversario = false" (jogadorSelecionado)="trocarAdversario($event)"></app-buscar-jogador>
+                }
+            </div>
         </div>
     </div>
 </div>

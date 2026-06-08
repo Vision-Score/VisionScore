@@ -21,6 +21,10 @@
         &.bad {
             color: #C73434;
         }
+
+        &.neutral {
+            color: #ffffff;
+        }
     }
 
     .statName {
@@ -36,7 +40,7 @@
         font-weight: 700;
         font-size: 16px;
 
-        color: #e4e4e440;
+        color: #e4e4e4;
     }
 
     .statValue {

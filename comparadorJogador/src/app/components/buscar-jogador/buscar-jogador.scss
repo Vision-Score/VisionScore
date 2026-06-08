@@ -1,0 +1,194 @@
+:host {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+}
+
+.buscar-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    background: #00000060;
+    border-radius: 2vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+        font-size: 50px;
+        color: white;
+        animation: spin 1s linear infinite;
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.buscar-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    background-color: #1a1a1a;
+    border-radius: 2vh;
+    box-shadow: 0 0 20px #00000080;
+
+    padding: 2%;
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    .buscar-header {
+        width: 100%;
+        height: 10%;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 3%;
+
+        border-bottom: solid 2px #0F8B8B40;
+
+        span {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: #e4e4e4;
+        }
+
+        .fechar-btn {
+            font-size: 28px;
+            color: #e4e4e4;
+            cursor: pointer;
+            transition: color .1s ease-in-out;
+
+            &:hover {
+                color: #0F8B8B;
+            }
+        }
+    }
+
+    .search-bar {
+        width: 90%;
+        height: 10%;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: start;
+        gap: 1vw;
+
+        margin-top: 2vh;
+
+        background-color: #003B3B40;
+        border: solid 2px #0F8B8B60;
+        border-radius: 1vh;
+
+        padding: 0 2%;
+
+        i {
+            font-size: 22px;
+            color: #0F8B8B;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: #e4e4e4;
+
+            &::placeholder {
+                color: #e4e4e460;
+            }
+        }
+    }
+
+    .resultados {
+        width: 100%;
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #0F8B8B40 transparent;
+
+        margin-top: 1vh;
+        padding-bottom: 2vh;
+
+        gap: 1vh;
+
+        .resultado-item {
+            width: 90%;
+            height: 14%;
+            min-height: 60px;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+            gap: 3%;
+
+            background-color: #00000030;
+            border: solid 1px #ffffff10;
+            border-radius: 1vh;
+
+            padding: 1% 2%;
+
+            cursor: pointer;
+            transition: background-color .1s ease-in-out, border-color .1s ease-in-out;
+
+            &:hover {
+                background-color: #003B3B60;
+                border-color: #0F8B8B60;
+            }
+
+            .foto-jogador {
+                height: 80%;
+                aspect-ratio: 1;
+                border-radius: 50%;
+                object-fit: cover;
+                border: solid 2px #0F8B8B;
+            }
+
+            .nome {
+                flex: 1;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 700;
+                font-size: 16px;
+                color: #e4e4e4;
+            }
+
+            .foto-time {
+                margin-left: 2%;
+                height: 60%;
+                aspect-ratio: 1;
+                object-fit: contain;
+            }
+
+            .role-icon {
+                margin-right: 2%;
+                height: 50%;
+                aspect-ratio: 1;
+                object-fit: contain;
+                filter: brightness(0) invert(1);
+                opacity: 0.8;
+            }
+        }
+    }
+}

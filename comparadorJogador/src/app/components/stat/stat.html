@@ -1,5 +1,5 @@
 <div class="stats-info">
-    <i class="material-icons" [class.bad]="statIcon === 'arrow_downward'">{{statIcon}}</i>
+    <i class="material-icons" [class.bad]="statIcon === 'arrow_downward'" [class.neutral]="statIcon === 'remove'">{{statIcon}}</i>
     <div class="statName">{{statName}}</div>
     <div class="statValue">{{statValue}}</div>
 </div>

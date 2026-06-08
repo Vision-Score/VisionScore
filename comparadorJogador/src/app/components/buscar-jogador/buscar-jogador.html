@@ -1,0 +1,26 @@
+<div class="buscar-container">
+    @if (loading) {
+        <div class="buscar-loader">
+            <span class="material-symbols-outlined">progress_activity</span>
+        </div>
+    }
+    <div class="buscar-header">
+        <span>Selecionar Jogador</span>
+        <i class="material-icons fechar-btn" (click)="fechar.emit()">close</i>
+    </div>
+
+    <div class="search-bar">
+        <i class="material-icons">search</i>
+        <input type="text" [(ngModel)]="busca" placeholder="Buscar jogador..." />
+    </div>
+
+    <div class="resultados" [style.opacity]="loading ? 0 : 1">
+        @for (jogador of jogadoresFiltrados; track jogador.idJogador) {
+        <div class="resultado-item" (click)="jogadorSelecionado.emit(jogador)">
+            <img class="foto-jogador" [src]="jogador.urlFotoJogador || 'assets/imagem_quebrada.svg'" [alt]="jogador.nome" />
+            <span class="nome">{{ jogador.nome }}</span>
+            <img class="role-icon" [src]="roleIcon(jogador.funcao)" [alt]="jogador.funcao" />
+        </div>
+        }
+    </div>
+</div>

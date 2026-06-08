@@ -253,10 +253,11 @@ function renderElencoAdversario(elenco) {
             const elencoTime = JSON.parse(sessionStorage.getItem('elenco')) || [];
             const jogadorAliado = elencoTime.find(j => j.funcao === jogador.funcao);
             const params = new URLSearchParams({
+                idEquipe: jogadorAliado.fkEquipe,
                 idAdversario: jogador.idJogador,
                 idAliado: jogadorAliado?.idJogador || ''
             });
-            window.location.href = `http://32.196.238.3/comparador?${params.toString()}`;
+            window.location.href = `/comparador/?${params.toString()}`;
         };
     });
 }
