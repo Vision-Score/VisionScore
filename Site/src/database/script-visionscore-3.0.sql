@@ -326,6 +326,9 @@ SELECT COUNT(*) FROM imagem_equipe WHERE urlImagem LIKE '%/player/%';
 SELECT COUNT(*) FROM imagem_jogador WHERE urlImagem LIKE '%/team/%';
 SELECT COUNT(*) FROM imagem_equipe WHERE urlImagem IS NULL;
 
+SELECT DISTINCT nomeCampeao 
+FROM desempenho_jogador 
+ORDER BY nomeCampeao;
 
 -- ADICIONAR AO JAR ANTES DO PRIMEIRO INSERT.
 SET FOREIGN_KEY_CHECKS = 0;
@@ -344,13 +347,129 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 SELECT 
     t.nome as torneio,
-    YEAR(j.dtJogo) as ano,
+    (SELECT s2.nome FROM series s2 
+     JOIN jogo j2 ON j2.fkSerie = s2.idSeries 
+     WHERE s2.fkTorneio = t.idTorneio 
+     GROUP BY s2.nome 
+     ORDER BY COUNT(*) DESC LIMIT 1) as serie,
     COUNT(*) as jogos,
-    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = 87 THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) as winrate
+    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = 84 THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) as winrate,
+    MAX(j.dtJogo) as dtReferencia
 FROM jogo j
 JOIN series s ON j.fkSerie = s.idSeries
 JOIN torneio t ON s.fkTorneio = t.idTorneio
-JOIN desempenho_equipe de ON de.fkJogo = j.idJogo AND de.fkEquipe = 87
-GROUP BY t.idTorneio, t.nome, YEAR(j.dtJogo)
+JOIN desempenho_equipe de ON de.fkJogo = j.idJogo AND de.fkEquipe = 84
+GROUP BY t.idTorneio, t.nome
 HAVING COUNT(*) > 2
-ORDER BY ano DESC, winrate DESC;
+ORDER BY dtReferencia DESC
+LIMIT 5;
+
+SELECT 
+    j.idJogo,
+    j.dtJogo,
+    CASE WHEN j.fkEquipeVencedora = 84 THEN 'V' ELSE 'D' END as resultado,
+    e.nome as adversario
+FROM jogo j
+JOIN desempenho_equipe de ON de.fkJogo = j.idJogo AND de.fkEquipe = 84
+JOIN desempenho_equipe de2 ON de2.fkJogo = j.idJogo AND de2.fkEquipe != 84
+JOIN equipe e ON e.id_equipe = de2.fkEquipe
+ORDER BY j.dtJogo DESC
+LIMIT 5;
+
+-- View 1: mais leve, sem first blood
+CREATE OR REPLACE VIEW vw_medias_gerais AS
+SELECT
+    ROUND(AVG(stats.total_dano / NULLIF(stats.total_ouro, 0)), 4) AS media_dano_por_gold,
+    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS media_winrate,
+    ROUND(AVG(de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos), 2) AS media_objetivos,
+    ROUND(AVG(stats.total_wards / NULLIF(j.duracaoSegundos / 60.0, 0)), 4) AS media_visao_por_minuto,
+    ROUND(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                   AND j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END)
+          / NULLIF(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                            THEN 1 ELSE 0 END), 0) * 100, 1) AS media_conversao_objetivos
+FROM (
+    SELECT fkJogo, fkEquipe,
+        SUM(totalDanoCausadoCampeaoInimigo) AS total_dano,
+        SUM(qtdOuroObtido) AS total_ouro,
+        SUM(qtdSentinelasPosicionadas) AS total_wards
+    FROM desempenho_jogador
+    GROUP BY fkJogo, fkEquipe
+) AS stats
+JOIN desempenho_equipe de ON de.fkJogo = stats.fkJogo AND de.fkEquipe = stats.fkEquipe
+JOIN jogo j ON j.idJogo = stats.fkJogo;
+
+CREATE OR REPLACE VIEW vw_media_first_blood AS
+SELECT
+    ROUND(COUNT(DISTINCT fb.fkJogo) / COUNT(DISTINCT j.idJogo) * 100, 1) AS media_first_blood_rate
+FROM jogo j
+LEFT JOIN (
+    SELECT fkJogo, MIN(tempoEventoSegundos) AS primeiro_kill
+    FROM evento
+    WHERE tipoEvento = 'player_kill'
+    GROUP BY fkJogo
+) fb ON fb.fkJogo = j.idJogo;
+
+select * from vw_media_first_blood;
+
+select * from vw_medias_gerais;	
+
+CREATE OR REPLACE VIEW vw_kpis_por_equipe AS
+SELECT
+    stats.fkEquipe,
+    ROUND(AVG(stats.total_dano / NULLIF(stats.total_ouro, 0)), 4) AS dano_por_gold,
+    ROUND(SUM(CASE WHEN j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS winrate,
+    ROUND(AVG(de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos), 2) AS objetivos,
+    ROUND(AVG(stats.total_wards / NULLIF(j.duracaoSegundos / 60.0, 0)), 4) AS visao_por_minuto,
+    ROUND(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                   AND j.fkEquipeVencedora = stats.fkEquipe THEN 1 ELSE 0 END)
+          / NULLIF(SUM(CASE WHEN (de.totalDragoesAbatidos + de.totalBaroesAbatidos + de.totalArautosAbatidos) > 3
+                            THEN 1 ELSE 0 END), 0) * 100, 1) AS conversao_objetivos,
+    ROUND(SUM(CASE WHEN fb.fkEquipe = stats.fkEquipe THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS first_blood_rate
+FROM (
+    SELECT fkJogo, fkEquipe,
+        SUM(totalDanoCausadoCampeaoInimigo) AS total_dano,
+        SUM(qtdOuroObtido) AS total_ouro,
+        SUM(qtdSentinelasPosicionadas) AS total_wards
+    FROM desempenho_jogador
+    GROUP BY fkJogo, fkEquipe
+) AS stats
+JOIN desempenho_equipe de ON de.fkJogo = stats.fkJogo AND de.fkEquipe = stats.fkEquipe
+JOIN jogo j ON j.idJogo = stats.fkJogo
+LEFT JOIN (
+    SELECT e.fkJogo, dj.fkEquipe
+    FROM evento e
+    JOIN (
+        SELECT fkJogo, MIN(tempoEventoSegundos) AS primeiro_kill
+        FROM evento
+        WHERE tipoEvento = 'player_kill'
+        GROUP BY fkJogo
+    ) primeiro ON primeiro.fkJogo = e.fkJogo AND primeiro.primeiro_kill = e.tempoEventoSegundos
+    JOIN desempenho_jogador dj ON dj.fkJogador = e.fkMatador AND dj.fkJogo = e.fkJogo
+    WHERE e.tipoEvento = 'player_kill'
+) fb ON fb.fkJogo = stats.fkJogo
+GROUP BY stats.fkEquipe;
+
+SELECT * FROM vw_kpis_por_equipe WHERE fkEquipe = 84;
+
+SELECT 
+    s.*,
+    e.nome AS nomeEquipe,
+    e.sigla
+FROM vw_stats_elenco_atual s
+JOIN equipe e ON e.id_equipe = s.fkEquipe
+WHERE s.idJogador = 222
+ORDER BY s.fkEquipe DESC
+LIMIT 1;
+
+SELECT 	
+    DISTINTCT(j.idJogador),
+    j.nome,
+    j.funcao,
+    ea.fkEquipe,
+    ij.urlImagem AS urlFotoJogador
+FROM jogador j
+JOIN vw_elenco_atual ea ON ea.idJogador = j.idJogador
+LEFT JOIN imagem_jogador ij ON ij.nomeJogador = j.nome
+WHERE j.funcao = "top"
+ORDER BY j.nome;
+

@@ -20,4 +20,12 @@ router.get("/getMelhoresCampeoes/:id", function (req, res) {
     jogadoresController.getMelhoresCampeoes(req, res);
 });
 
+router.get("/getJogadoresPorRole/:role", function (req, res) {
+    jogadoresController.getJogadoresPorRole(req, res);
+});
+
+router.get("/getJogadorPorIDeEquipe/:idJogador/:idEquipe", function (req, res) {
+    jogadoresController.getJogadorPorIDeEquipe(req, res);
+});
+
 module.exports = router;
