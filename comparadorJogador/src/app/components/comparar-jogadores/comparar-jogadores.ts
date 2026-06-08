@@ -2,7 +2,6 @@
 import { Playercard } from "../playercard/playercard";
 import { BuscarJogador } from "../buscar-jogador/buscar-jogador";
 import { JogadoresService } from "../services/jogadores.service";
-import { TimesService } from "../services/times.service";
 import { SplashService } from "../services/splash.service";
 import { firstValueFrom } from 'rxjs';
 
@@ -33,7 +32,6 @@ export class CompararJogadores implements OnInit {
 
   constructor(
     private jogadoresService: JogadoresService,
-    private timesService: TimesService,
     private splashService: SplashService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -81,18 +79,6 @@ export class CompararJogadores implements OnInit {
       }
       console.log('Stats do jogador adversario:', this.jogadorAdversarioStats);
 
-      const cachedTimes = sessionStorage.getItem('times');
-      let times: any[];
-      if (cachedTimes) {
-        times = JSON.parse(cachedTimes);
-      } else {
-        times = await firstValueFrom(this.timesService.listarTimes());
-        sessionStorage.setItem('times', JSON.stringify(times));
-      }
-      const logoTime = (id: number) => { const t = times.find((x: any) => (x.id_equipe ?? x.id) === id); return t?.urlImagem ?? t?.logoUrl; };
-      const urlTimeAliado = logoTime(jogadorAtual.fkEquipe);
-      const urlTimeAdversario = logoTime(this.jogadorAdversario.fkEquipe);
-
       const [campeaoesAliado, campeaoesAdversario]: [any[], any[]] = await Promise.all([
         firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAliado)),
         firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAdversario)),
@@ -109,8 +95,8 @@ export class CompararJogadores implements OnInit {
       const campeoesAliado = campeaoesAliado.map((c: any, i: number) => ({ ...c, splashUrl: allSplashes[i] }));
       const campeoesAdversario = campeaoesAdversario.map((c: any, i: number) => ({ ...c, splashUrl: allSplashes[campeaoesAliado.length + i] }));
 
-      this.playerAliado = this.montarPlayer(jogadorAtual, urlTimeAliado!, undefined, campeoesAliado);
-      this.playerAdversario = this.montarPlayer(this.jogadorAdversario, urlTimeAdversario!, this.jogadorAdversarioStats[0], campeoesAdversario);
+      this.playerAliado = this.montarPlayer(jogadorAtual, undefined, campeoesAliado);
+      this.playerAdversario = this.montarPlayer(this.jogadorAdversario, this.jogadorAdversarioStats[0], campeoesAdversario);
       this.aplicarComparacao();
     } catch (e) {
       console.error('Erro ao carregar comparação:', e);
@@ -126,15 +112,12 @@ export class CompararJogadores implements OnInit {
     this.splashAdversario = '';
     this.cdr.detectChanges();
 
-    const times: any[] = JSON.parse(sessionStorage.getItem('times') ?? '[]');
-    const urlTime = (() => { const t = times.find((x: any) => (x.id_equipe ?? x.id) === jogador.fkEquipe); return t?.urlImagem ?? t?.logoUrl; })();
-
     const campeoes: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(jogador.idJogador));
     const splashUrls = await Promise.all(campeoes.map((c: any) => this.splashService.getUrl(c.nomeCampeao)));
     this.splashAliado = splashUrls[0] ?? '';
     const campeoesComSplash = campeoes.map((c: any, i: number) => ({ ...c, splashUrl: splashUrls[i] }));
 
-    this.playerAliado = this.montarPlayer(jogador, urlTime, undefined, campeoesComSplash);
+    this.playerAliado = this.montarPlayer(jogador, undefined, campeoesComSplash);
     this.cdr.detectChanges();
 
     const role = jogador.funcao.toLowerCase();
@@ -162,10 +145,6 @@ export class CompararJogadores implements OnInit {
       const stats = await firstValueFrom(this.jogadoresService.getJogadorPorIDeEquipe(jogador.idJogador, jogador.fkEquipe));
       if (requestId !== this.adversarioRequestId) return;
 
-      const cachedTimes = sessionStorage.getItem('times');
-      const times: any[] = cachedTimes ? JSON.parse(cachedTimes) : [];
-      const urlTime = (() => { const t = times.find((x: any) => (x.id_equipe ?? x.id) === jogador.fkEquipe); return t?.urlImagem ?? t?.logoUrl; })();
-
       const campeoes: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(jogador.idJogador));
       if (requestId !== this.adversarioRequestId) return;
 
@@ -174,7 +153,7 @@ export class CompararJogadores implements OnInit {
 
       this.splashAdversario = splashUrls[0] ?? '';
       const campeoesComSplash = campeoes.map((c: any, i: number) => ({ ...c, splashUrl: splashUrls[i] }));
-      this.playerAdversario = this.montarPlayer(jogador, urlTime, Array.isArray(stats) ? stats[0] : stats, campeoesComSplash);
+      this.playerAdversario = this.montarPlayer(jogador, Array.isArray(stats) ? stats[0] : stats, campeoesComSplash);
       this.aplicarComparacao();
     } finally {
       if (requestId === this.adversarioRequestId) {
@@ -212,12 +191,11 @@ export class CompararJogadores implements OnInit {
     });
   }
 
-  montarPlayer(jogador: any, urlTime?: string, statsJogador?: any, campeoes: any[] = []) {
+  montarPlayer(jogador: any, statsJogador?: any, campeoes: any[] = []) {
     const stats = statsJogador || jogador;
     return {
       name: jogador.nome,
       position: jogador.funcao,
-      teamLogo: urlTime || 'assets/imagem_quebrada.svg',
       icon: jogador.urlFotoJogador || 'assets/imagem_quebrada.svg',
       campeoes,
       stats: [

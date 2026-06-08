@@ -19,7 +19,6 @@
         <div class="resultado-item" (click)="jogadorSelecionado.emit(jogador)">
             <img class="foto-jogador" [src]="jogador.urlFotoJogador || 'assets/imagem_quebrada.svg'" [alt]="jogador.nome" />
             <span class="nome">{{ jogador.nome }}</span>
-            <img class="foto-time" [src]="urlTime(jogador.fkEquipe)" [alt]="jogador.nome" />
             <img class="role-icon" [src]="roleIcon(jogador.funcao)" [alt]="jogador.funcao" />
         </div>
         }

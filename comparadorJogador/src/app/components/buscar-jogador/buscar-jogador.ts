@@ -22,17 +22,9 @@ export class BuscarJogador implements OnInit, OnChanges {
     return q ? this.jogadores.filter(j => j.nome.toLowerCase().includes(q)) : this.jogadores;
   }
 
-  private timesCache: Record<number, string> = {};
-
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    const cached = sessionStorage.getItem('times');
-    if (cached) {
-      JSON.parse(cached).forEach((t: any) => {
-        this.timesCache[t.id_equipe ?? t.id] = t.urlImagem ?? t.logoUrl;
-      });
-    }
     if (this.jogadores.length > 0) {
       this.loading = false;
     }
@@ -45,10 +37,6 @@ export class BuscarJogador implements OnInit, OnChanges {
       this.loading = false;
       this.cdr.detectChanges();
     }
-  }
-
-  urlTime(fkEquipe: number): string {
-    return this.timesCache[fkEquipe] || 'assets/imagem_quebrada.svg';
   }
 
   roleIcon(funcao: string): string {
