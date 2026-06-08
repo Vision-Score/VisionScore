@@ -37,25 +37,25 @@ export class CompararJogadores implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.loadingAdversario = true;
-    this.cdr.detectChanges();
+    const params = new URLSearchParams(window.location.search);
+    this.idEquipe = Number(params.get('idEquipe'));
+    this.idAliado = Number(params.get('idAliado'));
+    this.idAdversario = Number(params.get('idAdversario'));
+
+    if (this.idAdversario) {
+      this.loadingAdversario = true;
+      this.cdr.detectChanges();
+    }
 
     try {
-      const params = new URLSearchParams(window.location.search);
-      this.idEquipe = Number(params.get('idEquipe'));
-      this.idAliado = Number(params.get('idAliado'));
-      this.idAdversario = Number(params.get('idAdversario'));
-
-      console.log('idEquipe:', this.idEquipe, '| idAliado:', this.idAliado, '| idAdversario:', this.idAdversario);
-
       const cachedElenco = sessionStorage.getItem('elenco');
       this.elencoAliado = cachedElenco
         ? JSON.parse(cachedElenco)
         : await firstValueFrom(this.jogadoresService.listarElenco(this.idEquipe));
-      console.log('Elenco:', this.elencoAliado);
 
       const jogadorAtual = this.elencoAliado.find(j => j.idJogador === this.idAliado);
       if (!jogadorAtual) { console.error('Aliado não encontrado no elenco'); return; }
+
       const role = jogadorAtual.funcao.toLowerCase();
       const cachedJogadoresPorRole = sessionStorage.getItem(`jogadores_${role}`);
       if (cachedJogadoresPorRole) {
@@ -64,10 +64,16 @@ export class CompararJogadores implements OnInit {
         this.jogadoresParaComparar = await firstValueFrom(this.jogadoresService.getJogadoresPorRole(role));
         sessionStorage.setItem(`jogadores_${role}`, JSON.stringify(this.jogadoresParaComparar));
       }
-      console.log('Jogadores para comparar:', this.jogadoresParaComparar);
+
+      const campeaoesAliado: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAliado));
+      const splashesAliado = await Promise.all(campeaoesAliado.map((c: any) => this.splashService.getUrl(c.nomeCampeao)));
+      this.splashAliado = splashesAliado[0] ?? '';
+      const campeoesAliado = campeaoesAliado.map((c: any, i: number) => ({ ...c, splashUrl: splashesAliado[i] }));
+      this.playerAliado = this.montarPlayer(jogadorAtual, undefined, campeoesAliado);
+
+      if (!this.idAdversario) return;
 
       this.jogadorAdversario = this.jogadoresParaComparar.find(j => j.idJogador === this.idAdversario);
-      console.log('Jogador adversario:', this.jogadorAdversario);
       if (!this.jogadorAdversario) { console.error('Adversário não encontrado na lista de jogadores'); return; }
 
       const cachedElencoAdversario = sessionStorage.getItem(`elencoAdversario_${this.jogadorAdversario.fkEquipe}`);
@@ -77,25 +83,12 @@ export class CompararJogadores implements OnInit {
       } else {
         this.jogadorAdversarioStats = await firstValueFrom(this.jogadoresService.getJogadorPorIDeEquipe(this.idAdversario, this.jogadorAdversario.fkEquipe));
       }
-      console.log('Stats do jogador adversario:', this.jogadorAdversarioStats);
 
-      const [campeaoesAliado, campeaoesAdversario]: [any[], any[]] = await Promise.all([
-        firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAliado)),
-        firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAdversario)),
-      ]);
+      const campeaoesAdversario: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAdversario));
+      const splashesAdversario = await Promise.all(campeaoesAdversario.map((c: any) => this.splashService.getUrl(c.nomeCampeao)));
+      this.splashAdversario = splashesAdversario[0] ?? '';
+      const campeoesAdversario = campeaoesAdversario.map((c: any, i: number) => ({ ...c, splashUrl: splashesAdversario[i] }));
 
-      const allSplashes = await Promise.all([
-        ...campeaoesAliado.map((c: any) => this.splashService.getUrl(c.nomeCampeao)),
-        ...campeaoesAdversario.map((c: any) => this.splashService.getUrl(c.nomeCampeao)),
-      ]);
-
-      this.splashAliado = allSplashes[0] ?? '';
-      this.splashAdversario = allSplashes[campeaoesAliado.length] ?? '';
-
-      const campeoesAliado = campeaoesAliado.map((c: any, i: number) => ({ ...c, splashUrl: allSplashes[i] }));
-      const campeoesAdversario = campeaoesAdversario.map((c: any, i: number) => ({ ...c, splashUrl: allSplashes[campeaoesAliado.length + i] }));
-
-      this.playerAliado = this.montarPlayer(jogadorAtual, undefined, campeoesAliado);
       this.playerAdversario = this.montarPlayer(this.jogadorAdversario, this.jogadorAdversarioStats[0], campeoesAdversario);
       this.aplicarComparacao();
     } catch (e) {
