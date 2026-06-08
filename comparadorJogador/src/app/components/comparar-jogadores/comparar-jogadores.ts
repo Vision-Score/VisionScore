@@ -157,10 +157,7 @@ export class CompararJogadores implements OnInit {
   }
 
   goBack() {
-    const url = this.idAdversario
-      ? 'http://vision-score.ddns.net/dashboard/dashboard-time-adversario.html'
-      : 'http://vision-score.ddns.net/dashboard/dashboard-time.html';
-    window.location.href = url;
+    history.back();
   }
 
   aplicarComparacao() {
