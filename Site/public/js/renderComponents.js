@@ -177,7 +177,7 @@ async function renderPopupJogador(container, data) {
             </div>
             <div class="mainContent">
                 <div class="mainUpper">
-                    <div class="compareButton" onclick="compareJogadores('${config.name}')">
+                    <div class="compareButton" onclick="(function(){ var elencoTime = JSON.parse(sessionStorage.getItem('elenco')) || []; var jogadorAliado = elencoTime.find(function(j){ return j.funcao === '${data.position}'; }); var params = new URLSearchParams({ idEquipe: '${data.id}', idAliado: jogadorAliado ? jogadorAliado.idJogador : '' }); window.location.href = '/comparador/?' + params.toString(); })()">
                         <i class="material-icons">compare_arrows</i>
                         <span>Comparar</span>
                     </div>
