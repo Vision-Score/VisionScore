@@ -89,8 +89,9 @@ export class CompararJogadores implements OnInit {
         times = await firstValueFrom(this.timesService.listarTimes());
         sessionStorage.setItem('times', JSON.stringify(times));
       }
-      const urlTimeAliado: string = times.find((t: any) => t.id_equipe === jogadorAtual.fkEquipe)?.urlImagem;
-      const urlTimeAdversario: string = times.find((t: any) => t.id_equipe === this.jogadorAdversario.fkEquipe)?.urlImagem;
+      const logoTime = (id: number) => { const t = times.find((x: any) => (x.id_equipe ?? x.id) === id); return t?.urlImagem ?? t?.logoUrl; };
+      const urlTimeAliado = logoTime(jogadorAtual.fkEquipe);
+      const urlTimeAdversario = logoTime(this.jogadorAdversario.fkEquipe);
 
       const [campeaoesAliado, campeaoesAdversario]: [any[], any[]] = await Promise.all([
         firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAliado)),
@@ -126,7 +127,7 @@ export class CompararJogadores implements OnInit {
     this.cdr.detectChanges();
 
     const times: any[] = JSON.parse(sessionStorage.getItem('times') ?? '[]');
-    const urlTime: string = times.find((t: any) => t.id_equipe === jogador.fkEquipe)?.urlImagem;
+    const urlTime = (() => { const t = times.find((x: any) => (x.id_equipe ?? x.id) === jogador.fkEquipe); return t?.urlImagem ?? t?.logoUrl; })();
 
     const campeoes: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(jogador.idJogador));
     const splashUrls = await Promise.all(campeoes.map((c: any) => this.splashService.getUrl(c.nomeCampeao)));
@@ -163,7 +164,7 @@ export class CompararJogadores implements OnInit {
 
       const cachedTimes = sessionStorage.getItem('times');
       const times: any[] = cachedTimes ? JSON.parse(cachedTimes) : [];
-      const urlTime: string = times.find((t: any) => t.id_equipe === jogador.fkEquipe)?.urlImagem;
+      const urlTime = (() => { const t = times.find((x: any) => (x.id_equipe ?? x.id) === jogador.fkEquipe); return t?.urlImagem ?? t?.logoUrl; })();
 
       const campeoes: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(jogador.idJogador));
       if (requestId !== this.adversarioRequestId) return;
@@ -181,6 +182,13 @@ export class CompararJogadores implements OnInit {
         this.cdr.detectChanges();
       }
     }
+  }
+
+  goBack() {
+    const url = this.idAdversario
+      ? 'http://vision-score.ddns.net/dashboard/dashboard-time-adversario.html'
+      : 'http://vision-score.ddns.net/dashboard/dashboard-time.html';
+    window.location.href = url;
   }
 
   aplicarComparacao() {

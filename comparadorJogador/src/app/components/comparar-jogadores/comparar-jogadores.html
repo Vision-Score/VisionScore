@@ -6,7 +6,7 @@
          [style.background-image]="splashAdversario ? 'linear-gradient(to left, rgba(0,0,0,0) 80%, #000000 100%), linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(' + splashAdversario + ')' : 'none'">
     </div>
     <div class="header">
-        <div class="goBack" onclick="window.location.href='http://32.196.238.3:8080/dashboard/dashboard-time.html'">
+        <div class="goBack" (click)="goBack()">
             <i class="material-icons">arrow_back</i>
         </div>
     </div>

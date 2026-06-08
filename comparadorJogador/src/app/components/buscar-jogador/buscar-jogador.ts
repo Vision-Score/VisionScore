@@ -30,7 +30,7 @@ export class BuscarJogador implements OnInit, OnChanges {
     const cached = sessionStorage.getItem('times');
     if (cached) {
       JSON.parse(cached).forEach((t: any) => {
-        this.timesCache[t.id_equipe] = t.urlImagem;
+        this.timesCache[t.id_equipe ?? t.id] = t.urlImagem ?? t.logoUrl;
       });
     }
     if (this.jogadores.length > 0) {
