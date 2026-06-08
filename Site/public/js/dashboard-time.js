@@ -1,21 +1,30 @@
 
 const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 const equipe = JSON.parse(sessionStorage.getItem("time"));
-const elenco = JSON.parse(sessionStorage.getItem("elenco"));
+let elenco = JSON.parse(sessionStorage.getItem("elenco"));
 const ordem = ["Top", "Jungle", "Mid", "Bot", "Support"];
-const elencoOrdenado = elenco.sort((a, b) => ordem.indexOf(a.funcao) - ordem.indexOf(b.funcao));
-const mediasGerais = JSON.parse(sessionStorage.getItem("mediasGerais"));
+let elencoOrdenado = (elenco || []).sort((a, b) => ordem.indexOf(a.funcao) - ordem.indexOf(b.funcao));
+let mediasGerais = JSON.parse(sessionStorage.getItem("mediasGerais"));
 
 onInit();
-function onInit() {
+async function onInit() {
     getTimes();
+    if (!elenco && equipe) {
+        const res = await fetch(`/jogadores/listarElenco/${equipe.id_equipe ?? equipe.id}`);
+        elenco = await res.json();
+        sessionStorage.setItem("elenco", JSON.stringify(elenco));
+        elencoOrdenado = elenco.sort((a, b) => ordem.indexOf(a.funcao) - ordem.indexOf(b.funcao));
+        renderizarJogadores(elencoOrdenado);
+    }
     if (sessionStorage.getItem("mediasGerais")) {
         return;
     }
     document.querySelector(".loader").style.display = "flex";
     getMediasGerais().then(medias => {
+        mediasGerais = medias;
         sessionStorage.setItem("mediasGerais", JSON.stringify(medias));
         document.querySelector(".loader").style.display = "none";
+        renderGraficoTime(medias);
     }).catch(error => {
         console.error("Erro ao obter médias gerais:", error);
     });
@@ -74,10 +83,11 @@ function getMediasGerais() {
 }
 
 function switchPopupJogador(index) {
+    const medias = mediasGerais || JSON.parse(sessionStorage.getItem("mediasGerais"));
     if (document.getElementById("popupJogador").classList.contains("hidden")) {
         renderPopupJogador(
             document.getElementById("popupJogador"),
-            montarDadosPopup(elencoOrdenado[index], mediasGerais)
+            montarDadosPopup(elencoOrdenado[index], medias)
         );
     }
     document.getElementById("popupJogador").classList.toggle("hidden");
@@ -106,48 +116,52 @@ renderTeamProfile(document.getElementById('teamProfile'), { name: equipe.nome, c
 renderizarJogadores(elencoOrdenado);
 renderHighlightUltimoJogo(document.getElementById("highlight"), JSON.parse(sessionStorage.getItem("highlightUltimoJogo"))[0]);
 
-new Chart(document.getElementById("teamRadarChart"), {
-    type: 'bar',
-    data: {
-        labels: ['DPM', 'Kills', 'Deaths', 'Assists', 'KP%', 'GPM', 'CSPM', 'Wards/min'],
-        datasets: [{
-            label: equipe.nome,
-            data: mediasGerais ? montarRadarTime(elencoOrdenado, mediasGerais) : [0, 0, 0, 0, 0, 0, 0, 0],
-            backgroundColor: '#0F8B8B80',
-            borderColor: '#0F8B8B',
-            borderWidth: 1,
-            borderRadius: 4
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                min: 0,
-                max: 100,
-                grid: { color: '#44444460' },
-                ticks: { color: '#fff', font: { family: 'Montserrat', size: 11 } }
-            },
-            x: {
-                grid: { display: false },
-                ticks: { color: '#fff', font: { family: 'Montserrat', size: 11 } }
-            }
+function renderGraficoTime(medias) {
+    new Chart(document.getElementById("teamRadarChart"), {
+        type: 'bar',
+        data: {
+            labels: ['DPM', 'Kills', 'Deaths', 'Assists', 'KP%', 'GPM', 'CSPM', 'Wards/min'],
+            datasets: [{
+                label: equipe.nome,
+                data: montarRadarTime(elencoOrdenado, medias),
+                backgroundColor: '#0F8B8B80',
+                borderColor: '#0F8B8B',
+                borderWidth: 1,
+                borderRadius: 4
+            }]
         },
-        plugins: {
-            legend: { display: false },
-            annotation: {
-                annotations: {
-                    linha50: {
-                        type: 'line',
-                        yMin: 50,
-                        yMax: 50,
-                        borderColor: '#ffffff60',
-                        borderWidth: 2,
-                        borderDash: [6, 4]
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    grid: { color: '#44444460' },
+                    ticks: { color: '#fff', font: { family: 'Montserrat', size: 11 } }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#fff', font: { family: 'Montserrat', size: 11 } }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                annotation: {
+                    annotations: {
+                        linha50: {
+                            type: 'line',
+                            yMin: 50,
+                            yMax: 50,
+                            borderColor: '#ffffff60',
+                            borderWidth: 2,
+                            borderDash: [6, 4]
+                        }
                     }
                 }
             }
         }
-    }
-});
+    });
+}
+
+if (mediasGerais) renderGraficoTime(mediasGerais);
