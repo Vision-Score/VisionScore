@@ -397,42 +397,79 @@
                 height: 30%;
 
                 display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                align-items: center;
-                gap: 20px;
+                flex-direction: column;
+                align-items: start;
 
-                .badge {
+                gap: 6px;
+                padding: 1% 1% 1%;
 
+                background-color: #00000060;
+
+                .melhoresPicksTitle {
+                    font-family: "Open Sans";
+                    font-weight: 700;
+                    font-size: 13px;
+                    color: #aaaaaa;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+
+                .championList {
                     flex: 1;
+                    width: 100%;
+                    min-height: 0;
+
                     display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 10px;
+                    flex-direction: row;
+                    align-items: stretch;
+                    gap: 5px;
 
-                    padding: 10px;
-                    border-radius: 8px;
-                    transition: transform 0.2s;
+                    .championThumbnail {
+                        flex: 1;
+                        min-width: 0;
+                        border-radius: 1vh;
 
-                    img {
-                        width: 80px;
-                        height: auto;
-                        aspect-ratio: 1;
+                        overflow: hidden;
 
-                        filter: brightness(0) invert(1);
-                    }
+                        position: relative;
 
-                    span {
-                        color: #e4e4e4;
+                        background-size: cover;
+                        background-position: 15% 10%;
 
-                        font-family: "Open Sans";
-                        font-weight: 600;
-                        font-size: 16px;
-                        line-height: 100%;
-                        letter-spacing: 0%;
-                        text-align: center;
+                        box-shadow: inset 0 0 0 1000px #00000050;
+
+                        .championInfo {
+                            position: absolute;
+                            bottom: 0;
+                            width: 100%;
+                            padding: 5%;
+                            background: linear-gradient(transparent, #000000dd);
+                            display: flex;
+                            flex-direction: column;
+                            gap: 2px;
+
+                            .championNome {
+                                font-family: "Open Sans";
+                                font-weight: 700;
+                                font-size: 18px;
+                                color: #ffffff;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+
+                            .championStats {
+                                display: flex;
+                                gap: 4px;
+                                flex-wrap: wrap;
+
+                                span {
+                                    font-family: "Open Sans";
+                                    font-size: 16px;
+                                    color: #aaaaaa;
+                                }
+                            }
+                        }
                     }
                 }
             }

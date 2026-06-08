@@ -16,4 +16,8 @@ router.get("/getHighlightUltimoJogo/:id", function (req, res) {
     jogadoresController.getHighlightUltimoJogo(req, res);
 });
 
+router.get("/getMelhoresCampeoes/:id", function (req, res) {
+    jogadoresController.getMelhoresCampeoes(req, res);
+});
+
 module.exports = router;

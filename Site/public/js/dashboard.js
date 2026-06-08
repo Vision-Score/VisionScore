@@ -1,10 +1,12 @@
 const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 const equipe = JSON.parse(sessionStorage.getItem("time"));
+equipe.id = equipe.id_equipe || equipe.id;
 let strategies = [];
 
 onInit();
 
 async function onInit() {
+    styleAntigo = document.querySelector(".loader").style.backgroundColor;
     document.querySelector(".loader").style.backgroundColor = "rgba(0, 0, 0, 1)" // solução temporaria
     document.querySelector(".loader").style.display = "flex";
 
@@ -14,8 +16,8 @@ async function onInit() {
         await getUltimosCincoJogos(equipe.id);
     }
 
-    if (sessionStorage.getItem("mediasGerais")) {
-        renderMediasGerais(JSON.parse(sessionStorage.getItem("mediasGerais")));
+    if (sessionStorage.getItem("mediasGeraisEquipe")) {
+        renderMediasGerais(JSON.parse(sessionStorage.getItem("mediasGeraisEquipe")));
     } else {
         await getMediasGerais();
     }
@@ -27,9 +29,9 @@ async function onInit() {
     }
 
     if (sessionStorage.getItem("mediasPorTime")) {
-        renderMediasPorTime(JSON.parse(sessionStorage.getItem("mediasPorTime")), JSON.parse(sessionStorage.getItem("mediasGerais")));
+        renderMediasPorTime(JSON.parse(sessionStorage.getItem("mediasPorTime")), JSON.parse(sessionStorage.getItem("mediasGeraisEquipe")));
     } else {
-        await getMediasPorTime(equipe.id, JSON.parse(sessionStorage.getItem("mediasGerais")));
+        await getMediasPorTime(equipe.id, JSON.parse(sessionStorage.getItem("mediasGeraisEquipe")));
     }
 
     if (sessionStorage.getItem("times")) {
@@ -45,7 +47,8 @@ async function onInit() {
     }
 
     if (sessionStorage.getItem("estrategias")) {
-        renderStrategies(document.getElementById("strategiesContainer"), JSON.parse(sessionStorage.getItem("estrategias")));
+        strategies = JSON.parse(sessionStorage.getItem("estrategias"));
+        renderStrategies(document.getElementById("strategiesContainer"), strategies);
     } else {
         await getEstrategias();
     }
@@ -67,6 +70,7 @@ async function onInit() {
     });
 
     document.querySelector(".loader").style.display = "none";
+    document.querySelector(".loader").style.backgroundColor = styleAntigo;
 }
 
 function renderMediasGerais(mediasGerais) {
@@ -86,18 +90,28 @@ function renderMediaFirstBlood(mediaFirstBlood) {
 function renderMediasPorTime(mediasPorTime, mediasGerais) {
     const t = Array.isArray(mediasPorTime) ? mediasPorTime[0] : mediasPorTime;
     const g = Array.isArray(mediasGerais) ? mediasGerais[0] : mediasGerais;
+    const _fb = JSON.parse(sessionStorage.getItem("mediaFirstBlood"));
+    const fb = Array.isArray(_fb) ? _fb[0] : _fb;
+
+    function setKpi(id, valor, media) {
+        const el = document.getElementById(id);
+        const v = Number(valor), m = Number(media);
+        el.classList.remove('acimaMedia', 'abaixoMedia', 'naMedia');
+        el.classList.add(v > m ? 'acimaMedia' : v < m ? 'abaixoMedia' : 'naMedia');
+    }
+
     document.getElementById('dadoKpiDPG').innerText = Number(t.dano_por_gold).toFixed(2) + " DpG";
-    document.getElementById('dadoKpiDPG').style.textDecorationColor = Number(t.dano_por_gold) > Number(g.media_dano_por_gold) ? "#14AE5C" : "#DF0004";
+    setKpi('dadoKpiDPG', t.dano_por_gold, g.media_dano_por_gold);
     document.getElementById('dadoKpiVT').innerText = Number(t.winrate).toFixed(0) + "%";
-    document.getElementById('dadoKpiVT').style.textDecorationColor = Number(t.winrate) > Number(g.media_winrate) ? "#14AE5C" : "#DF0004";
+    setKpi('dadoKpiVT', t.winrate, g.media_winrate);
     document.getElementById('dadoKpiObj').innerText = Number(t.objetivos).toFixed(2);
-    document.getElementById('dadoKpiObj').style.textDecorationColor = Number(t.objetivos) > Number(g.media_objetivos) ? "#14AE5C" : "#DF0004";
+    setKpi('dadoKpiObj', t.objetivos, g.media_objetivos);
     document.getElementById('dadoKpiVPV').innerText = Number(t.visao_por_minuto).toFixed(2) + " VpM";
-    document.getElementById('dadoKpiVPV').style.textDecorationColor = Number(t.visao_por_minuto) > Number(g.media_visao_por_minuto) ? "#14AE5C" : "#DF0004";
+    setKpi('dadoKpiVPV', t.visao_por_minuto, g.media_visao_por_minuto);
     document.getElementById('dadoKpiFB').innerText = Number(t.first_blood_rate).toFixed(0) + "%";
-    document.getElementById('dadoKpiFB').style.textDecorationColor = Number(t.first_blood_rate) > Number(g.media_first_blood_rate) ? "#14AE5C" : "#DF0004";
+    setKpi('dadoKpiFB', t.first_blood_rate, fb.media_first_blood_rate);
     document.getElementById('dadoKpiCOV').innerText = Number(t.conversao_objetivos).toFixed(0) + "%";
-    document.getElementById('dadoKpiCOV').style.textDecorationColor = Number(t.conversao_objetivos) > Number(g.media_conversao_objetivos) ? "#14AE5C" : "#DF0004";
+    setKpi('dadoKpiCOV', t.conversao_objetivos, g.media_conversao_objetivos);
 }
 
 function getMediasGerais() {
@@ -105,7 +119,7 @@ function getMediasGerais() {
         .then(function (resposta) {
             if (resposta.ok) {
                 resposta.json().then(function (mediasGerais) {
-                    sessionStorage.setItem("mediasGerais", JSON.stringify(mediasGerais));
+                    sessionStorage.setItem("mediasGeraisEquipe", JSON.stringify(mediasGerais));
                     renderMediasGerais(mediasGerais);
                     console.log("Medias gerais recebidas:", mediasGerais);
                 })
@@ -268,7 +282,7 @@ function getTimes() {
             if (resposta.ok) {
                 resposta.json().then(function (times) {
                     const normalizedTimes = times.map(time => ({
-                        id: time.id,
+                        id: time.id_equipe || time.id,
                         name: time.name || time.nome,
                         logoUrl: time.urlImagem || time.logoUrl || "../assets/icons/t1logo.png"
                     }));
@@ -295,10 +309,11 @@ function getEstrategias() {
         return;
     }
 
-    fetch(`/treinador/getEstrategiasPorTreinador/${idTreinador}`)
+    return fetch(`/treinador/getEstrategiasPorTreinador/${idTreinador}`)
         .then(function (resposta) {
             if (resposta.status === 204) {
                 strategies = [];
+                sessionStorage.removeItem("estrategias");
                 renderStrategies(document.getElementById("strategiesContainer"), strategies);
             } else if (resposta.ok) {
                 resposta.json().then(function (estrategias) {
@@ -368,6 +383,7 @@ function criarEstrategia(titulo, conteudo) {
         .then(function (resposta) {
             if (resposta.ok) {
                 return resposta.json().then(function () {
+                    document.querySelector(".loader").style.display = "none";
                     getEstrategias();
                     return true;
                 });
@@ -407,6 +423,7 @@ function atualizarEstrategia(id, titulo, conteudo) {
         .then(function (resposta) {
             if (resposta.ok) {
                 return resposta.json().then(function () {
+                    document.querySelector(".loader").style.display = "none";
                     getEstrategias();
                     return true;
                 });
@@ -436,6 +453,7 @@ function deletarEstrategia(id) {
         .then(function (resposta) {
             if (resposta.ok) {
                 return resposta.json().then(function () {
+                    document.querySelector(".loader").style.display = "none";
                     getEstrategias();
                     return true;
                 });
