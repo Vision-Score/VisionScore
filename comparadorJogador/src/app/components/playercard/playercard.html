@@ -21,27 +21,41 @@
             </div>
         </div>
         <div class="change-player-container">
-            <div class="player-selector">
+            <div class="player-selector" (click)="onSwap.emit()">
                 <i class="material-icons">swap_horiz</i>
             </div>
         </div>
     </div>
     <div class="content">
-        <div class="badges">
-            @for(badge of player.badges; track $index) {
-            <app-badge [badgeIcon]="badge.icon" [badgeName]="badge.name"></app-badge>
-            }
-        </div>
         <div class="stats">
             @for(stat of player.stats; track $index) {
             <app-stat [statName]="stat.name" [statValue]="stat.value" [statIcon]="stat.icon"></app-stat>
             }
         </div>
     </div>
+    @if (player.campeoes?.length) {
+    <div class="champions-footer">
+        <span class="picks-title">Melhores Picks</span>
+        <div class="champion-list">
+            @for (c of player.campeoes; track c.nomeCampeao) {
+            <div class="champion-thumb" [style.background-image]="'url(' + c.splashUrl.replace('/splash/', '/loading/') + ')'">
+                <div class="champion-info">
+                    <span class="champion-nome">{{ c.nomeCampeao }}</span>
+                    <div class="champion-stats">
+                        <span>{{ c.winrate }}% WR</span>
+                        <span>{{ c.kda }} KDA</span>
+                        <span>{{ c.jogos }}j</span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
 </div>
 } @else {
 <div class="mainContainer empty">
-    <div class="search">
+    <div class="search" (click)="onSwap.emit()">
         Selecione o Jogador
         <i class="material-icons">arrow_downward_alt</i>
     </div>

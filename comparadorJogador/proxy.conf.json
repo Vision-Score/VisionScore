@@ -1,0 +1,11 @@
+{
+  "/jogadores": {
+    "target": "http://localhost:8080",
+    "changeOrigin": true
+  },
+   "/times": {
+    "target": "http://localhost:8080",
+    "changeOrigin": true
+  }
+}
+

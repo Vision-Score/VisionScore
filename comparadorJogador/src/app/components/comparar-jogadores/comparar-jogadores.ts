@@ -1,41 +1,228 @@
-import { Component } from '@angular/core';
+﻿import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Playercard } from "../playercard/playercard";
+import { BuscarJogador } from "../buscar-jogador/buscar-jogador";
+import { JogadoresService } from "../services/jogadores.service";
+import { TimesService } from "../services/times.service";
+import { SplashService } from "../services/splash.service";
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-comparar-jogadores',
-  imports: [Playercard],
+  imports: [Playercard, BuscarJogador],
   templateUrl: './comparar-jogadores.html',
   styleUrl: './comparar-jogadores.scss',
 })
-export class CompararJogadores {
+export class CompararJogadores implements OnInit {
 
-  player = {
-    name: 'Faker',
-    position: 'Mid Laner',
-    teamLogo: 'assets/icons/t1logo.png',
-    icon: 'assets/playerIcons/Faker.jpg',
-    badges: [
-      { name: 'Early Agressivo', icon: 'aim.svg' },
-      { name: 'Defesa Sólida', icon: 'Toughness_rating.png' },
-      { name: 'Cura Constante', icon: 'hourglass.svg' },
-      { name: 'Movimentação Ágil', icon: 'stopwatch.svg' },
-      { name: 'Controle de Área', icon: 'stopwatch.svg' },
-    ],
-    stats: [
-      { name: 'Abates por jogo', value: '7.4', icon: 'arrow_upward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Abates por jogo', value: '7.4', icon: 'arrow_upward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Abates por jogo', value: '7.4', icon: 'arrow_upward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Abates por jogo', value: '7.4', icon: 'arrow_upward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Abates por jogo', value: '7.4', icon: 'arrow_upward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-      { name: 'Torres abatidas por jogo', value: '0.60', icon: 'arrow_downward' },
-    ],
-  };
+  idEquipe!: number;
+  idAliado!: number;
+  idAdversario!: number;
+
+  elencoAliado: any[] = [];
+  jogadoresParaComparar: any[] = [];
+  jogadorAdversario: any;
+  jogadorAdversarioStats: any[] = [];
+  playerAliado: any = null;
+  playerAdversario: any = null;
+  buscarAtivoAliado = false;
+  buscarAtivoAdversario = false;
+  loadingAdversario = false;
+  private adversarioRequestId = 0;
+  splashAliado = '';
+  splashAdversario = '';
+
+  constructor(
+    private jogadoresService: JogadoresService,
+    private timesService: TimesService,
+    private splashService: SplashService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  async ngOnInit() {
+    this.loadingAdversario = true;
+    this.cdr.detectChanges();
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+      this.idEquipe = Number(params.get('idEquipe'));
+      this.idAliado = Number(params.get('idAliado'));
+      this.idAdversario = Number(params.get('idAdversario'));
+
+      console.log('idEquipe:', this.idEquipe, '| idAliado:', this.idAliado, '| idAdversario:', this.idAdversario);
+
+      const cachedElenco = sessionStorage.getItem('elenco');
+      this.elencoAliado = cachedElenco
+        ? JSON.parse(cachedElenco)
+        : await firstValueFrom(this.jogadoresService.listarElenco(this.idEquipe));
+      console.log('Elenco:', this.elencoAliado);
+
+      const jogadorAtual = this.elencoAliado.find(j => j.idJogador === this.idAliado);
+      if (!jogadorAtual) { console.error('Aliado não encontrado no elenco'); return; }
+      const role = jogadorAtual.funcao.toLowerCase();
+      const cachedJogadoresPorRole = sessionStorage.getItem(`jogadores_${role}`);
+      if (cachedJogadoresPorRole) {
+        this.jogadoresParaComparar = JSON.parse(cachedJogadoresPorRole);
+      } else {
+        this.jogadoresParaComparar = await firstValueFrom(this.jogadoresService.getJogadoresPorRole(role));
+        sessionStorage.setItem(`jogadores_${role}`, JSON.stringify(this.jogadoresParaComparar));
+      }
+      console.log('Jogadores para comparar:', this.jogadoresParaComparar);
+
+      this.jogadorAdversario = this.jogadoresParaComparar.find(j => j.idJogador === this.idAdversario);
+      console.log('Jogador adversario:', this.jogadorAdversario);
+      if (!this.jogadorAdversario) { console.error('Adversário não encontrado na lista de jogadores'); return; }
+
+      const cachedElencoAdversario = sessionStorage.getItem(`elencoAdversario_${this.jogadorAdversario.fkEquipe}`);
+      if (cachedElencoAdversario) {
+        const elencoAdv = JSON.parse(cachedElencoAdversario);
+        this.jogadorAdversarioStats = [elencoAdv.find((j: any) => j.idJogador === this.idAdversario)];
+      } else {
+        this.jogadorAdversarioStats = await firstValueFrom(this.jogadoresService.getJogadorPorIDeEquipe(this.idAdversario, this.jogadorAdversario.fkEquipe));
+      }
+      console.log('Stats do jogador adversario:', this.jogadorAdversarioStats);
+
+      const cachedTimes = sessionStorage.getItem('times');
+      let times: any[];
+      if (cachedTimes) {
+        times = JSON.parse(cachedTimes);
+      } else {
+        times = await firstValueFrom(this.timesService.listarTimes());
+        sessionStorage.setItem('times', JSON.stringify(times));
+      }
+      const urlTimeAliado: string = times.find((t: any) => t.id_equipe === jogadorAtual.fkEquipe)?.urlImagem;
+      const urlTimeAdversario: string = times.find((t: any) => t.id_equipe === this.jogadorAdversario.fkEquipe)?.urlImagem;
+
+      const [campeaoesAliado, campeaoesAdversario]: [any[], any[]] = await Promise.all([
+        firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAliado)),
+        firstValueFrom(this.jogadoresService.getMelhoresCampeoes(this.idAdversario)),
+      ]);
+
+      const allSplashes = await Promise.all([
+        ...campeaoesAliado.map((c: any) => this.splashService.getUrl(c.nomeCampeao)),
+        ...campeaoesAdversario.map((c: any) => this.splashService.getUrl(c.nomeCampeao)),
+      ]);
+
+      this.splashAliado = allSplashes[0] ?? '';
+      this.splashAdversario = allSplashes[campeaoesAliado.length] ?? '';
+
+      const campeoesAliado = campeaoesAliado.map((c: any, i: number) => ({ ...c, splashUrl: allSplashes[i] }));
+      const campeoesAdversario = campeaoesAdversario.map((c: any, i: number) => ({ ...c, splashUrl: allSplashes[campeaoesAliado.length + i] }));
+
+      this.playerAliado = this.montarPlayer(jogadorAtual, urlTimeAliado!, undefined, campeoesAliado);
+      this.playerAdversario = this.montarPlayer(this.jogadorAdversario, urlTimeAdversario!, this.jogadorAdversarioStats[0], campeoesAdversario);
+      this.aplicarComparacao();
+    } catch (e) {
+      console.error('Erro ao carregar comparação:', e);
+    } finally {
+      this.loadingAdversario = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async trocarAliado(jogador: any) {
+    this.buscarAtivoAliado = false;
+    this.playerAdversario = null;
+    this.splashAdversario = '';
+    this.cdr.detectChanges();
+
+    const times: any[] = JSON.parse(sessionStorage.getItem('times') ?? '[]');
+    const urlTime: string = times.find((t: any) => t.id_equipe === jogador.fkEquipe)?.urlImagem;
+
+    const campeoes: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(jogador.idJogador));
+    const splashUrls = await Promise.all(campeoes.map((c: any) => this.splashService.getUrl(c.nomeCampeao)));
+    this.splashAliado = splashUrls[0] ?? '';
+    const campeoesComSplash = campeoes.map((c: any, i: number) => ({ ...c, splashUrl: splashUrls[i] }));
+
+    this.playerAliado = this.montarPlayer(jogador, urlTime, undefined, campeoesComSplash);
+    this.cdr.detectChanges();
+
+    const role = jogador.funcao.toLowerCase();
+    const cached = sessionStorage.getItem(`jogadores_${role}`);
+    if (cached) {
+      this.jogadoresParaComparar = JSON.parse(cached);
+    } else {
+      this.jogadoresParaComparar = [];
+      this.cdr.detectChanges();
+      this.jogadoresParaComparar = await firstValueFrom(this.jogadoresService.getJogadoresPorRole(role));
+      sessionStorage.setItem(`jogadores_${role}`, JSON.stringify(this.jogadoresParaComparar));
+      this.cdr.detectChanges();
+    }
+  }
+
+  async trocarAdversario(jogador: any) {
+    const requestId = ++this.adversarioRequestId;
+
+    this.playerAdversario = null;
+    this.buscarAtivoAdversario = false;
+    this.loadingAdversario = true;
+    this.cdr.detectChanges();
+
+    try {
+      const stats = await firstValueFrom(this.jogadoresService.getJogadorPorIDeEquipe(jogador.idJogador, jogador.fkEquipe));
+      if (requestId !== this.adversarioRequestId) return;
+
+      const cachedTimes = sessionStorage.getItem('times');
+      const times: any[] = cachedTimes ? JSON.parse(cachedTimes) : [];
+      const urlTime: string = times.find((t: any) => t.id_equipe === jogador.fkEquipe)?.urlImagem;
+
+      const campeoes: any[] = await firstValueFrom(this.jogadoresService.getMelhoresCampeoes(jogador.idJogador));
+      if (requestId !== this.adversarioRequestId) return;
+
+      const splashUrls = await Promise.all(campeoes.map((c: any) => this.splashService.getUrl(c.nomeCampeao)));
+      if (requestId !== this.adversarioRequestId) return;
+
+      this.splashAdversario = splashUrls[0] ?? '';
+      const campeoesComSplash = campeoes.map((c: any, i: number) => ({ ...c, splashUrl: splashUrls[i] }));
+      this.playerAdversario = this.montarPlayer(jogador, urlTime, Array.isArray(stats) ? stats[0] : stats, campeoesComSplash);
+      this.aplicarComparacao();
+    } finally {
+      if (requestId === this.adversarioRequestId) {
+        this.loadingAdversario = false;
+        this.cdr.detectChanges();
+      }
+    }
+  }
+
+  aplicarComparacao() {
+    if (!this.playerAliado || !this.playerAdversario) return;
+    const MENOR_MELHOR = new Set([2]); // índice de Mortes
+    this.playerAliado.stats.forEach((stat: any, i: number) => {
+      const valA = parseFloat(stat.value);
+      const valB = parseFloat(this.playerAdversario.stats[i].value);
+      const aliadoVence = MENOR_MELHOR.has(i) ? valA < valB : valA > valB;
+      const adversarioVence = MENOR_MELHOR.has(i) ? valB < valA : valB > valA;
+      if (aliadoVence) {
+        this.playerAliado.stats[i].icon = 'arrow_upward';
+        this.playerAdversario.stats[i].icon = 'arrow_downward';
+      } else if (adversarioVence) {
+        this.playerAliado.stats[i].icon = 'arrow_downward';
+        this.playerAdversario.stats[i].icon = 'arrow_upward';
+      } else {
+        this.playerAliado.stats[i].icon = 'remove';
+        this.playerAdversario.stats[i].icon = 'remove';
+      }
+    });
+  }
+
+  montarPlayer(jogador: any, urlTime?: string, statsJogador?: any, campeoes: any[] = []) {
+    const stats = statsJogador || jogador;
+    return {
+      name: jogador.nome,
+      position: jogador.funcao,
+      teamLogo: urlTime || 'assets/imagem_quebrada.svg',
+      icon: jogador.urlFotoJogador || 'assets/imagem_quebrada.svg',
+      campeoes,
+      stats: [
+        { name: 'Dano por Minuto (DpM)', value: (stats.mediaDano / 30).toFixed(1), icon: 'remove' },
+        { name: 'Abates (Kills)', value: String(stats.mediaElims), icon: 'remove' },
+        { name: 'Mortes (Deaths)', value: String(stats.mediaMortes), icon: 'remove' },
+        { name: 'Assistências (Assists)', value: String(stats.mediaAssists), icon: 'remove' },
+        { name: 'Participação em Abates (KP%)', value: `${stats.mediaKP}%`, icon: 'remove' },
+        { name: 'Ouro por Minuto (GPM)', value: (stats.mediaOuro / 30).toFixed(1), icon: 'remove' },
+        { name: 'CS por Minuto (CSPM)', value: (stats.mediaCS / 30).toFixed(1), icon: 'remove' },
+        { name: 'Wards por Minuto', value: (stats.mediaWards / 30).toFixed(2), icon: 'remove' },
+      ]
+    };
+  }
 }
+
